@@ -1,0 +1,299 @@
+Id;Number;Name;Size;Category;Price;Spicy
+1;1;Pork Egg Roll;(1);Appetizer;1.95;0
+2;2;Spring Roll (Vegetable);(3);Appetizer;2.95;0
+3;3;Shrimp Egg Roll;(1);Appetizer;2.05;0
+4;4;Bar-B-Q Spare Ribs;(Sm);Appetizer;9.55;0
+5;4;Bar-B-Q Spare Ribs;(Lg);Appetizer;16.45;0
+6;5;Fried Wonton;(10);Appetizer;5.15;0
+7;6;Fried Jumbo Shrimp;(5);Appetizer;6.95;0
+8;7;BBQ Chicken Wings;(8 Halves);Appetizer;7.25;0
+9;8;Fried Buns;(10);Appetizer;5.25;0
+10;9;Crab Rangoon;(Sm 6);Appetizer;5.95;0
+11;9;Crab Rangoon;(Lg 10);Appetizer;8.55;0
+12;10;Fried or Steamed Dumpling;8;Appetizer;7.25;0
+13;11;Teriyaki Beef on Stick;5;Appetizer;9.25;0
+14;12;Teriyaki Chicken On Stick;5;Appetizer;8.75;0
+15;13;Fried Chicken Wings;4;Appetizer;7.25;0
+16;14;Boneless Spare Ribs;(Sm);Appetizer;9.15;0
+17;14;Boneless Spare Ribs;(Lg);Appetizer;14.15;0
+18;15;French Fries;(Sm);Appetizer;4.25;0
+19;15;French Fries;(Lg);Appetizer;6.05;0
+20;16;Fried Banana;(Sm);Appetizer;4.95;0
+21;16;Fried Banana;(Lg);Appetizer;7.25;0
+22;17;Pu Pu Platter;(For 1);Appetizer;9.95;0
+23;17;Pu Pu Platter;(For 2);Appetizer;17.95;0
+24;17A;Chicken Fingers;;Appetizer;9.25;0
+25;17B;Scallion Pancakes;;Appetizer;5.25;0
+26;18;Wonton Soup;(Pt);Soup;2.95;0
+27;18;Wonton Soup;(Qt);Soup;4.55;0
+28;19;Egg Drop Soup;(Pt);Soup;2.75;0
+29;19;Egg Drop Soup;(Qt);Soup;4.25;0
+30;20;Wonton Egg Drop Soup;(Pt);Soup;2.95;0
+31;20;Wonton Egg Drop Soup;(Qt);Soup;4.55;0
+32;21;Chicken Noodle or Rice Soup;(Pt);Soup;2.95;0
+33;21;Chicken Noodle or Rice Soup;(Qt);Soup;4.55;0
+34;22;Hot & Sour Soup;(Pt);Soup;2.95;0
+35;22;Hot & Sour Soup;(Qt);Soup;4.55;1
+36;23;Vegetable & Bean Curd Soup;(Pt);Soup;2.95;0
+37;23;Vegetable & Bean Curd Soup;(Qt);Soup;4.55;0
+38;24;Seafood Soup;(Qt);Soup;7.75;0
+39;25;Roast Pork Chow Mein;(Pt);Chow Mein;6.25;0
+40;25;Roast Pork Chow Mein;(Qt);Chow Mein;9.15;0
+41;26;Chicken Chow Mein;(Pt);Chow Mein;6.25;0
+42;26;Chicken Chow Mein;(Qt);Chow Mein;9.25;0
+43;27;Beef Chow Mein;(Pt);Chow Mein;6.65;0
+44;27;Beef Chow Mein;(Qt);Chow Mein;10.25;0
+45;28;Shrimp Chow Mein;(Pt);Chow Mein;6.65;0
+46;28;Shrimp Chow Mein;(Qt);Chow Mein;10.25;0
+47;29;Vegetable Chow Mein;(Pt);Chow Mein;6.05;0
+48;29;Vegetable Chow Mein;(Qt);Chow Mein;8.95;0
+49;30;House Special Chow Mein;(Pt);Chow Mein;6.85;0
+50;30;House Special Chow Mein;(Qt);Chow Mein;10.55;0
+51;31;Roast Pork Fried Rice;(Pt);Fried Rice;6.05;0
+52;31;Roast Pork Fried Rice;(Qt);Fried Rice;9.05;0
+53;32;Chicken Fried Rice;(Pt);Fried Rice;6.05;0
+54;32;Chicken Fried Rice;(Qt);Fried Rice;9.05;0
+55;33;Vegetable Fried Rice;(Pt);Fried Rice;5.25;0
+56;33;Vegetable Fried Rice;(Qt);Fried Rice;7.75;0
+57;34;Beef Fried Rice;(Pt);Fried Rice;6.95;0
+58;34;Beef Fried Rice;(Qt);Fried Rice;9.75;0
+59;35;Shrimp Fried Rice;(Pt);Fried Rice;6.95;0
+60;35;Shrimp Fried Rice;(Qt);Fried Rice;9.75;0
+61;37;House Special Fried Rice;(Pt);Fried Rice;7.05;0
+62;37;House Special Fried Rice;(Qt);Fried Rice;10.25;0
+63;38;Vegetable Lo Mein;(Pt);Lo Mein;6.85;0
+64;38;Vegetable Lo Mein;(Qt);Lo Mein;9.25;0
+65;39;Roast Pork Lo Mein;(Pt);Lo Mein;7.25;0
+66;39;Roast Pork Lo Mein;(Qt);Lo Mein;9.95;0
+67;40;Chicken Lo Mein;(Pt);Lo Mein;7.25;0
+68;40;Chicken Lo Mein;(Qt);Lo Mein;9.95;0
+69;41;Beef Lo Mein;(Pt);Lo Mein;7.45;0
+70;41;Beef Lo Mein;(Qt);Lo Mein;10.25;0
+71;42;Shrimp Lo Mein;(Pt);Lo Mein;7.45;0
+72;42;Shrimp Lo Mein;(Qt);Lo Mein;10.25;0
+73;44;House Special Lo Mein;(Pt);Lo Mein;7.75;0
+74;44;House Special Lo Mein;(Qt);Lo Mein;10.95;0
+75;45;Chicken or Pork Chow Mei Fun;;Mei Fun;9.75;0
+76;46;Beef or Shrimp Chow Mei Fun;;Mei Fun;9.75;0
+77;47;House Special Chow Mei Fun;;Mei Fun;10.25;0
+78;48;Singapore Chow Mei Fun;;Mei Fun;10.25;0
+79;49;Roast Pork w. Chinese Veg;(Pt);Pork;8.25;0
+80;49;Roast Pork w. Chinese Veg;(Qt);Pork;11.25;0
+81;50;Pork w. Snow Peas;(Pt);Pork;8.25;0
+82;50;Pork w. Snow Peas;(Qt);Pork;11.25;0
+83;51;Pork w. Mushrooms;(Pt);Pork;8.25;0
+84;51;Pork w. Mushrooms;(Qt);Pork;11.25;0
+85;52;Pork w. Broccoli;(Pt);Pork;8.25;0
+86;52;Pork w. Broccoli;(Qt);Pork;11.25;0
+87;53;Pork w. Garlic Sauce;;Pork;11.25;1
+88;54;Hunan Pork;;Pork;11.25;1
+89;55;Pork w. Mixed Vegetable;(Pt);Pork;8.25;0
+90;55;Pork w. Mixed Vegetable;(Qt);Pork;11.25;0
+91;56;Chicken w. Bean Curd;(Pt);Poultry;8.55;0
+92;56;Chicken w. Bean Curd;(Qt);Poultry;12.25;0
+93;57;Moo Goo Gai Pan;(Pt);Poultry;8.55;0
+94;57;Moo Goo Gai Pan;(Qt);Poultry;12.25;0
+95;58;Chicken w. Snow Peas;(Pt);Poultry;8.55;0
+96;58;Chicken w. Snow Peas;(Qt);Poultry;12.25;0
+97;59;Chicken w. Black Bean Sauce;(Pt);Poultry;8.55;0
+98;59;Chicken w. Black Bean Sauce;(Qt);Poultry;12.25;0
+99;60;Chicken w. Mushrooms;(Pt);Poultry;8.55;0
+100;60;Chicken w. Mushrooms;(Qt);Poultry;12.25;0
+101;62;Chicken w. Curry Sauce;(Pt);Poultry;8.55;1
+102;62;Chicken w. Curry Sauce;(Qt);Poultry;12.25;1
+103;63;Chicken w. Cashew Nuts;;Poultry;12.25;0
+104;64;Szechuan Chicken;;Poultry;12.25;1
+105;65;Chicken w. Garlic Sauce;;Poultry;12.25;1
+106;66;Hunan Chicken;;Poultry;12.25;1
+107;67;Chicken w. Mixed Vegetable;(Pt);Poultry;8.55;0
+108;67;Chicken w. Mixed Vegetable;(Qt);Poultry;12.25;0
+109;68;Hot & Spicy Chicken;;Poultry;12.25;1
+110;69;Kung Pao Chicken ;;Poultry;12.25;1
+111;70;Chicken w. Broccoli;(Pt);Poultry;8.55;0
+112;70;Chicken w. Broccoli;(Qt);Poultry;12.25;0
+113;71;Chicken w. String Beans;;Poultry;12.25;0
+114;72;Chicken w. Eggplant w. Garlic Sc;;Poultry;12.25;1
+115;73;Lemon Chicken;;Poultry;12.25;0
+116;73A;Chicken w. Scallion;;Poultry;12.25;0
+117;74;Beef w. Chinese Vegetable;(Pt);Beef;9.05;0
+118;74;Beef w. Chinese Vegetable;(Qt);Beef;12.55;0
+119;75;Pepper Steak w. Onion;(Pt);Beef;9.05;0
+120;75;Pepper Steak w. Onion;(Qt);Beef;12.55;0
+121;76;Beef w. Snow Peas;(Pt);Beef;9.05;0
+122;76;Beef w. Snow Peas;(Qt);Beef;12.55;0
+123;77;Beef w. Mushrooms;(Pt);Beef;9.05;0
+124;77;Beef w. Mushrooms;(Qt);Beef;12.55;0
+125;78;Szechuan Beef;;Beef;12.55;1
+126;79;Hunan Beef;;Beef;12.55;1
+127;80;Beef w. Garlic Sauce;;Beef;12.55;1
+128;81;Beef w. Mixed Vegetable;(Pt);Beef;9.05;0
+129;81;Beef w. Mixed Vegetable;(Qt);Beef;12.55;0
+130;82;Hot & Spicy Beef;;Beef;12.55;1
+131;83;Beef w. Broccoli;(Pt);Beef;9.05;0
+132;83;Beef w. Broccoli;(Qt);Beef;12.55;0
+133;84;Beef w. Eggplant;;Beef;12.55;0
+134;85;Beef w. Bean Curd;;Beef;12.55;0
+135;86;Shrimp w. Bean Curd;(Pt);Seafood;9.05;0
+136;86;Shrimp w. Bean Curd;(Qt);Seafood;12.55;0
+137;87;Shrimp w. Lobster Sauce;(Pt);Seafood;9.05;0
+138;87;Shrimp w. Lobster Sauce;(Qt);Seafood;12.55;0
+139;88;Shrimp w. Chinese Veg;(Pt);Seafood;9.05;0
+140;88;Shrimp w. Chinese Veg;(Qt);Seafood;12.55;0
+141;89;Shrimp w. Snow Peas;(Pt);Seafood;9.05;0
+142;89;Shrimp w. Snow Peas;(Qt);Seafood;12.55;0
+143;90;Shrimp w. Curry Sauce;(Pt);Seafood;9.05;1
+144;90;Shrimp w. Curry Sauce;(Qt);Seafood;12.55;1
+145;91;Shrimp w. Mixed Vegetable;(Pt);Seafood;9.05;0
+146;91;Shrimp w. Mixed Vegetable;(Qt);Seafood;12.55;0
+147;92;Shrimp w. Garlic Sauce;;Seafood;12.55;1
+148;93;Szechuan Shrimp;;Seafood;12.55;1
+149;94;Hunan Shrimp;;Seafood;12.55;1
+150;95;Shrimp w. Cashew Nuts;;Seafood;12.55;0
+151;96;Kung Pao Shrimp;;Seafood;12.55;1
+152;97;Shrimp w. Broccoli;(Pt);Seafood;9.05;0
+153;97;Shrimp w. Broccoli;(Qt);Seafood;12.55;0
+154;98;Shrimp w. Coconut;;Seafood;12.55;0
+155;99;Scallop w. Garlic Sauce;;Seafood;12.55;1
+156;100;Shrimp w. Chili Sauce;;Seafood;12.55;1
+157;101;Hot & Spicy Shrimp;;Seafood;12.55;1
+158;103;Roast Pork or Chicken Egg Foo Young;;Egg Foo Young;9.25;0
+159;104;Shrimp or Beef Egg Foo Young;;Egg Foo Young;9.75;0
+160;105;Vegetable Egg Foo Young;;Egg Foo Young;8.75;0
+161;106;Sweet & Sour Pork;(Pt);Sweet And Sour;6.85;0
+162;106;Sweet & Sour Pork;(Qt);Sweet And Sour;9.85;0
+163;107;Sweet & Sour Chicken;(Pt);Sweet And Sour;6.85;0
+164;107;Sweet & Sour Chicken;(Qt);Sweet And Sour;9.85;0
+165;108;Sweet & Sour Shrimp;(Pt);Sweet And Sour;7.25;0
+166;108;Sweet & Sour Shrimp;(Qt);Sweet And Sour;11.55;0
+167;109;Bean Curd Home Style;;Vegetable;9.25;0
+168;110;Szechuan Tofu;;Vegetable;9.25;1
+169;110A;Mapo Tofu;;Vegetable;9.25;1
+170;111;Buddhist Delight;;Vegetable;9.25;0
+171;112;Broccoli w. Garlic Sauce;;Vegetable;9.55;1
+172;113;Eggplant w. Garlic Sauce;;Vegetable;9.55;1
+173;114;Sauteed String Beans;;Vegetable;9.55;0
+174;115;Moo Shu Pork or Chicken;;Moo Shu;10.15;0
+175;116;Moo Shu Beef or Shrimp;;Moo Shu;10.55;0
+176;117;House Special Moo Shu;;Moo Shu;10.55;0
+177;C1;Chicken Chow Mein;;Special Combination Plates;10.25;0
+178;C2;Pepper Steak w. Onion;;Special Combination Plates;10.25;0
+179;C3;Roast Pork Egg Foo Young;;Special Combination Plates;10.25;0
+180;C4;Shrimp w. Lobster Sauce;;Special Combination Plates;10.25;0
+181;C5;Chicken w. Broccoli;;Special Combination Plates;10.25;0
+182;C6;Sweet & Sour Pork;;Special Combination Plates;10.25;0
+183;C7;Moo Goo Gai Pan;;Special Combination Plates;10.25;0
+184;C8;Bar-B-Q Spare Ribs;;Special Combination Plates;11.25;0
+185;C9;Beef w. Chinese Vegetable;;Special Combination Plates;10.25;0
+186;C10;Roast Pork w. Broccoli;;Special Combination Plates;10.25;0
+187;C11;Beef w. Broccoli;;Special Combination Plates;10.25;0
+188;C12;Shrimp w. Broccoli;;Special Combination Plates;10.25;0
+189;C13;Sweet & Sour Chicken;;Special Combination Plates;10.25;0
+190;C14;Chicken w. Garlic Sauce;;Special Combination Plates;10.25;1
+191;C15;Hot & Spicy Chicken;;Special Combination Plates;10.25;1
+192;C16;Sesame Chicken;;Special Combination Plates;10.25;0
+193;C17;General Tsos Chicken;;Special Combination Plates;10.25;1
+194;C18;Chicken Lo Mein;;Special Combination Plates;10.25;0
+195;C19;Boneless Spare Ribs;;Special Combination Plates;10.75;0
+196;C20;Fried Half Chicken;;Special Combination Plates;10.25;0
+197;S1;Happy Family;;Chefs Specialties;13.25;0
+198;S2;Tung Ting Shrimp;;Chefs Specialties;13.25;0
+199;S3;Seafood Delight;;Chefs Specialties;14.25;0
+200;S4;Triple Delight;;Chefs Specialties;14.25;0
+201;S5;Dragon & Pheonix;;Chefs Specialties;12.75;0
+202;S6;Beef w. Orange Flavor;;Chefs Specialties;13.25;1
+203;S7;Sesame Chicken;;Chefs Specialties;12.25;0
+204;S8;Four Seasons;;Chefs Specialties;12.75;0
+205;S9;Triple Delight w. Garlic Sauce;;Chefs Specialties;12.75;1
+206;S10;General Tsos Chicken;;Chefs Specialties;12.25;1
+207;S11;Shrimp & Beef Hunan Style;;Chefs Specialties;12.95;1
+208;S12;Chicken w. Orange Flavor;;Chefs Specialties;12.45;1
+209;S15;Sesame Shrimp;;Chefs Specialties;13.25;0
+210;D1;General Tsos Chicken, Crab Rangoons, Chicken Wings;;All Day Special;10.75;1
+211;D2;Sesame Chicken, B.B.Q Chicken Wings, Chicken Finger;;All Day Special;10.75;0
+212;D3;Boneless Ribs, Chicken Wings, Crab Rangoon;;All Day Special;10.75;0
+213;D4;Vegetable Lo Mein, B.B.Q Chicken Wings, Egg Roll;;All Day Special;10.75;0
+214;D5;General Tsos Chicken, Egg Roll, Crab Rangoon;;All Day Special;10.75;1
+215;D6;Chicken w. Broccoli, Crab Rangoon, B.B.Q Chicken Wings;;All Day Special;10.75;0
+216;D7;Beef w. Broccoli, Chicken Wings, Chicken Fingers;;All Day Special;10.75;0
+217;D8;Sesame Chicken, Crab Rangoon, Chicken Wings;;All Day Special;10.75;0
+218;D9;Vegetable Lo Mein, Crab Rangoon, Chicken Fingers;;All Day Special;10.75;0
+219;D10;Chicken w. Garlic Sauce, Chicken Wings, Chicken Finger;;All Day Special;10.75;1
+220;D11;Boneless Ribs, Teriyaki Beef, Chicken Finger;;All Day Special;10.75;0
+221;D12;Teriyaki Beef, Crab Rangoon, Egg Roll;;All Day Special;10.75;0
+222;D13;Boneless Ribs, Egg Roll, Chicken Fingers;;All Day Special;10.75;0
+223;D14;Teriyaki Beef, Chicken Wings, Fried Scallops;;All Day Special;10.75;0
+224;D15;Chicken w. Garlic Sauce, Chicken Wings, Boneless Ribs;;All Day Special;10.75;1
+225;D16;Boneless Ribs, Egg Roll, Chicken Wings;;All Day Special;10.75;0
+226;D17;Crab Rangoon, Fried Scallop, Chicken Fingers;;All Day Special;10.75;0
+227;D18;Chicken Finger, Chicken Teriyaki, Egg Roll;;All Day Special;10.75;0
+228;E1;General Tsos Chicken, Chicken Fingers;;All Day Special;9.25;1
+229;E2;General Tsos Chicken, Crab Rangoon;;All Day Special;9.25;1
+230;E3;Boneless Ribs, Chicken Wings;;All Day Special;9.25;0
+231;E4;Boneless Ribs, Chicken Fingers;;All Day Special;9.25;0
+232;E5;Boneless Ribs, Crab Rangoon;;All Day Special;9.25;0
+233;E6;Chicken Fingers, Crab Rangoon;;All Day Special;9.25;0
+234;E7;Sesame Chicken, Chicken Wings;;All Day Special;9.25;0
+235;E8;Chicken Wings, Chicken Fingers;;All Day Special;9.25;0
+236;E9;Chicken Wings, Crab Rangoon;;All Day Special;9.25;0
+237;E10;Crab Rangoon, Teriyaki Beef;;All Day Special;9.25;0
+238;H1;Steamed Mixed Vegetable;;Special Healthy Diet;9.45;0
+239;H2;Steamed Plain Broccoli;;Special Healthy Diet;9.45;0
+240;H3;Steamed Tofu w. Broccoli;;Special Healthy Diet;9.45;0
+241;H4;Steamed Chicken w. Broccoli;;Special Healthy Diet;11.75;0
+242;H5;Steamed Shrimp w. Broccoli;;Special Healthy Diet;12.25;0
+243;H6;Steamed Shrimp w. Mixed Vegetable;;Special Healthy Diet;12.25;0
+244;H7;Steamed Chicken w. Mixed Vegetable;;Special Healthy Diet;11.75;0
+245;H8;Steamed Tofu w. Chicken;;Special Healthy Diet;10.45;0
+246;O1;Fortune Cookies ;(6 Per Bag);Other;1.50;0
+247;O2;Made Crisp Noodles;(1);Other;1.00;0
+248;O3;White Rice;(Sm);Other;3.00;0
+249;O3;White Rice;(Lg);Other;4.50;0
+250;A1;Fried Chicken Wings (4);[w. French Fries or Plain Fried Rice];American Dishes;9.55;0
+251;A1;Fried Chicken Wings (4);[w. Pork or Chicken or Vegetable Fried Rice];American Dishes;9.95;0
+252;A1;Fried Chicken Wings (4);[w. Beef or Shrimp Fried Rice];American Dishes;10.45;0
+253;A2;Fried Half Chicken;[w. French Fries or Plain Fried Rice];American Dishes;9.55;0
+254;A2;Fried Half Chicken;[w. Pork or Chicken or Vegetable Fried Rice];American Dishes;9.95;0
+255;A2;Fried Half Chicken;[w. Beef or Shrimp Fried Rice];American Dishes;10.45;0
+256;A3;Fried Scallops (10);[w. French Fries or Plain Fried Rice];American Dishes;8.25;0
+257;A3;Fried Scallops (10);[w. Pork or Chicken or Vegetable Fried Rice];American Dishes;8.65;0
+258;A3;Fried Scallops (10);[w. Beef or Shrimp Fried Rice];American Dishes;9.85;0
+259;A4;Fried Jumbo Shrimp (5);[w. French Fries or Plain Fried Rice];American Dishes;9.15;0
+260;A4;Fried Jumbo Shrimp (5);[w. Pork or Chicken or Vegetable Fried Rice];American Dishes;9.95;0
+261;A4;Fried Jumbo Shrimp (5);[w. Beef or Shrimp Fried Rice];American Dishes;10.45;0
+262;A5;Chicken Fingers;[w. French Fries or Plain Fried Rice];American Dishes;9.15;0
+263;A5;Chicken Fingers;[w. Pork or Chicken or Vegetable Fried Rice];American Dishes;9.95;0
+264;A5;Chicken Fingers;[w. Beef or Shrimp Fried Rice];American Dishes;10.45;0
+265;A6;Boneless Ribs;[w. French Fries or Plain Fried Rice];American Dishes;10.25;0
+266;A6;Boneless Ribs;[w. Pork or Chicken or Vegetable Fried Rice];American Dishes;10.55;0
+267;A6;Boneless Ribs;[w. Beef or Shrimp Fried Rice];American Dishes;10.95;0
+268;L1;Chicken or Shrimp Chow Mein;;Lunch Special;8.55;0
+269;L2;Roast Pork Egg Foo Young;;Lunch Special;8.55;0
+270;L3;Chicken Finger, Crab Rangoon, Fried Scallop;;Lunch Special;8.55;0
+271;L4;Pepper Steak w. Onion;;Lunch Special;8.55;0
+272;L5;Beef w. Broccoli;;Lunch Special;8.55;0
+273;L6;Shrimp w. Broccoli;;Lunch Special;8.55;0
+274;L7;Chicken w. Broccoli;;Lunch Special;8.55;0
+275;L8;Shrimp w. Lobster Sauce;;Lunch Special;8.55;0
+276;L9;Boneless Spare Ribs;;Lunch Special;9.15;0
+277;L10;Shrimp w. Chinese Vegetable;;Lunch Special;8.55;0
+278;L11;Beef or Chicken w. Mushroom;;Lunch Special;8.55;0
+279;L12;Roast Pork w. Chinese Vegetable;;Lunch Special;8.55;0
+280;L13;Moo Goo Gai Pan;;Lunch Special;8.55;0
+281;L14;Chicken Wing, Crab Rangoon, Fried Scallop;;Lunch Special;8.55;0
+282;L15;BBQ Chicken Wing, French Fries, Crab Rangoon;;Lunch Special;8.55;0
+283;L16;Boneless Spare Ribs, Chicken Fingers, French Fries;;Lunch Special;8.85;0
+284;L17;Roast Pork or Chicken Lo Mein;;Lunch Special;8.55;0
+285;L18;Sweet & Sour Chicken;;Lunch Special;8.55;0
+286;L19;Beef w. Mixed Vegetable;;Lunch Special;8.55;0
+287;L20;General Tsos Chicken;;Lunch Special;8.55;1
+288;L21;Chicken w. Garlic Sauce;;Lunch Special;8.55;1
+289;L22;Sesame Chicken;;Lunch Special;8.55;0
+290;L23;Sauteed String Beans;;Lunch Special;8.55;0
+291;L24;Hunan Chicken or Beef;;Lunch Special;8.55;1
+292;L25;Chicken or Shrimp w. Cashew Nuts;;Lunch Special;8.55;0
+293;L26;Hot & Spicy Chicken or Beef;;Lunch Special;8.55;1
+294;L27;Sweet & Sour Pork;;Lunch Special;8.55;0
+295;L28;Beef w. Eggplant;;Lunch Special;8.55;0
+296;L29;Mixed Vegetable;;Lunch Special;8.55;0
+297;L30;Shrimp w. Garlic Sauce;;Lunch Special;8.55;1
+298;L31;Kung Pao Chicken or Shrimp;;Lunch Special;8.55;1
