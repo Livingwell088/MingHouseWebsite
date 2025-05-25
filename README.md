@@ -1,13 +1,17 @@
-<<<<<<< HEAD
 # Ming-House
-=======
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Website for Ming House.
+
+In this repo are two directories: Ming-House(frontend code) and RestaurantAPI(backend and database code)
+
+Run backend first
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the backend directory, you can run:
+
+mvn clean
 
 ### `npm start`
 
