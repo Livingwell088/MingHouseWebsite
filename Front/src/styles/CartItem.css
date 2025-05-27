@@ -1,0 +1,8 @@
+
+.cartCard {
+    width: 90%;
+    margin: 0 1% 1%;
+    /*border: #661a06 0px solid !important;*/
+    border-bottom: #661a06 1px dashed !important;
+    padding: 0 1% 1% 1%;
+}

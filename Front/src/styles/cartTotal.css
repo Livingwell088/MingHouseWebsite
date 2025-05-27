@@ -1,0 +1,32 @@
+
+.cartTotal {
+    width: 90%;
+    /*border: #661a06 1px solid !important;*/
+    text-align: left;
+    margin: auto;
+}
+
+
+.totalCard {
+    width: 80%;
+    padding: 1%;
+
+    background-color: rgba(245, 245, 245, 0) !important;
+    color: #661a06 !important;
+    border: #661a06 1px solid !important;
+}
+
+.tablePrice {
+    text-align: right;
+}
+
+.orderTypeLink {
+    color: black;
+    text-decoration: none;
+}
+
+.orderTypeLink:hover {
+    color: #661a06 !important;
+
+}
+

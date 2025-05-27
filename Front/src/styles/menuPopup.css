@@ -1,0 +1,53 @@
+
+.popup .modal-content{
+    background-color: #f8d7a4 !important;
+    color: #661a06 !important;
+    border: #661a06 2px solid !important;
+}
+
+.menuImg {
+    width: 80%;
+}
+
+.specialText {
+    background-color: #f8d7a4 !important;
+    border: #661a06 2px solid !important;
+    color: #661a06 !important;
+}
+
+
+.popover {
+    background-color: #f8d7a4 !important;
+    color: #661a06 !important;
+    border: #661a06 2px solid !important;
+}
+
+.popoverHeader {
+    background-color: #f8d7a4 !important;
+    color: #661a06 !important;
+    /*border: #661a06 2px solid !important;*/
+}
+
+.popRow{
+    color: #661a06 !important;
+    /*border-top: 1px solid;*/
+    /*border-bottom: 1px solid;*/
+    padding-top: 0 ;
+    padding-bottom: 0;
+}
+
+.popRow:hover {
+    color: rgb(238, 121, 89) !important;
+    border: 1px solid rgb(238, 121, 89) !important;
+
+}
+
+a {
+    color: #661a06 !important;
+}
+
+a:hover {
+    color: rgb(238, 121, 89) !important;
+}
+
+

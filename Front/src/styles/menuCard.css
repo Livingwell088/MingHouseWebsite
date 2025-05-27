@@ -1,0 +1,40 @@
+.menuCard{
+
+    width: 85%;
+    text-align: left;
+    /*opacity: 0;*/
+    background-color: rgba(245, 245, 245, 0) !important;
+    color: #661a06 !important;
+    border: #661a06 2px solid !important;
+    padding: 3%;
+    margin: 3%;
+    /*padding-bottom: 0;*/
+
+    transition: transform .2s;
+}
+
+.menuCard:hover{
+    border-color: rgb(238, 121, 89) !important;
+}
+
+.cardBody1{
+    /*padding: 0 !important;*/
+    padding-bottom: 0 !important;
+    /*margin-bottom: 0;*/
+}
+
+.blank{
+    visibility: hidden;
+}
+
+.addButton{
+    width: 10% !important;
+    background-color: #661a06 !important;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    /*height: inherit;*/
+    height: 80%;
+    /*border-radius: 0 !important;*/
+
+}

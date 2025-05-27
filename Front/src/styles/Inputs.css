@@ -1,0 +1,23 @@
+
+#timeDropdown {
+    width: 80%;
+    height: auto;
+
+
+}
+
+#dropDown {
+    background-color: rgba(245, 245, 245, 0) !important;
+    color: #661a06 !important;
+    border: #661a06 1px solid !important;
+}
+
+.textInput {
+    background-color: rgba(245, 245, 245, 0) !important;
+    color: #661a06 !important;
+    border: #661a06 1px solid !important;
+}
+
+.floatingLabel {
+    margin: 1% 0 1% 0;
+}

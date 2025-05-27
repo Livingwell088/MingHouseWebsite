@@ -1,0 +1,86 @@
+.navbar-brand-custom {
+    width: 100%;
+    /*text-align: center;*/
+    margin-right: 35vw;
+}
+
+
+#navbar{
+    background-color: white;
+    justify-content: center;
+    padding-top: 2%;
+    bottom: 0;
+}
+
+#logo {
+    justify-content: center;
+}
+
+#navbar1{
+    background-color: white;
+    justify-content: center;
+    border-bottom: black solid;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+#header{
+    padding-top: 1%;
+    background-color: #3c342c;
+    width: 100vw !important;
+    /*padding: 0;*/
+}
+
+#nav1{
+    justify-content: center;
+    bottom: 0;
+    align-content: space-between;
+    width: 100%;
+
+}
+
+#nav2{
+    align-self: end;
+    justify-content: end;
+}
+
+.navitem {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.navtext {
+    color: #ec4c45;
+}
+
+#navbar1 {
+    /*background: linear-gradient(to right, #fcefda, #fae3bf);*/
+    background-color: transparent;
+    /*background-color: #fcefda;*/
+
+    padding: 0;
+    border-bottom: 0;
+    /*1px #ec4c45;*!*/
+}
+
+#navcontainer {
+    margin: 0;
+    width: 100%;
+}
+
+#headtext{
+    font-size: 12px;
+    margin-bottom: 0;
+    margin-left: 12%;
+    text-decoration: none;
+
+    /*margin-right: 12%;*/
+}
+
+.fontLarge {
+    font-size: 150px;
+}
+
+a {
+    text-decoration: none;
+}

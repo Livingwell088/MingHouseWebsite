@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h3>Order Confirmation</h3>
+<p>Thank You for Your Order</p>
+<h4>Summary</h4>
+
+<div style= 'border: 1px solid; textAlign: left; padding: 0 3% 0 3%' >
+<table style="width: 80%">
+<tbody>
+<tr>
+    <td><strong>Order Number:</strong> {props.order.phoneNumber}</td>
+    <td><strong>Order for {props.order.orderType}</strong></td>
+</tr>
+
+<tr>
+    <td><strong>Date of Order:</strong> {props.order.datePlaced}</td>
+    {props.order.orderType === "Delivery" && <td><strong>Address: </strong>{(props.order.address).split(",")[0]}</td>}
+</tr>
+
+<tr>
+    <td><strong>Time for {props.order.orderType}:</strong> {props.order.orderTime}</td>
+    {props.order.orderType === "Delivery" && <td>{(props.order.address).split(",", 2)}</td>}
+</tr>
+
+</tbody>
+</table>
+</div>
+
+
+<table style= 'width: 100%' >
+<thead>
+<tr>
+    <th style='width: 70%'>Item</th>
+    <th style='width: 10%; textAlign: center'>Quantity</th>
+    <th class="tablePrice" style='width: 20%'>Price</th>
+</tr>
+
+</thead>
+<tbody>
+{(props.order.items ?? []).map((item, index) => {
+test += item.quantity
+// setTotalQuantity(totalQuantity + item.item.quantity)
+{
+if (item.specialInstruction !== ""){
+return <>
+<tr>
+    <td>{item.item.name} {item.item.size}</td>
+    <td style='textAlign: center'>{item.quantity}</td>
+    <td class="tablePrice">${API.priceAPI.price(item.orderPrice)}</td>
+</tr>
+<tr>
+    <td></td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;{item.specialInstruction}</td>
+    <td></td>
+</tr>
+</>
+}
+else{
+return <tr>
+    <td><Image src={"/images/" + item.item.number + ".png"} style={{width: "10%"}} /> {item.item.name} {item.item.size}</td>
+    <td style={{textAlign: "center"}}>{item.quantity}</td>
+    <td className={"tablePrice"}>${API.priceAPI.price(item.orderPrice)}</td>
+
+</tr>
+}
+
+
+
+}
+})}
+</tbody>
+
+</table>
+
+
+
+
+<table style='width: 100%; textAlign: right'>
+<tbody>
+<tr>
+    <td style='width: 70%'>
+    Subtotal ({test} Items):
+    </td>
+    <td style='width: 10%'>
+    ${props.order.orderPrice}
+    </td>
+</tr>
+
+{props.order.orderType === "Delivery" && <tr>
+    <td style='width: 70%'>
+    Delivery Fee:
+    </td>
+    <td style='width: 10%'>
+    $2.00
+    </td>
+</tr>}
+
+<tr>
+    <td style='width: 70%'>
+    Tax:
+    </td>
+
+    {props.order.orderType === "Pickup" && <td style='width: 10%'>${API.priceAPI.price(props.order.orderPrice * 0.07)}</td>}
+    {props.order.orderType === "Delivery" && <td style='width: 10%'>${API.priceAPI.price((props.order.orderPrice + 2) * 0.07)}</td>}
+</tr>
+
+<tr style='borderTop: 1px solid'>
+<td style='width: 70%'>
+Order Total:
+</td>
+
+{props.order.orderType === "Pickup" && <td style='width: 10%'>${API.priceAPI.price(props.order.orderPrice * 1.07)}</td>}
+{props.order.orderType === "Delivery" && <td style='width: 10%'>${API.priceAPI.price((props.order.orderPrice + 2) * 1.07)}</td>}
+</tr>
+
+</tbody>
+</table>
+
+</body>
+</html>
