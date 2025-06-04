@@ -35,10 +35,13 @@ public class MenuController {
     @GetMapping(path = "/getMenu")
     public List<Menu> getAllMenu(){
 //        menuService.deleteMenu();
+        String currentDirectory = System.getProperty("user.dir");
+        System.out.println("Current directory: " + currentDirectory);
 
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new FileReader("C:/Users/nickl/OneDrive/Desktop/Personal Projects/Rest/RestaurantAPI/src/main/java/com/example/Restaurant/data/menu1.csv"));
+//            reader = new BufferedReader(new FileReader("C:/Users/nickl/OneDrive/Desktop/Personal Projects/Rest/RestaurantAPI/src/main/java/com/example/Restaurant/data/menu1.csv"));
+            reader = new BufferedReader(new FileReader("./src/main/java/com/example/Restaurant/data/menu1.csv"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
