@@ -32,34 +32,11 @@ public class MenuController {
         return "New Menu Item Added!";
     }
 
+
+
     @GetMapping(path = "/getMenu")
     public List<Menu> getAllMenu(){
-//        menuService.deleteMenu();
-        String currentDirectory = System.getProperty("user.dir");
-        System.out.println("Current directory: " + currentDirectory);
 
-        BufferedReader reader = null;
-        try {
-//            reader = new BufferedReader(new FileReader("C:/Users/nickl/OneDrive/Desktop/Personal Projects/Rest/RestaurantAPI/src/main/java/com/example/Restaurant/data/menu1.csv"));
-            reader = new BufferedReader(new FileReader("./src/main/java/com/example/Restaurant/data/menu1.csv"));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        List<String> lines = new ArrayList<>();
-        String line = null;
-        while (true) {
-            try {
-                if (!((line = reader.readLine()) != null)) break;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-//            System.out.println(line);
-            String[] split = line.split(";");
-            Menu current = new Menu(split[0], split[1], split[2], split[3], split[4], split[5], split[6] );
-            add(current);
-        }
-
-//        System.out.println(lines.get(0));
         return menuService.getAllMenu();
     }
 

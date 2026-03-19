@@ -13,6 +13,7 @@ com\example\Restaurant\Controller\CartController.class
 com\example\Restaurant\model\Orders.class
 com\example\Restaurant\Controller\UserController.class
 com\example\Restaurant\Repository\OrderRepository.class
+com\example\Restaurant\DataLoader.class
 com\example\Restaurant\Service\UserService.class
 com\example\securingweb\SessionConfig.class
 com\example\Restaurant\model\Menu.class
