@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const MENU_REST_API_URL = 'http://localhost:8080/menu';
+const MENU_REST_API_URL = 'https://minghousewebsite-backend.onrender.com/menu';
+// http://localhost:8080/menu
 
 class MenuServices {
 

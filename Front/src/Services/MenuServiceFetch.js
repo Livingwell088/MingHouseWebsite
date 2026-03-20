@@ -1,5 +1,7 @@
 
-const MENU_REST_API_URL = 'http://localhost:8080/menu/getMenu';
+const MENU_REST_API_URL = 'https://minghousewebsite-backend.onrender.com/menu/getMenu';
+
+// http://localhost:8080/menu/getMenu
 
 class MenuServiceFetch {
 

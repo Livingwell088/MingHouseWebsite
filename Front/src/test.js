@@ -1,6 +1,8 @@
 
 
-const Menu_REST_API = 'localhost:8080/menu/getMenu';
+const Menu_REST_API = 'https://minghousewebsite-backend.onrender.com/menu/getMenu';
+
+// localhost:8080/menu/getMenu
 
 class APIService {
     getMenu() {
