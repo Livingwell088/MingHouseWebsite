@@ -12,7 +12,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/carts")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://minghousema.com/")
+
 //@SessionAttributes("cart")
 public class CartController {
 

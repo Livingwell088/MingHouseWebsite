@@ -17,7 +17,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/menu")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://minghousema.com/")
+
 public class MenuController {
 
 //    public MenuRepository menuRepository;
