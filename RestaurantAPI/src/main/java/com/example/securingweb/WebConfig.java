@@ -1,5 +1,6 @@
 package com.example.securingweb;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -31,6 +32,11 @@ public class WebConfig {
                         .allowedOrigins("*")
                         .allowedMethods("*")
                         .allowedHeaders("*");
+            }
+
+            @PostConstruct
+            public void init() {
+                System.out.println("WebConfig LOADED");
             }
         };
 
