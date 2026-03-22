@@ -27,6 +27,11 @@ public class MenuController {
 
 //    public MenuRepository menuRepository;
 
+    @GetMapping("/test")
+    public String test() {
+        return "NEW CODE DEPLOYED";
+    }
+
     @Autowired
     private MenuService menuService;
 
