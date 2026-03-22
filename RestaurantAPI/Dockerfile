@@ -56,8 +56,10 @@ FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 
 # Copy built jar file
-COPY target/*.jar app.jar
-COPY ./src src
+#COPY target/*.jar app.jar
+#COPY ./src src
+
+COPY --from=build /app/target/*.jar app.jar
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
