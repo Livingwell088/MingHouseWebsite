@@ -1,8 +1,8 @@
-.navbar-brand-custom {
-    width: 100%;
-    /*text-align: center;*/
-    margin-right: 35vw;
-}
+/*.navbar-brand-custom {*/
+/*    width: 100%;*/
+/*    !*text-align: center;*!*/
+/*    margin-right: 35vw;*/
+/*}*/
 
 
 #navbar{
@@ -13,16 +13,17 @@
 }
 
 #logo {
-    justify-content: center;
+    /*justify-content: center;*/
+    /*height: 100px;*/
 }
 
-#navbar1{
-    background-color: white;
-    justify-content: center;
-    border-bottom: black solid;
-    padding-bottom: 0;
-    margin-bottom: 0;
-}
+/*#navbar1{*/
+/*    background-color: white;*/
+/*    justify-content: center;*/
+/*    border-bottom: black solid;*/
+/*    padding-bottom: 0;*/
+/*    margin-bottom: 0;*/
+/*}*/
 
 #header{
     padding-top: 1%;
@@ -44,28 +45,112 @@
     justify-content: end;
 }
 
-.navitem {
-    margin-left: 5%;
-    margin-right: 5%;
-}
+/*.navitem {*/
+/*    margin-left: 5%;*/
+/*    margin-right: 5%;*/
+/*}*/
 
 .navtext {
-    color: #ec4c45;
+    /*color: #ec4c45;*/
+    color: #FFFFFF;
+    white-space: nowrap;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin: 0;
+    position: relative;
+
+    /*transition: color 0.2s ease, opacity 0.2s ease;*/
+
+}
+
+.navtext::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0;
+    height: 3px;
+    background: #f5c542;
+    transition: width 0.25s ease;
+}
+
+.navtext:hover {
+    color: #f5c542;
+}
+
+.navtext:hover::after {
+    width: 100%;
+}
+
+.navtext.active {
+    color: #f5c542;
 }
 
 #navbar1 {
-    /*background: linear-gradient(to right, #fcefda, #fae3bf);*/
-    background-color: transparent;
-    /*background-color: #fcefda;*/
 
-    padding: 0;
-    border-bottom: 0;
-    /*1px #ec4c45;*!*/
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 18px 40px;
+
+    background:
+            radial-gradient(
+                    circle at 85% 50%,
+                    rgba(255, 200, 100, 0.15),
+                    transparent 40%
+            ),
+            linear-gradient(
+                    to right,
+                    #0f0f0f,
+                    #1a1a1a,
+                    #2b1a0f
+            );
+
+    /* Depth */
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    overflow: hidden;
+
 }
 
-#navcontainer {
-    margin: 0;
-    width: 100%;
+#navbar1::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: url("../../public/images/noise.jpg");
+    opacity: 0.05;
+
+    pointer-events: none;
+    filter: blur(0.5px);
+}
+
+/** {*/
+/*    outline: 1px solid red;*/
+/*}*/
+
+#navLinks {
+    align-items: center;
+    /*display: flex;*/
+    /*gap: 40px;*/
+    /*align-items: center;*/
+    /*flex: 0 0 auto;*/
+    /*flex-wrap: nowrap;*/
+}
+
+.navcontainer {
+    /*margin: 0;*/
+    /*width: 100%;*/
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 #headtext{
@@ -83,4 +168,90 @@
 
 a {
     text-decoration: none;
+}
+
+
+#order-btn{
+    background: linear-gradient(
+            to bottom,
+            /*#f5c542,*/
+            /*#e0a800*/
+            #f7d25a, #d9a600
+    );
+
+    color: #1a1a1a !important;
+    padding: 12px 28px;
+
+    border-radius: 10px;
+    font-weight: 700;
+    border: none;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+
+    /* Glow + depth */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+
+    white-space: nowrap;
+
+    margin-right: 20px;
+    letter-spacing: 1px;
+
+}
+
+#order-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px white;
+    /*rgba(0, 0, 0, 0.4)*/
+
+    color: #FFFFFF !important;
+}
+
+
+
+
+/*Mobile Responsive Design*/
+
+@media (max-width: 768px) {
+    #navbar1 {
+        position: relative;
+    }
+    #logo{
+        margin-right: auto;
+        margin-left: auto;
+    }
+    /*.navcontainer {*/
+    /*    margin-left: 20%;*/
+    /*}*/
+    .navbar-collapse {
+        margin-top: 15px;
+        padding: 20px;
+        border-radius: 12px;
+
+        background: rgba(15,15,15,0.95);
+        backdrop-filter: blur(6px);
+    }
+    #navLinks {
+        align-items: center;
+        text-align: center;
+        width: 100%;
+
+        gap: 20px;
+    }
+    #order-btn {
+        width: 80%;
+        max-width: 280px;
+        margin: 10px auto 20px auto;
+        display: block;
+    }
+
+    .navbar-collapse {
+        transition: all 0.3s ease;
+    }
+
+    .navbar-toggler {
+        border: none;
+        filter: brightness(1.5);
+    }
 }

@@ -4,6 +4,7 @@ C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI
 C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI\src\main\java\com\example\Restaurant\Service\MenuService.java
 C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI\src\main\java\com\example\Restaurant\Service\CartServiceImpl.java
 C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI\src\main\java\com\example\Restaurant\model\CartItem.java
+C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI\src\main\java\com\example\Restaurant\CorsFilterConfig.java
 C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI\src\main\java\com\example\Restaurant\model\Orders.java
 C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI\src\main\java\com\example\Restaurant\Repository\UserRepository.java
 C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI\src\main\java\com\example\Restaurant\Service\OrderService.java
@@ -19,6 +20,7 @@ C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI
 C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI\src\main\java\com\example\Restaurant\Repository\MenuRepository.java
 C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI\src\main\java\com\example\Restaurant\Repository\OrderRepository.java
 C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI\src\main\java\com\example\Restaurant\RestaurantApplication.java
+C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI\src\main\java\com\example\Restaurant\WebConfig.java
 C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI\src\main\java\com\example\Restaurant\model\Menu.java
 C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI\src\main\java\com\example\Restaurant\Controller\EmailController.java
 C:\Users\nickl\OneDrive\Desktop\Personal Projects\MingHouseWebsite\RestaurantAPI\src\main\java\com\example\Restaurant\Repository\CartRepository.java

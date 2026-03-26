@@ -50,5 +50,6 @@
     ]
 
   },
-  "proxy": "https://ming-house-backend.onrender.com"
+  "proxy": "http://localhost:8080/"
 }
+

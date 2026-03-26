@@ -47,54 +47,78 @@ export default function Appbar() {
 
         setLog(window.sessionStorage.getItem("loggedIn"))
 
-        // const handleSessionChange = () => {
-        //     setLog(window.sessionStorage.getItem("loggedIn"))
-        //
-        // }
-        //
-        // window.addEventListener("storage", handleSessionChange)
-        //
-        // return () => {
-        //     window.removeEventListener("storage", handleSessionChange)
-        // }
     }, [log]);
 
 
 
     return (
         <>
-            {/*<div id='header'>*/}
-            {/*    <Row  className={"teko"}>*/}
-            {/*        <Col xs={1}></Col>*/}
-            {/*        <Col xs={3}><p style={{color: "white"}}>217A Chandler St Worcester MA 01609</p></Col>*/}
-            {/*        <Col xs={3}><p style={{color: "white"}}>(508)756-6888</p></Col>*/}
-            {/*        <Col xs={4}>*/}
 
-            {/*            /!*<p style={{color: "white"}}>Sun: 12:00PM-10:30PM</p>*!/*/}
-            {/*            /!*<p style={{color: "white"}}>Tues-Thurs: 11:00AM-10:30PM</p>*!/*/}
-            {/*            /!*<p style={{color: "white"}}>Fri-Sat: 11:00AM-11:00PM</p>*!/*/}
-            {/*            </Col>*/}
-            {/*        <Col xs={1}>*/}
-            {/*            {show && <p>{user}</p>}*/}
-            {/*        </Col>*/}
-            {/*    </Row>*/}
+            {/*<Navbar id='navbar1' className={"teko"}>*/}
+            {/*        <Nav id='nav1' className={"align-items-center "}>*/}
+
+            {/*            <Navbar.Brand id='logo' as={NavLink} to={'/'}>*/}
+            {/*                <Image src={"/images/logo.png"} width='100vm'/>*/}
+            {/*            </Navbar.Brand>*/}
+
+            {/*            <Nav.Item className={"navitem"}>*/}
+            {/*                <Link to={'/'} style={{textDecoration: "none"}}>*/}
+            {/*                    <p className={"navtext"}>ABOUT US</p>*/}
+            {/*                </Link>*/}
+            {/*            </Nav.Item>*/}
+            {/*            <Nav.Item className={"navitem"}>*/}
+            {/*                <Link to="/menupage" style={{textDecoration: "none"}}>*/}
+            {/*                    <p className={"navtext"}>MENU</p>*/}
+            {/*                </Link>*/}
+            {/*            </Nav.Item>*/}
 
 
-            {/*</div>*/}
+            {/*            <Nav.Item className={"navitem"}>*/}
+            {/*                <Link to="/cartPage" style={{textDecoration: "none"}}>*/}
+            {/*                    <p className={"navtext"}>CART</p>*/}
+            {/*                </Link>*/}
+            {/*            </Nav.Item>*/}
+            {/*            <Nav.Item className={"navitem"}>*/}
+            {/*                <Link to="/contactPage" style={{textDecoration: "none"}}>*/}
+            {/*                    <p className={"navtext"}>CONTACT US</p>*/}
+            {/*                </Link>*/}
+            {/*            </Nav.Item>*/}
 
-            {/*<Navbar style={{backgroundColor: "#071740", position: "sticky"}} variant="dark" fixed="top">*/}
-            <Navbar id='navbar1' className={"teko"}>
-                    <Nav id='nav1' className={"align-items-center "}>
+            {/*            <Nav.Item className={"navitem"}>*/}
 
-                        <Navbar.Brand id='logo' as={NavLink} to={'/'}>
-                            <Image src={"/images/logo.png"} width='100vm'/>
-                        </Navbar.Brand>
+            {/*            </Nav.Item>*/}
 
-                        <Nav.Item className={"navitem"}>
-                            <Link to={'/'} style={{textDecoration: "none"}}>
-                                <p className={"navtext"}>ABOUT US</p>
-                            </Link>
-                        </Nav.Item>
+            {/*            <Nav.Item className={"navitem"}>*/}
+
+            {/*                <UserPopover user={log} />*/}
+
+            {/*            </Nav.Item>*/}
+
+            {/*        </Nav>*/}
+
+            {/*</Navbar>*/}
+
+
+            <Navbar id='navbar1' className={"teko"} expand="md">
+                {/*<Nav id='nav1' className={"align-items-center w-100"}>*/}
+                <div className={"container-fluid navcontainer"}>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
+
+                    {/*Left*/}
+                    <Navbar.Brand id='logo' as={NavLink} to={'/'}>
+                        <Image src={"/images/logo.png"} height='70'/>
+                    </Navbar.Brand>
+
+
+                    {/*Right*/}
+
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav className="ms-auto align-items-center">
+                    <Nav id="navLinks" className={"navLinks align-items-center gap-4"}>
+
+                        <Button id="order-btn"> Order Now </Button>
+
                         <Nav.Item className={"navitem"}>
                             <Link to="/menupage" style={{textDecoration: "none"}}>
                                 <p className={"navtext"}>MENU</p>
@@ -103,8 +127,8 @@ export default function Appbar() {
 
 
                         <Nav.Item className={"navitem"}>
-                            <Link to="/cartPage" style={{textDecoration: "none"}}>
-                                <p className={"navtext"}>CART</p>
+                            <Link to="/contactPage" style={{textDecoration: "none"}}>
+                                <p className={"navtext"}>HOURS</p>
                             </Link>
                         </Nav.Item>
                         <Nav.Item className={"navitem"}>
@@ -114,17 +138,27 @@ export default function Appbar() {
                         </Nav.Item>
 
                         <Nav.Item className={"navitem"}>
-
+                            <Link to="/cartPage" style={{textDecoration: "none"}}>
+                                <p className={"navtext"}>CART</p>
+                            </Link>
                         </Nav.Item>
 
-                        <Nav.Item className={"navitem"}>
+                        {/*<Nav.Item className={"navitem"}>*/}
 
-                            <UserPopover user={log} />
+                        {/*    <UserPopover user={log} />*/}
 
-                        </Nav.Item>
-
+                        {/*</Nav.Item>*/}
                     </Nav>
 
+                        </Nav>
+                    </Navbar.Collapse>
+
+
+
+
+                {/*</Nav>*/}
+
+                </div>
             </Navbar>
 
             {/*<hr />*/}
