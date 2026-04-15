@@ -1,0 +1,73 @@
+.break-section {
+    /*width: 100%;*/
+    /*padding: 30px 20px;*/
+
+    /*!* Gold gradient *!*/
+    /*background: linear-gradient(*/
+    /*        to right,*/
+    /*        #f4c76b,*/
+    /*        #e3b04a*/
+    /*);*/
+
+    /*border-top: 4px solid #d4a037;*/
+    /*border-bottom: 4px solid #d4a037;*/
+
+    /*position: relative;;*/
+    /*overflow: hidden;*/
+
+    height: 80px;
+
+    /*background: linear-gradient(*/
+    /*        to right,*/
+    /*        #0f0f0f,*/
+    /*        #1a1a1a*/
+    /*);*/
+
+    background:
+            radial-gradient(
+                    circle at 85% 50%,
+                    rgba(255, 200, 100, 0.15),
+                    transparent 40%
+            ),
+            linear-gradient(
+                    to right,
+                    #0f0f0f,
+                    #1a1a1a,
+                    #2b1a0f
+            );
+
+    /*border-top: 3px solid #d4a037;*/
+    /*border-bottom: 3px solid #d4a037;*/
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+
+    position: relative;;
+    overflow: hidden;
+
+
+
+}
+
+.break-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: url("../../public/images/noise.jpg") center/cover no-repeat;
+    opacity: 0.05;
+
+    pointer-events: none;
+}
+
+.break-content {
+    max-width: 1200px;
+    margin: 0 auto;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}

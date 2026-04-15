@@ -86,7 +86,7 @@ const MenuPage = (props) => {
             {/*<p>{menu}</p>*/}
             <CssBaseline />
             <div className="App teko">
-                <main>
+                {/*<main>*/}
                     <h1 className={"dancing-script fontDark"}>Menu</h1>
                     <div>
 
@@ -102,7 +102,7 @@ const MenuPage = (props) => {
                             {/*)}*/}
                         </div>
                     </div>
-                </main>
+                {/*</main>*/}
                 {/*<header className="App-header">*/}
                 {/*    <img src={logo} className="App-logo" alt="logo" />*/}
                 {/*    <div className="App-intro">*/}

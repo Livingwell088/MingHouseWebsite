@@ -4,12 +4,18 @@
   text-align: center;
   /*background-color: #3c342c;*/
   /*background: linear-gradient(to right, #fae7c8, #f8d7a4);*/
-  background-color: transparent;
+  /*background-color: transparent;*/
 
-  height: 100%;
-  min-height: 100vh;
+  /*min-height: 100vh;*/
   background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 
+}
+
+main {
+  flex: 1;
 }
 
 .App-logo {
@@ -91,3 +97,229 @@ h1 {
   font-size: 150px;
 }
 
+
+
+/*@media (max-width: 768px) {*/
+/*  flex-direction: column;*/
+/*}*/
+
+
+
+
+.hero-right {
+
+  /*mask-image: linear-gradient(*/
+  /*        to left,*/
+  /*        rgba(0,0,0,1) 70%,*/
+  /*        rgba(0,0,0,0) 100%*/
+  /*);*/
+
+  /*-webkit-mask-image: linear-gradient(*/
+  /*        to left,*/
+  /*        rgba(0,0,0,1) 60%,*/
+  /*        rgba(0,0,0,0.85) 70%,*/
+  /*        rgba(0,0,0,0.4) 85%,*/
+  /*        rgba(0,0,0,0) 100%*/
+  /*);*/
+
+  /*mask-image: linear-gradient(*/
+  /*        to left,*/
+  /*        rgba(0,0,0,1) 60%,*/
+  /*        rgba(0,0,0,0.85) 70%,*/
+  /*        rgba(0,0,0,0.4) 85%,*/
+  /*        rgba(0,0,0,0) 100%*/
+  /*);*/
+
+  -webkit-mask-image: linear-gradient(
+          to left,
+          black 65%,
+          transparent 100%
+  );
+  mask-image: linear-gradient(
+          to left,
+          black 65%,
+          transparent 100%
+  );
+
+  filter: blur(0.5px);
+
+  flex: 0.85;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.hero-right img {
+  filter: contrast(1.05) saturate(1.05);
+}
+
+.hero-right::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+          to left,
+          rgba(212, 175, 55, 0) 60%,
+          rgba(212, 175, 55, 0.6) 85%,
+          rgba(212, 175, 55, 1) 100%
+  );
+
+  pointer-events: none;
+}
+
+
+.hero-right::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(
+          circle at 80% 50%,
+          transparent 60%,
+          rgba(0,0,0,0.15) 100%
+  );
+
+  pointer-events: none;
+}
+
+/*#imageDiv::after {*/
+/*  content: "";*/
+/*  position: absolute;*/
+/*  inset: 0;*/
+/*  background: linear-gradient(*/
+/*          to left,*/
+/*          transparent 60%,*/
+/*          rgba(0,0,0,0.15) 100%*/
+/*  );*/
+/*  pointer-events: none;*/
+/*}*/
+
+
+.hero {
+  text-align: center;
+  /*background-color: #3c342c;*/
+  /*background: linear-gradient(to right, #fae7c8, #f8d7a4);*/
+  /*background-color: transparent;*/
+
+  /*min-height: 100vh;*/
+  background-attachment: fixed;
+
+  display: flex;
+  align-items: center;   /* 🔥 vertical centering */
+  justify-content: space-between;
+  height: 100vh;
+  flex-wrap: wrap
+}
+
+
+/* LEFT SIDE (TEXT) */
+.hero-left {
+  flex: 1.15;
+  transform: translateY(-50px);
+  text-align: center;
+  align-items: center;
+
+  /*max-width: 520px;*/
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+}
+
+/* 🔥 THIS FIXES YOUR TEXT POSITION */
+.hero-left h1 {
+  /*font-size: 72px;*/
+  margin-bottom: 20px;
+  font-weight: 500;
+  letter-spacing: 1px;
+
+}
+
+.hero-left p {
+  /*font-size: 14px;*/
+  line-height: 1.6;
+}
+
+
+/*Responsive Design*/
+@media (max-width: 768px) {
+/*  .hero {*/
+/*    flex-direction: column;*/
+/*    text-align: center;*/
+/*    padding: 40px 20px;*/
+/*  }*/
+
+/*  .hero-right {*/
+/*    justify-content: center;*/
+/*    margin-top: 20px;*/
+/*  }*/
+
+/*  .hero-left {*/
+/*    max-width: 100%;*/
+/*  }*/
+/*}*/
+
+/*.hero-buttons {*/
+/*  display: flex;*/
+/*  gap: 16px;*/
+/*  margin-top: 10px;*/
+
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .hero-left {
+    max-width: 100%;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+#hero-order-btn {
+  background: linear-gradient(135deg, #e6b84f, #d4a437);
+  color: #000;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+}
+
+#hero-order-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+#menu-btn {
+  background: transparent;
+  color: #000;
+  border: 2px solid #d4a437;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+
+}
+
+/*html, body, #root {*/
+/*  height: 100%;*/
+/*  margin: 0;*/
+/*}*/
+
+/*.page-wrapper {*/
+/*  min-height: 100vh;*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*}*/
+
+/*.main-content {*/
+/*  flex: 1;*/
+/*}*/

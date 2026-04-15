@@ -1,0 +1,69 @@
+.footer {
+    background:
+            radial-gradient(circle at top right, rgba(212,164,55,0.25), transparent 35%),
+            #111;
+    color: #e8c56a;
+    padding: 60px 80px 30px;
+    border-top: 2px solid #d4a437;
+    bottom: 0;
+}
+
+/*.footer::before {*/
+/*    content: "";*/
+/*    !*position: absolute;*!*/
+/*    !*inset: 0;*!*/
+
+/*    background: url("../../public/images/noise.jpg");*/
+/*    !*opacity: 0.05;*!*/
+
+/*    pointer-events: none;*/
+/*    filter: blur(0.5px);*/
+/*}*/
+
+
+.footer-top-line,
+.footer-bottom-line {
+    height: 1px;
+    background: #d4a437;
+    opacity: 0.5;
+    margin-bottom: 40px;
+}
+
+.footer-bottom-line {
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 60px;
+    flex-wrap: wrap;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 220px;
+}
+
+
+/*.footer-column h3 {*/
+/*    font-size: 24px;*/
+/*    margin-bottom: 20px;*/
+/*    letter-spacing: 2px;*/
+/*}*/
+
+/*.footer-column p {*/
+/*    margin: 8px 0;*/
+/*    color: #f4d98d;*/
+/*}*/
+
+
+
+.footer-copy {
+    text-align: center;
+    opacity: 0.75;
+    font-size: 14px;
+}
+
+

@@ -107,7 +107,7 @@ export default function Appbar() {
 
                     {/*Left*/}
                     <Navbar.Brand id='logo' as={NavLink} to={'/'}>
-                        <Image src={"/images/logo.png"} height='70'/>
+                        <Image src={"/images/LogoOneLine.png"} height='70'/>
                     </Navbar.Brand>
 
 

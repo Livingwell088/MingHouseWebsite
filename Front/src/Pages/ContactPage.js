@@ -12,7 +12,7 @@ const ContactPage = (props) => {
     return <>
         <CssBaseline />
         <div className="App teko">
-            <main>
+            {/*<main>*/}
                 <div style={{
                     backgroundImage: `url(/images/fries.png)`,
                     backgroundSize: "cover",
@@ -92,7 +92,7 @@ const ContactPage = (props) => {
                         API.timeAPI.get()
                     }></Button>
                 </div>
-            </main>
+            {/*</main>*/}
         </div>
         </>
 }

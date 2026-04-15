@@ -7,7 +7,37 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   /*background: linear-gradient(to bottom, #fcefda, #fae3bf);*/
-  background: linear-gradient(to bottom right, #fef9e1, #E5D0AC);
+  /*background: linear-gradient(to bottom right, #fef9e1, #E5D0AC);*/
+
+  /*background: linear-gradient(*/
+  /*        to bottom right,*/
+  /*        #fef9e1 0%,*/
+  /*        #c89b3c 40%,*/
+  /*        #E5D0AC 70%,*/
+  /*        #fef9e1 100%*/
+  /*);*/
+
+
+
+
+  background:
+          radial-gradient(
+                  circle at 25% 40%,
+                  rgba(255, 230, 150, 0.35),
+                  transparent 45%
+          ),
+          radial-gradient(
+                  circle at 80% 60%,
+                  rgba(200, 150, 60, 0.25),
+                  transparent 50%
+          ),
+          linear-gradient(
+                  to right,
+                  #caa24a,
+                  #e6c27a,
+                  #f5e2b8
+          );
+
 }
 /*FEF9E1, E5D0AC, 6D2323*/
 /*#fcefda, #fae3bf*/

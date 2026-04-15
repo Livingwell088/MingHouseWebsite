@@ -15,6 +15,7 @@ import Order from "./Pages/CartPage"
 import CheckoutPage from "./Pages/CheckoutPage";
 import ContactPage from "./Pages/ContactPage";
 import OrdersPage from "./Pages/OrdersPage";
+import Footer from "./components/Footer";
 
 class App extends Component {
 
@@ -31,6 +32,8 @@ class App extends Component {
                     <Route path="/contactPage" element={<ContactPage />} />
                     <Route path="/ordersPage" element={<OrdersPage /> } />
                 </Routes>
+
+                <Footer />
             </Router>
 
         )
