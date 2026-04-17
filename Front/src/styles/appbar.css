@@ -28,7 +28,7 @@
 #header{
     padding-top: 1%;
     background-color: #3c342c;
-    width: 100vw !important;
+    width: 100% !important;
     /*padding: 0;*/
 }
 
@@ -128,7 +128,7 @@
     opacity: 0.05;
 
     pointer-events: none;
-    filter: blur(0.5px);
+    /*filter: blur(0.5px);*/
 }
 
 /** {*/

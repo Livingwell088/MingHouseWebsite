@@ -105,9 +105,10 @@ export default function Appbar() {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
 
-                    {/*Left*/}
-                    <Navbar.Brand id='logo' as={NavLink} to={'/'}>
-                        <Image src={"/images/LogoOneLine.png"} height='70'/>
+                    <Navbar.Brand id="logo">
+                        <Link to="/">
+                            <Image src="/images/LogoOneLine.png" height="70" />
+                        </Link>
                     </Navbar.Brand>
 
 

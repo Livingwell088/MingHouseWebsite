@@ -56,8 +56,8 @@
     position: absolute;
     inset: 0;
 
-    background: url("../../public/images/noise.jpg") center/cover no-repeat;
-    opacity: 0.05;
+    background: url("../../public/images/cloud.png") center/cover no-repeat;
+    opacity: 0.10;
 
     pointer-events: none;
 }

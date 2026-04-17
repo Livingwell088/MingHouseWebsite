@@ -14,72 +14,81 @@ export default function Footer() {
             <div className="footer">
                 <div className="footer-top-line"></div>
 
-                <div className="footer-content">
+                <div className="footer-content" >
 
-                    <div className="footer-column brand">
+                    <div className="footer-column brand" >
 
                         <Image src={"/images/LogoSquare.png"} width='100%'/>
 
                     </div>
 
-                    <div className="footer-column">
-                        {/*<h3>HOURS</h3>*/}
-                        {/*<p>Monday - Thursday</p>*/}
-                        {/*<p>11:00 AM - 9:30 PM</p>*/}
 
-                        {/*<p>Friday - Saturday</p>*/}
-                        {/*<p>11:00 AM - 10:30 PM</p>*/}
+                    <div className="footer-column hours-column teko">
+                        <div className="footer-hours" >
+                            <h3>HOURS</h3>
 
-                        {/*<p>Sunday Closed</p>*/}
 
-                        <table style={{width: "100%"}}>
-                            <tbody>
-                            <tr>
-                                <td><h5><strong>Sunday:</strong></h5></td>
-                                <td style={{textAlign: "right"}}><p>12:00 Noon - 10:30 PM </p></td>
-                            </tr>
-                            <tr>
-                                <td><h5><strong>Monday:</strong></h5></td>
-                                <td style={{textAlign: "right"}}><p>11:00 AM - 10:30 PM </p></td>
-                            </tr>
-                            <tr>
-                                <td><h5><strong>Tuesday:</strong></h5></td>
-                                <td style={{textAlign: "right"}}><p>11:00 AM - 10:30 PM </p></td>
-                            </tr>
-                            <tr>
-                                <td><h5><strong>Wednesday:</strong></h5></td>
-                                <td style={{textAlign: "right"}}><p>11:00 AM - 10:30 PM </p></td>
-                            </tr>
-                            <tr>
-                                <td><h5><strong>Thursday:</strong></h5></td>
-                                <td style={{textAlign: "right"}}><p>11:00 AM - 10:30 PM </p></td>
-                            </tr>
-                            <tr>
-                                <td><h5><strong>Friday:</strong></h5></td>
-                                <td style={{textAlign: "right"}}><p>11:00 AM - 11:00 PM </p></td>
-                            </tr>
-                            <tr>
-                                <td><h5><strong>Saturday:</strong></h5></td>
-                                <td style={{textAlign: "right"}}><p>11:00 AM - 11:00 PM </p></td>
-                            </tr>
-                            </tbody>
-                        </table>
+                            <div className="hours-row">
+                                <span className="hours-day">Sunday</span>
+                                <span className="hours-dots"></span>
+                                <span className="hours-time">12:00 Noon – 10:30 PM</span>
+                            </div>
+
+                            <div className="hours-row">
+                                <span className="hours-day">Monday</span>
+                                <span className="hours-dots"></span>
+                                <span className="hours-time">11:00 AM – 10:30 PM</span>
+                            </div>
+                            <div className="hours-row">
+                                <span className="hours-day">Tuesday</span>
+                                <span className="hours-dots"></span>
+                                <span className="hours-time">11:00 AM – 10:30 PM</span>
+                            </div>
+                            <div className="hours-row">
+                                <span className="hours-day">Wednesday</span>
+                                <span className="hours-dots"></span>
+                                <span className="hours-time">11:00 AM – 10:30 PM</span>
+                            </div>
+                            <div className="hours-row">
+                                <span className="hours-day">Thursday</span>
+                                <span className="hours-dots"></span>
+                                <span className="hours-time">11:00 AM – 10:30 PM</span>
+                            </div>
+
+                            <div className="hours-row">
+                                <span className="hours-day">Friday</span>
+                                <span className="hours-dots"></span>
+                                <span className="hours-time">11:00 AM – 11:00 PM</span>
+                            </div>
+
+                            <div className="hours-row">
+                                <span className="hours-day">Saturday</span>
+                                <span className="hours-dots"></span>
+                                <span className="hours-time">11:00 AM – 11:00 PM</span>
+                            </div>
+
+
+                        </div>
                     </div>
 
-                    <div className="footer-column">
+                    <div className="footer-column teko" >
                         <h3>CONTACT</h3>
-                        <p>217A Chandler St</p>
+                        <p style={{margin: 0}}>217A Chandler St</p>
                         <p>Worcester, MA 01609</p>
+
                         <p>(508) 756-6888</p>
+                        <p>minghousema@gmail.com</p>
                     </div>
 
                 </div>
 
 
+
+
                 <div className="footer-bottom-line"></div>
 
                 <p className="footer-copy">
-                    © 2026 Ming House. All rights reserved.
+                    2026 Ming House.
                 </p>
             </div>
         </>

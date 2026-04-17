@@ -86,3 +86,30 @@ h1-Title {
     color: #661a06 !important;
     border: #661a06 solid !important;
 }
+
+html, body, #root {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/*body {*/
+/*    cursor: url("../../public/images/egg.png") 16 16, auto;*/
+/*}*/
+
+/**:hover {*/
+/*    cursor: url("../../public/images/egg.png") 16 16, auto;*/
+/*}*/
+
+/*a:hover, button:hover {*/
+/*    cursor: url("../../public/images/egg.png") 16 16, pointer !important;*/
+/*}*/

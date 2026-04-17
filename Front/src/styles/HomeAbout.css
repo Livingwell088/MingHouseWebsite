@@ -1,55 +1,121 @@
-.HomeAbout {
-    /*padding: 80px 10%;*/
-    /*background: #0b0b0b;*/
-    text-align: center;
-    background: transparent !important;
-
-    /*display: flex;*/
-    /*align-items: center;*/
+.about-section {
+    padding: 60px 40px;
 }
 
-
-
-
-.map-container {
-    width: 100%;
-    height: 300px;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 2px solid #d4af37;
+.about-wrapper {
+    display: flex;
+    gap: 32px;
+    align-items: stretch;
 }
 
+.about-left,
+.about-right {
+    flex: 1;
+}
+
+.about-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.about-info {
+    text-align: left;
+    padding: 30px;
+}
+
+.about-divider {
+    height: 1px;
+    background: black;
+    opacity: 0.35;
+    width: 80%;
+    margin: 0 0 10px 30px;
+}
+
+.about-hours {
+    text-align: left;
+    padding: 30px;
+    width: 80%;
+}
 
 .hours-row {
     display: flex;
     align-items: center;
+    margin-bottom: 18px;
+    /*font-size: 1.15rem;*/
 }
 
-.hours-day {
+.hours-day,
+.hours-time {
     white-space: nowrap;
 }
 
 .hours-dots {
     flex: 1;
-    border-bottom: 2px dotted #999;
-    margin: 0 10px;
+    border-bottom: 1px dotted rgba(0, 0, 0, 0.45);
+    margin: 0 12px;
 }
 
-.hours-time {
-    white-space: nowrap;
+.map-container {
+    width: 100%;
+    height: 360px;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 2px solid rgba(212, 160, 55, 0.8);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
 }
 
-
-
-
-/*Responsive Design*/
-@media (max-width: 768px) {
+/* tablet */
+@media (max-width: 992px) {
     .about-section {
+        padding: 48px 24px;
+    }
+
+    .about-wrapper {
         flex-direction: column;
     }
 
-    .map-container {
+    .about-left,
+    .about-right {
         width: 100%;
-        height: 250px;
     }
+
+    .about-divider,
+    .about-hours {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .about-info,
+    .about-hours {
+        padding: 20px 0;
+    }
+
+    .map-container {
+        height: 300px;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .about-section {
+        padding: 32px 20px;
+    }
+
+    .about-info p {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .hours-row {
+        font-size: 1rem;
+        margin-bottom: 14px;
+    }
+
+    .map-container {
+        height: 240px;
+        margin-top: 10px;
+    }
+
+
 }
