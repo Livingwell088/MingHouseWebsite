@@ -126,165 +126,322 @@ const MenuPopup = (props) => {
     return (
         <>
 
-            <Modal show={props.show}
-                   // onHide={props.onClose}
-                   onHide={closeModal}
-                // cancel={props.onClose}
-                   backdrop="static"
-                   keyboard={false}
-                   size="lg"
-                   aria-labelledby="contained-modal-title-vcenter"
-                   centered
-                   className={"popup teko"}
-                   onClick={e => e.stopPropagation()}
+            {/*<Modal show={props.show}*/}
+            {/*       onHide={closeModal}*/}
+            {/*       backdrop="static"*/}
+            {/*       keyboard={false}*/}
+            {/*       size="lg"*/}
+            {/*       aria-labelledby="contained-modal-title-vcenter"*/}
+            {/*       centered*/}
+            {/*       className={"popup teko"}*/}
+            {/*       onClick={e => e.stopPropagation()}*/}
+            {/*>*/}
+
+            {/*    <Modal.Header closeButton={true}>*/}
+            {/*        /!*<Modal.Title>{props.name}</Modal.Title>*!/*/}
+            {/*        /!*<Modal.Title>{props.item.filter(obj => obj.size === sizeChosen).name}</Modal.Title>*!/*/}
+
+            {/*    </Modal.Header>*/}
+
+            {/*    <Modal.Body style={{margin: "auto"}}>*/}
+            {/*        <Image src={"/images/" + props.item[0].number + ".png"} className={"menuImg"}*/}
+            {/*               style={{width: "100%",*/}
+            {/*                   margin: "auto"}}*/}
+            {/*               rounded />*/}
+            {/*    </Modal.Body>*/}
+
+            {/*    <Modal.Body>*/}
+            {/*        <Form style={{width: "80%",*/}
+            {/*            margin: "auto"*/}
+            {/*        }}>*/}
+            {/*            <Button onClick={() => {*/}
+            {/*                console.log(props.item)*/}
+
+            {/*                console.log(props.item.filter(obj => obj.size === (props.size || props.item[0].size))[0].price)*/}
+            {/*                console.log(total)*/}
+            {/*                console.log(total * count)*/}
+            {/*            }}>Test</Button>*/}
+
+            {/*            {*/}
+
+            {/*                sizes.map((current, index) => {*/}
+
+            {/*                    // console.log(props.item[current].price)*/}
+            {/*                    // console.log(total)*/}
+
+            {/*                    if (sizes.length === 1){*/}
+            {/*                        if (props.item[current].size === ""){*/}
+            {/*                            return <Form.Check*/}
+            {/*                                id={current}*/}
+            {/*                                name={"options"}*/}
+            {/*                                type={"radio"}*/}
+            {/*                                label={"$" + props.item[current].price}*/}
+            {/*                                value={props.item[current].price}*/}
+            {/*                                checked={total === props.item[current].price}*/}
+            {/*                                onChange={() => {*/}
+            {/*                                    setTotal(props.item[current].price)*/}
+            {/*                                    setSizeChosen(0)*/}
+            {/*                                }}*/}
+
+            {/*                            />*/}
+            {/*                        }*/}
+            {/*                        else if (props.item[current].size !== "("){*/}
+            {/*                            return <Form.Check*/}
+            {/*                                id={current}*/}
+            {/*                                name={"options"}*/}
+            {/*                                type={"radio"}*/}
+            {/*                                label={"(" + props.item[current].size + ") : $" + props.item[current].price}*/}
+            {/*                                value={props.item[current].price}*/}
+            {/*                                checked={total === props.item[current].price}*/}
+            {/*                                onChange={() => {*/}
+            {/*                                    setTotal(props.item[current].price)*/}
+            {/*                                    setSizeChosen(0)*/}
+            {/*                                }}*/}
+
+            {/*                            />*/}
+            {/*                        }*/}
+            {/*                        else{*/}
+            {/*                            return <Form.Check*/}
+            {/*                                id={current}*/}
+            {/*                                name={"options"}*/}
+            {/*                                type={"radio"}*/}
+            {/*                                label={props.item[current].size + ": $" + props.item[current].price}*/}
+            {/*                                value={props.item[current].price}*/}
+            {/*                                checked={total === props.item[current].price}*/}
+            {/*                                onChange={() => {*/}
+            {/*                                    setTotal(props.item[current].price)*/}
+            {/*                                    setSizeChosen(0)*/}
+            {/*                                }}*/}
+
+            {/*                            />*/}
+            {/*                        }*/}
+            {/*                    }*/}
+            {/*                    else{*/}
+            {/*                        // console.log(sizes)*/}
+            {/*                        return <Form.Check*/}
+            {/*                            id={current}*/}
+            {/*                            name={"options"}*/}
+            {/*                            type={"radio"}*/}
+            {/*                            value={props.item[current].price}*/}
+            {/*                            label={props.item[current].size + ": $" + props.item[current].price}*/}
+            {/*                            checked={sizeChosen === props.item[current].size}*/}
+            {/*                            onChange={() => {*/}
+            {/*                                setTotal(props.item[current].price)*/}
+            {/*                                setSizeChosen(props.item[current].size)*/}
+            {/*                            }}*/}
+            {/*                        />*/}
+            {/*                    }*/}
+            {/*                })}*/}
+
+
+
+            {/*        </Form>*/}
+            {/*    </Modal.Body>*/}
+
+            {/*    <Modal.Body>*/}
+            {/*        <Form.Control as="textarea" rows={3} className={"specialText"} placeholder="Special Instructions" value={instructions} onChange={onChange}/>*/}
+            {/*    </Modal.Body>*/}
+
+                {/*<Modal.Footer style={{width: "100%"}} justify-content-between>*/}
+                {/*    /!*<Row style={{width: "100%"}}>*!/*/}
+                {/*    <Button className={"mr-auto mingButtonOutline"} variant="secondary" onClick={() => {*/}
+                {/*        if (props.do === "Edit") {*/}
+                {/*            if (count >= 1) {*/}
+                {/*                setCount(count - 1)*/}
+                {/*            }*/}
+                {/*        }*/}
+                {/*        else {*/}
+                {/*            if (count >= 2) {*/}
+                {/*                setCount(count - 1)*/}
+                {/*            }*/}
+                {/*        }*/}
+                {/*    }}>*/}
+                {/*        -*/}
+                {/*    </Button>*/}
+                {/*    <h2>{count}</h2>*/}
+                {/*    <Button className={"mingButtonOutline"} variant="secondary" onClick={() => {*/}
+                {/*        setCount(count + 1)*/}
+                {/*    }}>*/}
+                {/*        +*/}
+                {/*    </Button>*/}
+
+                {/*    <Button className={"mingButton"} variant="primary" onClick={() => {*/}
+                {/*        let id = null;*/}
+                {/*        if (props.do === "Edit") {*/}
+                {/*            id = props.id;*/}
+                {/*        }*/}
+
+                {/*        let itemSize = {}*/}
+                {/*        for (let q = 0; q < props.item.length; q++) {*/}
+                {/*            if (props.item[q].size === sizeChosen) {*/}
+                {/*                itemSize = props.item[q]*/}
+                {/*            }*/}
+                {/*        }*/}
+
+                {/*        addToCart(props.name, total * count, count, itemSize, instructions, props.do, id)*/}
+                {/*    }}>Add ${API.priceAPI.price(total * count)}</Button>*/}
+
+                {/*</Modal.Footer>*/}
+
+
+            {/*</Modal>*/}
+
+            <Modal
+                show={props.show}
+                onHide={closeModal}
+                backdrop="static"
+                keyboard={false}
+                centered
+                size="lg"
+                className="popup teko"
+                onClick={e => e.stopPropagation()}
             >
 
-                <Modal.Header closeButton={true}>
-                    {/*<Modal.Title>{props.name}</Modal.Title>*/}
-                    {/*<Modal.Title>{props.item.filter(obj => obj.size === sizeChosen).name}</Modal.Title>*/}
-
-                </Modal.Header>
-
-                <Modal.Body style={{margin: "auto"}}>
-                    <Image src={"/images/" + props.item[0].number + ".png"} className={"menuImg"}
-                           style={{width: "100%",
-                               margin: "auto"}}
-                           rounded />
-                </Modal.Body>
+                <Modal.Header closeButton />
 
                 <Modal.Body>
-                    <Form style={{width: "80%",
-                        margin: "auto"
-                    }}>
-                        <Button onClick={() => {
-                            console.log(props.item)
+                    <h2 className="popupTitle">{props.name}</h2>
 
-                            console.log(props.item.filter(obj => obj.size === (props.size || props.item[0].size))[0].price)
-                            console.log(total)
-                            console.log(total * count)
-                        }}>Test</Button>
+                    <div className="popupContent">
+                        <div className="popupLeft">
+                            <div className="popupImageCard">
+                                {/*<Image*/}
+                                {/*    src={"/images/" + props.item[0].number + ".png"}*/}
+                                {/*    className="menuImg"*/}
+                                {/*    rounded={false}*/}
+                                {/*/>*/}
+                                <Image
+                                    src={"/images/" + "1" + ".png"}
+                                    className="menuImg"
+                                    rounded={false}
+                                />
+                                <div className="popupImageCaption">
+                                    <strong>{props.name}</strong>
+                                </div>
+                            </div>
+                        </div>
 
-                        {
+                        <div className="popupRight">
+                            <div className="popupDesc">Spicy, sweet & tangy chicken</div>
 
-                            sizes.map((current, index) => {
+                            <div>
+                                <div className="popupOptionsTitle">Options</div>
+                                {/*<Form className="popupOptions">*/}
+                                {/*    {sizes.map((current) => (*/}
+                                {/*        <Form.Check*/}
+                                {/*            key={current}*/}
+                                {/*            id={current}*/}
+                                {/*            name="options"*/}
+                                {/*            type="radio"*/}
+                                {/*            label={*/}
+                                {/*                props.item[current].size*/}
+                                {/*                    ? `${props.item[current].size}: $${props.item[current].price}`*/}
+                                {/*                    : `$${props.item[current].price}`*/}
+                                {/*            }*/}
+                                {/*            checked={sizeChosen === props.item[current].size}*/}
+                                {/*            onChange={() => {*/}
+                                {/*                setTotal(props.item[current].price);*/}
+                                {/*                setSizeChosen(props.item[current].size);*/}
+                                {/*            }}*/}
+                                {/*        />*/}
+                                {/*    ))}*/}
+                                {/*</Form>*/}
 
-                                // console.log(props.item[current].price)
-                                // console.log(total)
+                                <Form className="popupOptions">
+                                    {sizes.map((current) => {
+                                        const option = props.item[current];
+                                        const checked = sizeChosen === option.size;
 
-                                if (sizes.length === 1){
-                                    if (props.item[current].size === ""){
-                                        return <Form.Check
-                                            id={current}
-                                            name={"options"}
-                                            type={"radio"}
-                                            label={"$" + props.item[current].price}
-                                            value={props.item[current].price}
-                                            checked={total === props.item[current].price}
-                                            onChange={() => {
-                                                setTotal(props.item[current].price)
-                                                setSizeChosen(0)
-                                            }}
+                                        return (
+                                            <label
+                                                key={current}
+                                                htmlFor={`option-${current}`}
+                                                className={`popupOptionRow ${checked ? "selected" : ""}`}
+                                            >
+                                                <input
+                                                    id={`option-${current}`}
+                                                    type="radio"
+                                                    name="options"
+                                                    checked={checked}
+                                                    onChange={() => {
+                                                        setTotal(Number(option.price));
+                                                        setSizeChosen(option.size);
+                                                    }}
+                                                />
 
-                                        />
-                                    }
-                                    else if (props.item[current].size !== "("){
-                                        return <Form.Check
-                                            id={current}
-                                            name={"options"}
-                                            type={"radio"}
-                                            label={"(" + props.item[current].size + ") : $" + props.item[current].price}
-                                            value={props.item[current].price}
-                                            checked={total === props.item[current].price}
-                                            onChange={() => {
-                                                setTotal(props.item[current].price)
-                                                setSizeChosen(0)
-                                            }}
+                                                <span className="customRadio"></span>
 
-                                        />
-                                    }
-                                    else{
-                                        return <Form.Check
-                                            id={current}
-                                            name={"options"}
-                                            type={"radio"}
-                                            label={props.item[current].size + ": $" + props.item[current].price}
-                                            value={props.item[current].price}
-                                            checked={total === props.item[current].price}
-                                            onChange={() => {
-                                                setTotal(props.item[current].price)
-                                                setSizeChosen(0)
-                                            }}
+                                                <span className="popupOptionText">
+                                                  {option.size ? option.size.replace(/^\[/, "")
+                                                      .replace(/\]$/, "")
+                                                      .replace(/^w\.\s*/i, "With ")
+                                                      .trim() : props.name}
+                                                </span>
 
-                                        />
-                                    }
-                                }
-                                else{
-                                    // console.log(sizes)
-                                    return <Form.Check
-                                        id={current}
-                                        name={"options"}
-                                        type={"radio"}
-                                        value={props.item[current].price}
-                                        label={props.item[current].size + ": $" + props.item[current].price}
-                                        checked={sizeChosen === props.item[current].size}
-                                        onChange={() => {
-                                            setTotal(props.item[current].price)
-                                            setSizeChosen(props.item[current].size)
-                                        }}
-                                    />
-                                }
-                            })}
+                                                <span className="popupOptionPrice">
+                                                  ${API.priceAPI.price(Number(option.price))}
+                                                </span>
+                                            </label>
+                                        );
+                                    })}
+                                </Form>
+                            </div>
 
-
-
-                    </Form>
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                className="specialText"
+                                placeholder="Special Instructions"
+                                value={instructions}
+                                onChange={onChange}
+                            />
+                        </div>
+                    </div>
                 </Modal.Body>
 
-                <Modal.Body>
-                    <Form.Control as="textarea" rows={3} className={"specialText"} placeholder="Special Instructions" value={instructions} onChange={onChange}/>
-                </Modal.Body>
-
-                <Modal.Footer style={{width: "100%"}} justify-content-between>
-                    {/*<Row style={{width: "100%"}}>*/}
-                    <Button className={"mr-auto mingButtonOutline"} variant="secondary" onClick={() => {
-                        if (props.do === "Edit") {
-                            if (count >= 1) {
-                                setCount(count - 1)
+                <Modal.Footer>
+                    <div className="popupQtyRow">
+                        <Button className="mingButtonOutline" variant="secondary" onClick={() => {
+                            if (props.do === "Edit") {
+                                if (count >= 1) {
+                                    setCount(count - 1)
+                                }
                             }
-                        }
-                        else {
-                            if (count >= 2) {
-                                setCount(count - 1)
+                            else {
+                                if (count >= 2) {
+                                    setCount(count - 1)
+                                }
                             }
-                        }
-                    }}>
-                        -
-                    </Button>
-                    <h2>{count}</h2>
-                    <Button className={"mingButtonOutline"} variant="secondary" onClick={() => {
-                        setCount(count + 1)
-                    }}>
-                        +
-                    </Button>
+                        }}>-</Button>
+                        <div className="popupQtyValue">{count}</div>
+                        <Button className="mingButtonOutline" variant="secondary" onClick={() => {
+                            setCount(count + 1)
+                        }}>+</Button>
+                    </div>
 
-                    <Button className={"mingButton"} variant="primary" onClick={() => {
-                        let id = null;
-                        if (props.do === "Edit") {
-                            id = props.id;
-                        }
-
-                        let itemSize = {}
-                        for (let q = 0; q < props.item.length; q++) {
-                            if (props.item[q].size === sizeChosen) {
-                                itemSize = props.item[q]
+                    <div className="popupActions">
+                        <Button className="mingButtonOutline" variant="secondary" onClick={closeModal}>
+                            Cancel
+                        </Button>
+                        <Button className="mingButton" variant="primary" onClick={() => {
+                            let id = null;
+                            if (props.do === "Edit") {
+                                id = props.id;
                             }
-                        }
 
-                        addToCart(props.name, total * count, count, itemSize, instructions, props.do, id)
-                    }}>Add ${API.priceAPI.price(total * count)}</Button>
+                            let itemSize = {}
+                            for (let q = 0; q < props.item.length; q++) {
+                                if (props.item[q].size === sizeChosen) {
+                                    itemSize = props.item[q]
+                                }
+                            }
 
+                            addToCart(props.name, total * count, count, itemSize, instructions, props.do, id)
+                        }}>
+                            Add ${API.priceAPI.price(total * count)}
+                        </Button>
+                    </div>
                 </Modal.Footer>
-
 
             </Modal>
 

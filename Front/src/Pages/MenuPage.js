@@ -83,10 +83,10 @@ const MenuPage = (props) => {
     // console.log(menu)
     return (
         <>
-            {/*<p>{menu}</p>*/}
+
             <CssBaseline />
             <div className="App teko">
-                {/*<main>*/}
+
                     <h1 className={"dancing-script fontDark"}>Menu</h1>
                     <div>
 
@@ -94,28 +94,15 @@ const MenuPage = (props) => {
 
                             <MenuComponent menu={result} categories={categories} types={types}/>
 
-
-                            {/*{groups.map(group =>*/}
-                            {/*    <div key={group.id}>*/}
-                            {/*        {group.name}, {group.size}*/}
-                            {/*    </div>*/}
-                            {/*)}*/}
                         </div>
                     </div>
-                {/*</main>*/}
-                {/*<header className="App-header">*/}
-                {/*    <img src={logo} className="App-logo" alt="logo" />*/}
-                {/*    <div className="App-intro">*/}
-                {/*        <h2>JUG List</h2>*/}
-                {/*        {groups.map(group =>*/}
-                {/*            <div key={group.id}>*/}
-                {/*                {group.name}, {group.size}*/}
-                {/*            </div>*/}
-                {/*        )}*/}
-                {/*    </div>*/}
-                {/*</header>*/}
+
             </div>
-        </>
+        {/*</>*/}
+
+
+            </>
+
     );
 }
 
