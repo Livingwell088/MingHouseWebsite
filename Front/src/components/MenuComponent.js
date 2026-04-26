@@ -10,16 +10,158 @@ import MenuCard from "./MenuCard";
 import {useEffect, useState} from "react";
 import API from "../api";
 import {type} from "@testing-library/user-event/dist/type";
+import {useNavigate} from "react-router-dom";
+import CartItem from "./CartItem";
 
 
 
 
 const MenuComponent = (props) => {
 
-    const [menu, setMenu] = useState(props.menu);
     const [categories, setCategories] = useState(props.categories);
     const [types, setTypes] = useState(props.types)
 
+    const [cart, setCart] = useState([]);
+    const [fullMenu, setFullMenu] = useState([[]])
+    const [subtotal, setSubtotal] = useState(0.0)
+
+    const [orderType, setOrderType] = useState(window.sessionStorage.getItem('orderType'));
+    const [orderTime, setOrderTime] = useState(window.sessionStorage.getItem('orderTime'));
+
+
+    const [showPopup, setShowPopup] = useState(false)
+    const handleShow = () => setShowPopup(true);
+    const handleClose = () => setShowPopup(false);
+
+    const navigate = useNavigate();
+
+
+    const [showError, setShowError] = useState(false)
+    const [errorHeading, setErrorHeading] = useState("")
+    const [errorContent, setErrorContent] = useState("")
+
+
+
+    const onChangeOrderType = (type) => {
+        window.sessionStorage.setItem("orderType", type);
+        setOrderType(type);
+    }
+
+    const onChangeOrderTime = (time) => {
+        window.sessionStorage.setItem("orderTime", time);
+        setOrderTime(time);
+    }
+
+
+    const testing = async () => {
+        let currentData = window.sessionStorage.getItem("sessionId")
+
+        if (window.sessionStorage.getItem("loggedIn") === "true"){
+            currentData = window.sessionStorage.getItem("username")
+        }
+        await API.cartAPI.get(currentData)
+            .then((data) => data.data)
+            .then(async (data) => {
+                // console.log(data)
+
+                let full = []
+                let price = 0.0
+                for (let i = 0; i < data.length; i++) {
+                    const number = data[i].item.number;
+
+                    price += await data[i].orderPrice;
+
+
+                    await API.menuAPI.getByNumber(number)
+                        .then((res) => res.data)
+                        .then((res) => full.push(res))
+                        .catch((error) => console.log(error.message))
+
+                }
+
+                setCart(data);
+                setFullMenu(full);
+                setSubtotal(price)
+
+            })
+            .catch((error) => console.log(error.message))
+    }
+
+    const updateCart = async () => {
+        console.log("Updating Cart")
+        setCart([]);
+        // setTimeout(() => {
+        //     API.orderAPI.get()
+        //         .then((res) => setCart(res.data))
+        //         .catch((error) => console.log(error.message))
+        // })
+
+        await testing()
+    }
+
+    const checkIfLogged = () => {
+
+        if (sessionStorage.getItem("loggedIn") === "false"){
+
+            console.log("NOT LOGGED IN")
+
+            if (orderType !== "Select One"){
+                handleShow()
+
+            }
+            else{
+                setErrorHeading("Error")
+                setErrorContent("Please select an order type: Pickup or Delivery")
+                setShowError(true)
+
+                // alert("Select an Order Type")
+                // return <ErrorAlert />
+            }
+        }
+        else {
+
+            if (cart.length === 0){
+                setErrorHeading("Error")
+                setErrorContent("Cart is Empty. Cannot Move to Checkout with An Empty Cart.")
+                setShowError(true)
+            }
+            else{
+                navigate('/checkoutPage', {state: {orderType: orderType, subtotal: subtotal, orderTime: orderTime, cart: cart}});
+
+            }
+
+        }
+    }
+
+    const makeOrder = async () => {
+
+        // console.log("Make Order");
+
+        checkIfLogged()
+
+
+    }
+
+
+
+
+    useEffect( () => {
+
+        testing()
+
+    }, [cart, subtotal, fullMenu])
+
+    useEffect(() => {
+        if (window.sessionStorage.getItem("orderType") === null){
+            window.sessionStorage.setItem("orderType", "Select One")
+        }
+    }, []);
+
+    useEffect(() => {
+        if (window.sessionStorage.getItem("orderTime") === null){
+            window.sessionStorage.setItem("orderTime", "Time")
+        }
+    })
 
     const test = (type) => {
 
@@ -48,6 +190,43 @@ const MenuComponent = (props) => {
             setTypes(types.filter(noLunch))
         }
     }, [categories, types]);
+
+
+    const minus = (item) => {
+
+        // console.log("Minus")
+        let current = item;
+
+        console.log(current)
+
+        if (current.quantity === 1){
+            API.cartAPI.delete(current.orderName, current.orderPrice, current.quantity, current.item, current.cartId, current.specialInstruction)
+                .then(r => props.updateCart())
+                .catch((error) => console.log(error.message))
+        }
+        else{
+            API.cartAPI.delete(current.orderName, current.orderPrice, current.quantity, current.item, current.cartId, current.specialInstruction)
+                .then(r => {
+                    props.updateCart();
+                })
+                .catch((error) => console.log(error.message))
+        }
+    }
+
+    const plus = (item) => {
+        let current = item;
+
+
+        API.cartAPI.create(
+            current.orderName, current.item.price, 1, current.item, current.cartId, current.specialInstruction)
+            .then(r => props.updateCart())
+            .catch((error) => console.log(error.message))
+
+        // console.log(current)
+
+
+
+    }
 
 
 
@@ -299,7 +478,72 @@ const MenuComponent = (props) => {
             </section>
 
             <aside className="menu-cart">
+                <div className="cartHeader">
+                    <h2>Your Cart</h2>
+                    <span className="cartCount">1</span>
+                </div>
+
+
+                <div className="cartItems">
+                    {cart.length === 0 ? (
+                        <div className="emptyCart">
+                            <h5> Your cart is empty </h5>
+                            <p>Add an item from the menu to get started.</p>
+
+                        </div>
+                    ) : (
+                        cart.length > 0 && cart.map((item, index) => {
+                                return <div className="cartItem">
+                                    <div className="cartItemTop">
+                                        <h5 className="cartItemName">{item.item.number + ". " + item.item.name}</h5>
+                                        <span className="cartItemPrice">${API.priceAPI.price(item.orderPrice)}</span>
+                                    </div>
+
+                                    <div className="cartItemRow">
+                                        <div className="cartItemModifier">
+                                            {/*{(item.item.size > 1) && item.item.size}*/}
+                                            {item.item.size}
+                                        </div>
+
+                                        <div className="cartItemQuantity">
+                                            <button className="qtyBtn" onClick={() => minus(item)}>-</button>
+                                            <span className="qtyValue">{item.quantity}</span>
+                                            <button className="qtyBtn" onClick={() => plus(item)}>+</button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            })
+                    )
+                    }
+
+
+
+                </div>
+
+
+
+                <div className="cartSummary">
+                    <div className="cartRow">
+                        <span>Subtotal</span>
+                        <span>${API.priceAPI.price(subtotal)}</span>
+                    </div>
+
+                    <div className="cartRow">
+                        <span>Tax</span>
+                        <span>${API.priceAPI.price(subtotal * 0.07)}</span>
+                    </div>
+
+                    <div className="cartRow totalRow">
+                        <span>Total</span>
+                        <span>${API.priceAPI.price(subtotal * 1.07)}</span>
+                    </div>
+                </div>
+
+                <button className="cartCheckoutBtn" disabled={cart.length === 0}>Checkout</button>
             </aside>
+
 
         </main>
     )
