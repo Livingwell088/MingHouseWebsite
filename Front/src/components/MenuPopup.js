@@ -51,6 +51,7 @@ const MenuPopup = (props) => {
                     .catch((error) => console.log(error.message))
             }
             else{
+                console.log("Submitting instructions:", instructions);
                 // console.log(name.toString(), total, quantity, item, sessionStorage.getItem("sessionId").toString(), instructions)
                 API.cartAPI.edit(
                     id, name.toString(), total, quantity, item, instructions, addTo
@@ -68,10 +69,37 @@ const MenuPopup = (props) => {
 
 
     }
-    //
-    const [total, setTotal] = useState(props.item.filter(obj => obj.size === (props.size || props.item[0].size))[0].price)
-    const [sizeChosen, setSizeChosen] = useState(props.size || props.item[0].size)
-    const [instructions, setInstructions] = useState(props.instructions || "")
+
+    const getInitialSize = () => {
+        if (props.do === "Edit" && props.cartItem?.item?.size) {
+            return props.cartItem.item.size;
+        }
+        return props.item[0]?.size;
+    };
+
+    const getInitialTotal = () => {
+        const size = getInitialSize();
+        const match = props.item.find(obj => obj.size === size);
+        return Number(match?.price || props.item[0]?.price);
+    };
+
+    const getInitialInstructions = () => {
+        if (props.do === "Edit") {
+            return props.cartItem?.specialInstruction || "";
+        }
+
+        return "";
+    };
+
+    const [total, setTotal] = useState(getInitialTotal());
+
+    const [sizeChosen, setSizeChosen] = useState(getInitialSize());
+
+    const [instructions, setInstructions] = useState(getInitialInstructions());
+
+    // const [total, setTotal] = useState(props.item.filter(obj => obj.size === (props.size || props.item[0].size))[0].price)
+    // const [sizeChosen, setSizeChosen] = useState(props.size || props.item[0].size)
+    // const [instructions, setInstructions] = useState(props.instructions || "")
 
 
     const onChange = (event) => setInstructions(event.target.value);
@@ -101,27 +129,36 @@ const MenuPopup = (props) => {
     }
 
     const closeModal = () => {
-        clearStates()
+        // clearStates()
         props.onClose()
     }
 
+    // useEffect(() => {
+    //     console.log(props)
+    //     if (props.do === "Edit"){
+    //         // console.log("Entered")
+    //         setTotal(props.item.filter(obj => obj.size === (props.size || props.item[0].size))[0].price)
+    //         props.update()
+    //         setCount(props.quantity)
+    //     }
+    //     else{
+    //         // setCount(1)
+    //         setCount(props.quantity)
+    //
+    //     }
+    // }, [props.quantity]);
+
     useEffect(() => {
-        console.log(props)
-        if (props.do === "Edit"){
-            // console.log("Entered")
-            setTotal(props.item.filter(obj => obj.size === (props.size || props.item[0].size))[0].price)
-            props.update()
-            setCount(props.quantity)
-        }
-        else{
-            // setCount(1)
-            setCount(props.quantity)
+        if (!props.show) return;
 
-        }
-    }, [props.quantity]);
+        const size = getInitialSize();
+        const match = props.item.find(obj => obj.size === size);
 
-    // console.log(props)
-
+        setSizeChosen(size);
+        setTotal(Number(match?.price || props.item[0]?.price));
+        setCount(props.quantity || 1);
+        setInstructions(getInitialInstructions());
+    }, [props.show]);
 
     return (
         <>
@@ -355,33 +392,58 @@ const MenuPopup = (props) => {
                                         return (
                                             <label
                                                 key={current}
-                                                htmlFor={`option-${current}`}
                                                 className={`popupOptionRow ${checked ? "selected" : ""}`}
+                                                onClick={() => {
+                                                    setTotal(Number(option.price));
+                                                    setSizeChosen(option.size);
+                                                }}
                                             >
                                                 <input
-                                                    id={`option-${current}`}
                                                     type="radio"
                                                     name="options"
                                                     checked={checked}
-                                                    onChange={() => {
-                                                        setTotal(Number(option.price));
-                                                        setSizeChosen(option.size);
-                                                    }}
+                                                    readOnly
                                                 />
 
                                                 <span className="customRadio"></span>
 
                                                 <span className="popupOptionText">
-                                                  {option.size ? option.size.replace(/^\[/, "")
-                                                      .replace(/\]$/, "")
-                                                      .replace(/^w\.\s*/i, "With ")
-                                                      .trim() : props.name}
-                                                </span>
+                                                    {option.size ? option.size.trim() : props.name}
+                                                  </span>
 
                                                 <span className="popupOptionPrice">
-                                                  ${API.priceAPI.price(Number(option.price))}
-                                                </span>
+                                                    ${API.priceAPI.price(Number(option.price))}
+                                                  </span>
                                             </label>
+                                            // <label
+                                            //     key={current}
+                                            //     htmlFor={`option-${current}`}
+                                            //     className={`popupOptionRow ${checked ? "selected" : ""}`}
+                                            // >
+                                            //     <input
+                                            //         id={`option-${current}`}
+                                            //         type="radio"
+                                            //         name="options"
+                                            //         checked={checked}
+                                            //         onChange={() => {
+                                            //             setTotal(Number(option.price));
+                                            //             setSizeChosen(option.size);
+                                            //         }}
+                                            //     />
+                                            //
+                                            //     <span className="customRadio"></span>
+                                            //
+                                            //     <span className="popupOptionText">
+                                            //       {option.size ? option.size.replace(/^\[/, "")
+                                            //           .replace(/\]$/, "")
+                                            //           .replace(/^w\.\s*/i, "With ")
+                                            //           .trim() : props.name}
+                                            //     </span>
+                                            //
+                                            //     <span className="popupOptionPrice">
+                                            //       ${API.priceAPI.price(Number(option.price))}
+                                            //     </span>
+                                            // </label>
                                         );
                                     })}
                                 </Form>

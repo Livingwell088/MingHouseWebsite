@@ -400,6 +400,29 @@
 }
 
 
+.cartItemInstructions {
+    margin-top: 6px;
+    padding-left: 10px;
+
+    font-size: 0.9rem;
+    font-style: italic;
+
+    color: #8a5a3a;
+
+    /*border-left: 2px solid rgba(122, 42, 10, 0.2);*/
+    text-align: left;
+}
+
+.cartItemInstructions::before {
+    content: "“";
+}
+
+.cartItemInstructions::after {
+    content: "”";
+}
+
+
+
 
 /*Responsive Design*/
 @media (max-width: 900px) {

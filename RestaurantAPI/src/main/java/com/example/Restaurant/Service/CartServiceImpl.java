@@ -119,49 +119,75 @@ public class CartServiceImpl implements CartService{
         return cartRepository.findById(id);
     }
 
+//    @Override
+//    public Cart updateCartItem(CartItem item) {
+//
+//        System.out.println(item.toString());
+//
+//
+////        cartItemRepository.saveAndFlush(item);
+////        List<CartItem> items = cartItemRepository.findAllByCartId(item.getCartId());
+////
+////
+////        Optional<Cart> cart = cartRepository.findById(item.getCartId());
+////        cart = cartRepository.findById(item.getCartId());
+////
+////        Cart newCart = cart.get();
+////        newCart.setCartItems(items);
+////
+////
+////
+////        cartRepository.saveAndFlush(newCart);
+////        return new Cart();
+//
+////        deleteCartItemById(String.valueOf(item.getId()));
+//
+//        CartItem currentItem = cartItemRepository.findById(item.getId()).get();
+//
+//        String cartId = item.getCartId();
+//        Cart cart = getCartById(cartId).orElseThrow(() -> new EntityNotFoundException(
+//                String.format("Carts with id %d not found.", cartId)));
+//
+//        Long currentId = cartItemRepository.findAllByItemAndSpecialInstruction(cartId, currentItem.getItem(), item.getSpecialInstruction());
+//        CartItem current = cartItemRepository.getById(currentId);
+//        cart.getCartItems().remove(current);
+//        cartItemRepository.deleteById(currentId);
+//
+//
+//        if (item.getQuantity() > 0){
+//            addItemToCart(item);
+//        }
+//
+//        return new Cart();
+//
+//
+//
+//    }
+
     @Override
     public Cart updateCartItem(CartItem item) {
 
         System.out.println(item.toString());
 
-
-//        cartItemRepository.saveAndFlush(item);
-//        List<CartItem> items = cartItemRepository.findAllByCartId(item.getCartId());
-//
-//
-//        Optional<Cart> cart = cartRepository.findById(item.getCartId());
-//        cart = cartRepository.findById(item.getCartId());
-//
-//        Cart newCart = cart.get();
-//        newCart.setCartItems(items);
-//
-//
-//
-//        cartRepository.saveAndFlush(newCart);
-//        return new Cart();
-
-//        deleteCartItemById(String.valueOf(item.getId()));
-
-        CartItem currentItem = cartItemRepository.findById(item.getId()).get();
+        CartItem currentItem = cartItemRepository.findById(item.getId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Cart item with id " + item.getId() + " not found."
+                ));
 
         String cartId = item.getCartId();
+
         Cart cart = getCartById(cartId).orElseThrow(() -> new EntityNotFoundException(
-                String.format("Carts with id %d not found.", cartId)));
+                "Cart with id " + cartId + " not found."
+        ));
 
-        Long currentId = cartItemRepository.findAllByItemAndSpecialInstruction(cartId, currentItem.getItem(), item.getSpecialInstruction());
-        CartItem current = cartItemRepository.getById(currentId);
-        cart.getCartItems().remove(current);
-        cartItemRepository.deleteById(currentId);
+        cart.getCartItems().remove(currentItem);
+        cartItemRepository.deleteById(item.getId());
 
-
-        if (item.getQuantity() > 0){
+        if (item.getQuantity() > 0) {
             addItemToCart(item);
         }
 
-        return new Cart();
-
-
-
+        return cart;
     }
 
 

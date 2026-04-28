@@ -12,6 +12,7 @@ import API from "../api";
 import {type} from "@testing-library/user-event/dist/type";
 import {useNavigate} from "react-router-dom";
 import CartItem from "./CartItem";
+import MenuPopup from "./MenuPopup";
 
 
 
@@ -29,9 +30,20 @@ const MenuComponent = (props) => {
     const [orderTime, setOrderTime] = useState(window.sessionStorage.getItem('orderTime'));
 
 
+    const [selectedItem, setSelectedItem] = useState(null);
     const [showPopup, setShowPopup] = useState(false)
-    const handleShow = () => setShowPopup(true);
-    const handleClose = () => setShowPopup(false);
+    const [popupMode, setPopupMode] = useState("Add");
+
+    const handleShow = (item, mode = "Add") => {
+        console.log(item, mode);
+        setSelectedItem(item)
+        setShowPopup(true);
+        setPopupMode(mode)
+    }
+    const handleClose = () => {
+        setShowPopup(false);
+        setSelectedItem(null);
+    }
 
     const navigate = useNavigate();
 
@@ -228,6 +240,19 @@ const MenuComponent = (props) => {
 
     }
 
+    const getItemOptions = (cartItem) => {
+        if (!cartItem?.item) return [];
+
+        const options = Object.values(props.menu || {})
+            .flat()
+            .filter(menuItem =>
+                menuItem &&
+                menuItem.number === cartItem.item.number &&
+                menuItem.name === cartItem.item.name
+            );
+
+        return options.length > 0 ? options : [cartItem.item];
+    };
 
 
     // console.log(props.menu)
@@ -405,7 +430,9 @@ const MenuComponent = (props) => {
                                               name={current.name}
                                               size={[current.size]}
                                               price={[current.price]}
-                                              menu={[current]}/>
+                                              menu={[current]}
+                                             onOpen={(menuItems) => handleShow({ menu: menuItems }, "Add")}
+                                        />
                                     }
 
                                     else {
@@ -435,7 +462,8 @@ const MenuComponent = (props) => {
                                                              name={items[0].name}
                                                              size={sizes}
                                                              price={prices}
-                                                             menu={items}/>
+                                                             menu={items}
+                                                             onOpen={(menuItems) => handleShow({ menu: menuItems }, "Add")}/>
                                             // <Col className={"col-6"}></Col>
 
                                         } else {
@@ -461,7 +489,8 @@ const MenuComponent = (props) => {
                                                                           name={names[x]}
                                                                           size={sizes}
                                                                           price={prices}
-                                                                          menu={items}/>)
+                                                                          menu={items}
+                                                                          onOpen={(menuItems) => handleShow({ menu: menuItems }, "Add")}/>)
                                             // <Col className={"col-6"}></Col>
                                             }
 
@@ -492,12 +521,20 @@ const MenuComponent = (props) => {
 
                         </div>
                     ) : (
-                        cart.length > 0 && cart.map((item, index) => {
-                                return <div className="cartItem">
+                        cart.length > 0 && cart.slice()
+                            .sort((a, b) => a.id - b.id).map((item, index) => {
+                                return <div className="cartItem" onClick={() => handleShow(item, "Edit")}>
                                     <div className="cartItemTop">
                                         <h5 className="cartItemName">{item.item.number + ". " + item.item.name}</h5>
                                         <span className="cartItemPrice">${API.priceAPI.price(item.orderPrice)}</span>
                                     </div>
+                                    {/*<p style={{margin: 0,*/}
+                                    {/*textAlign: "left"}}>{item.specialInstruction}</p>*/}
+                                    {item.specialInstruction && (
+                                        <div className="cartItemInstructions">
+                                            {item.specialInstruction}
+                                        </div>
+                                    )}
 
                                     <div className="cartItemRow">
                                         <div className="cartItemModifier">
@@ -506,9 +543,15 @@ const MenuComponent = (props) => {
                                         </div>
 
                                         <div className="cartItemQuantity">
-                                            <button className="qtyBtn" onClick={() => minus(item)}>-</button>
+                                            <button className="qtyBtn" onClick={(e) => {
+                                                e.stopPropagation();
+                                                minus(item);
+                                            }}>-</button>
                                             <span className="qtyValue">{item.quantity}</span>
-                                            <button className="qtyBtn" onClick={() => plus(item)}>+</button>
+                                            <button className="qtyBtn" onClick={(e) => {
+                                                e.stopPropagation();
+                                                plus(item);
+                                            }}>+</button>
                                         </div>
                                     </div>
 
@@ -543,6 +586,35 @@ const MenuComponent = (props) => {
 
                 <button className="cartCheckoutBtn" disabled={cart.length === 0}>Checkout</button>
             </aside>
+
+            {selectedItem && (
+                // console.log(fullMenu)
+                // <MenuPopup show={showPopup} onClose={handleClose} id={selectedItem.id} name={selectedItem.orderName} item={getItemOptions(selectedItem)} quantity={selectedItem.quantity} do={"Edit"} update={updateCart}/>
+                <MenuPopup
+                    show={showPopup}
+                    onClose={handleClose}
+                    id={
+                        popupMode === "Edit"
+                            ? selectedItem.id
+                            : selectedItem.menu?.[0]?.id
+                    }
+                    name={
+                        popupMode === "Edit"
+                            ? selectedItem.orderName
+                            : selectedItem.menu?.[0]?.name
+                    }
+                    item={
+                        popupMode === "Edit"
+                            ? getItemOptions(selectedItem)
+                            : selectedItem.menu
+                    }
+                    quantity={selectedItem.quantity || 1}
+                    cartItem={selectedItem}
+                    do={popupMode}
+                    update={updateCart}
+                    // instructions={selectedItem.specialInstruction}
+                />
+            )}
 
 
         </main>

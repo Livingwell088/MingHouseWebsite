@@ -9,18 +9,17 @@ import Image from "react-bootstrap/Image";
 
 const MenuCard = (props) => {
 
-    const [showPopup, setShowPopup] = useState(false)
-    const handleShow = () => setShowPopup(true);
-    const handleClose = () => setShowPopup(false);
+    // const handleShow = () => setShowPopup(true);
+    // const handleClose = () => setShowPopup(false);
 
     const [imgError, setImgError] = useState(false);
 
 
     // console.log(props)
 
-    const toggleModal = () => {
-        setShowPopup(!showPopup)
-    };
+    // const toggleModal = () => {
+    //     setShowPopup(!showPopup)
+    // };
 
     let sizes = []
     for (let i = 0; i < props.size.length; i++){
@@ -70,8 +69,9 @@ const MenuCard = (props) => {
         //
         // </Card>
 
+        // onClick={handleShow}
 
-        <Card className={"menuCard teko"} onClick={handleShow}>
+        <Card className={"menuCard teko"} onClick={() => props.onOpen(props.menu)} >
 
             {/*<Image src={"/images/" + props.number + ".png"} className={"menuCardImage"}*/}
             {/*       rounded/>*/}
@@ -104,12 +104,14 @@ const MenuCard = (props) => {
                     Spicy and Sweet
                 </p>
 
-                <Button className="menuCardBottom">
+                <Button className="menuCardBottom"  onClick={(e) => {
+                    e.stopPropagation();
+                    props.onOpen(props.menu);
+                }}>
                     Add to Cart
                 </Button>
             </Card.Body>
 
-            <MenuPopup show={showPopup} onClose={handleClose} id={props.id} name={props.name} item={props.menu} quantity={1} do={"Add"}/>
         </Card>
 
     );
