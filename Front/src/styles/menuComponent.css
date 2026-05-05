@@ -421,6 +421,39 @@
     content: "”";
 }
 
+.menuSearchWrapper {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.menuSearchInput {
+    width: 100%;
+    padding: 14px 48px 14px 18px;
+    border-radius: 14px;
+    border: 2px solid #d4a437;
+    background: #f8edd5;
+    font-size: 1.1rem;
+    color: #2b1a0d;
+    outline: none;
+}
+
+.menuSearchInput:focus {
+    border-color: #661a06;
+    box-shadow: 0 0 0 4px rgba(212, 164, 55, 0.2);
+}
+
+.menuSearchClear {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.6rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #661a06;
+}
+
 
 
 

@@ -47,6 +47,10 @@ const MenuComponent = (props) => {
 
     const navigate = useNavigate();
 
+    const [searchTerm, setSearchTerm] = useState("");
+
+
+
 
     const [showError, setShowError] = useState(false)
     const [errorHeading, setErrorHeading] = useState("")
@@ -409,100 +413,146 @@ const MenuComponent = (props) => {
 
             <section className="menu-content">
 
+                <div className="menuSearchWrapper">
+                    <input
+                        type="text"
+                        className="menuSearchInput"
+                        placeholder="Search by item number or name..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
 
-                {categories.map(category =>(
-                    <section className="menu-section">
-                        <div className="section-header">
-                            <h2>{category}</h2>
-                            <div className="line"></div>
-                        </div>
+                    {searchTerm && (
+                        <button
+                            className="menuSearchClear"
+                            onClick={() => setSearchTerm("")}
+                        >
+                            ×
+                        </button>
+                    )}
+                </div>
 
-                        <div className="menu-grid grid-3">
-                            {Object.keys(props.menu).map((item, i) => {
+                {searchTerm ? (
+                    <div className="menu-grid grid-3">
+                        {Object.keys(props.menu).map((item) => {
+                            const menuItems = props.menu[item];
 
-                                if (category === props.menu[item][0].category){
+                            // flatten + filter
+                            return menuItems
+                                .filter(m =>
+                                    m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                    String(m.number).includes(searchTerm)
+                                )
+                                .map((current) => (
+                                    <MenuCard
+                                        key={current.id}
+                                        id={current.id}
+                                        number={current.number}
+                                        name={current.name}
+                                        size={[current.size]}
+                                        price={[current.price]}
+                                        menu={[current]}
+                                        onOpen={(menuItems) => handleShow({ menu: menuItems }, "Add")}
+                                    />
+                                ));
+                        })}
+                    </div>
+                ) : (
+                    categories.map(category => (
+                        <section className="menu-section">
+                            <div className="section-header">
+                                <h2>{category}</h2>
+                                <div className="line"></div>
+                            </div>
 
-                                    if (Object.keys(props.menu[item]).length === 1) {
-                                        let current = props.menu[item][0]
+                            <div className="menu-grid grid-3">
+                                {Object.keys(props.menu).map((item, i) => {
 
-                                        return <MenuCard id={current.id}
-                                              number={current.number}
-                                              name={current.name}
-                                              size={[current.size]}
-                                              price={[current.price]}
-                                              menu={[current]}
-                                             onOpen={(menuItems) => handleShow({ menu: menuItems }, "Add")}
-                                        />
-                                    }
+                                    if (category === props.menu[item][0].category){
 
-                                    else {
+                                        if (Object.keys(props.menu[item]).length === 1) {
+                                            let current = props.menu[item][0]
 
-                                        let names = []
-
-                                        for (let n = 0; n < Object.keys(props.menu[item]).length; n++) {
-                                            if (!names.includes(props.menu[item][n].name)) {
-                                                names.push(props.menu[item][n].name)
-                                            }
+                                            return <MenuCard id={current.id}
+                                                             number={current.number}
+                                                             name={current.name}
+                                                             size={[current.size]}
+                                                             price={[current.price]}
+                                                             menu={[current]}
+                                                             onOpen={(menuItems) => handleShow({ menu: menuItems }, "Add")}
+                                            />
                                         }
-                                        // console.log(names)
 
-                                        if (names.length === 1) {
-                                            let sizes = []
-                                            let prices = []
-                                            let items = []
+                                        else {
+
+                                            let names = []
+
                                             for (let n = 0; n < Object.keys(props.menu[item]).length; n++) {
-                                                let current = props.menu[item][n]
-                                                sizes.push(current.size)
-                                                prices.push(current.price)
-                                                items.push(current)
+                                                if (!names.includes(props.menu[item][n].name)) {
+                                                    names.push(props.menu[item][n].name)
+                                                }
                                             }
+                                            // console.log(names)
 
-                                            return <MenuCard id={items[0].id}
-                                                             number={items[0].number}
-                                                             name={items[0].name}
-                                                             size={sizes}
-                                                             price={prices}
-                                                             menu={items}
-                                                             onOpen={(menuItems) => handleShow({ menu: menuItems }, "Add")}/>
-                                            // <Col className={"col-6"}></Col>
-
-                                        } else {
-
-                                            let components = []
-
-                                            for (let x = 0; x < names.length; x++) {
+                                            if (names.length === 1) {
                                                 let sizes = []
                                                 let prices = []
                                                 let items = []
                                                 for (let n = 0; n < Object.keys(props.menu[item]).length; n++) {
                                                     let current = props.menu[item][n]
-                                                    if (current.name === names[x]) {
-                                                        sizes.push(current.size)
-                                                        prices.push(current.price)
-                                                        items.push(current)
-                                                    }
-
+                                                    sizes.push(current.size)
+                                                    prices.push(current.price)
+                                                    items.push(current)
                                                 }
 
-                                                components.push(<MenuCard id={items[0].id}
-                                                                          number={items[0].number}
-                                                                          name={names[x]}
-                                                                          size={sizes}
-                                                                          price={prices}
-                                                                          menu={items}
-                                                                          onOpen={(menuItems) => handleShow({ menu: menuItems }, "Add")}/>)
-                                            // <Col className={"col-6"}></Col>
-                                            }
+                                                return <MenuCard id={items[0].id}
+                                                                 number={items[0].number}
+                                                                 name={items[0].name}
+                                                                 size={sizes}
+                                                                 price={prices}
+                                                                 menu={items}
+                                                                 onOpen={(menuItems) => handleShow({ menu: menuItems }, "Add")}/>
+                                                // <Col className={"col-6"}></Col>
 
-                                            return components;
-                                        }}
+                                            } else {
+
+                                                let components = []
+
+                                                for (let x = 0; x < names.length; x++) {
+                                                    let sizes = []
+                                                    let prices = []
+                                                    let items = []
+                                                    for (let n = 0; n < Object.keys(props.menu[item]).length; n++) {
+                                                        let current = props.menu[item][n]
+                                                        if (current.name === names[x]) {
+                                                            sizes.push(current.size)
+                                                            prices.push(current.price)
+                                                            items.push(current)
+                                                        }
+
+                                                    }
+
+                                                    components.push(<MenuCard id={items[0].id}
+                                                                              number={items[0].number}
+                                                                              name={names[x]}
+                                                                              size={sizes}
+                                                                              price={prices}
+                                                                              menu={items}
+                                                                              onOpen={(menuItems) => handleShow({ menu: menuItems }, "Add")}/>)
+                                                    // <Col className={"col-6"}></Col>
+                                                }
+
+                                                return components;
+                                            }}
 
 
-                                }
+                                    }
 
-                            })}
-                        </div>
-                    </section>
+                                })}
+                            </div>
+
+
+                    </section>)
                 ))}
             </section>
 
