@@ -424,7 +424,7 @@ const API = {
             const currentTime = date.getHours()
                 + ':' + date.getMinutes()
 
-            const hours = ["ASAP"]
+            const hours = []
 
             const todaysHour = dayHours[(date.getDay())]
 

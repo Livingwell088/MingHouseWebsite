@@ -4,6 +4,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import CheckoutLeft from "../components/CheckoutLeft";
 import API from "../api";
+import "../styles/Checkout.css"
 import ErrorAlert from "../components/ErrorAlert";
 import ConfirmationModal from "../components/ConfirmationModal";
 import LoginModal from "../components/LoginModal";
@@ -22,6 +23,7 @@ const CheckoutPage = (props) => {
     const [subtotal, setSubtotal] = useState(0)
     const [orderTime, setOrderTime] = useState(window.sessionStorage.getItem('orderTime'));
     const [cart, setCart] = useState([])
+
     // console.log(cart)
 
 
@@ -62,7 +64,7 @@ const CheckoutPage = (props) => {
 
     useEffect(() => {
         testing()
-    }, [cart, subtotal]);
+    }, []); //cart, subtotal
 
 
     const [user, setUser] = useState({})
@@ -72,6 +74,8 @@ const CheckoutPage = (props) => {
     const handleChangeUser = (event) => {
         const name = event.target.name;
         const value = event.target.value;
+
+        console.log("changing:", name, value);
 
         setUser(values => ({...values, [name]: value}))
 
@@ -129,28 +133,44 @@ const CheckoutPage = (props) => {
     const makeOrder = async (event) => {
         console.log("Making Order")
 
+
         event.preventDefault()
         const form = event.currentTarget;
-        if (form.checkValidity() === false || orderType === "Select One" || orderTime === "Time") {
-            event.stopPropagation()
+        // if (form.checkValidity() === false || orderType === "Select One" || orderTime === "Time") {
+        //     event.stopPropagation()
+        //     setValidated(true)
+        //
+        //
+        //     if (orderType === "Select One") {
+        //         setErrorHeading("Error")
+        //         setErrorContent("Select an Order Type")
+        //         setShowError(true)
+        //     } else if (orderTime === "Time") {
+        //         setErrorHeading("Error")
+        //         setErrorContent("Select a Time for the Order.")
+        //         setShowError(true)
+        //     } else {
+        //         setErrorHeading("Error")
+        //         setErrorContent("Make sure all required fields are provided")
+        //         setShowError(true)
+        //     }
+        // }
+        if (
+            !user.firstName ||
+            !user.lastName ||
+            !fields.phoneNumber ||
+            orderType === "Select One" ||
+            orderTime === "Time" ||
+            (orderType === "Delivery" && (!fields.address || !fields.zipcode))
+        ) {
+            setErrorHeading("Error");
+            setErrorContent("Make sure all required fields are provided.");
+            setShowError(true);
+            return;
+        }
+        else {
             setValidated(true)
 
-
-            if (orderType === "Select One") {
-                setErrorHeading("Error")
-                setErrorContent("Select an Order Type")
-                setShowError(true)
-            } else if (orderTime === "Time") {
-                setErrorHeading("Error")
-                setErrorContent("Select a Time for the Order.")
-                setShowError(true)
-            } else {
-                setErrorHeading("Error")
-                setErrorContent("Make sure all required fields are provided")
-                setShowError(true)
-            }
-        } else {
-            setValidated(true)
 
             let currentAddress = ""
 
@@ -178,6 +198,8 @@ const CheckoutPage = (props) => {
 
             // navigate("/")
 
+            console.log("Ordering", subtotal, orderType, window.sessionStorage.getItem("username"), currentAddress, fields.phoneNumber, fields.instruction, orderTime, cart)
+
             await API.orderAPI.create("Ordering", subtotal, orderType, window.sessionStorage.getItem("username"), currentAddress, fields.phoneNumber, fields.instruction, orderTime, cart)
                 .then(res => res.data)
                 .then(async r => {
@@ -202,22 +224,88 @@ const CheckoutPage = (props) => {
 
 
     return <div className={"App teko"}>
-        <main>
-            <h1 className={"dancing-script fontDark"} style={{marginBottom: "2%"}}>Checkout</h1>
 
-            {showError && <ErrorAlert heading={errorHeading} content={errorContent} onClose={() => setShowError(false)} />}
+        <main className="checkout-page">
+            <CheckoutLeft
+                orderType={orderType}
+                orderTime={orderTime}
+                user={user}
+                fields={fields}
+                validated={validated}
+                onChangeOrderType={onChangeOrderType}
+                handleChangeTime={onChangeOrderTime}
+                handleChangeUser={handleChangeUser}
+                handleChangeFields={handleChangeField}
+                submitButton={makeOrder}
+            />
 
-            <Row>
-                <Col xs={1}></Col>
-                <Col xs={7}>
-                    <CheckoutLeft orderType={orderType} user={user} handleChangeUser={handleChangeUser} fields={fields} handleChangeFields={handleChangeField} cart={cart} validated={validated} submitButton={makeOrder} />
-                </Col>
-                <Col xs={4}>
-                    <CartTotal id={"cartTotal"} page={"Place Order"} onChange={(type) => onChangeOrderType(type)} orderType={orderType} orderTime={orderTime} handleChangeTime={(time) => onChangeOrderTime(time)} subtotal={subtotal} makeOrder={() => makeOrder} ></CartTotal>
-                </Col>
-            </Row>
+            <aside className="checkoutSummary">
+                <div className="summaryCard">
+                    <div className="summaryHeader">
+                        <h2>Your Order</h2>
+                        <button>Edit Cart</button>
+                    </div>
 
+                    <div className="summaryItems">
+                        {cart.map((item, index) => (
+                            <div key={index} className="summaryItem">
+                                <div className="summaryItemRow">
+                                    <span>{item.quantity}x {item.item.name}</span>
+                                    <span>${Number(item.orderPrice).toFixed(2)}</span>
+                                </div>
+
+                                {item.item.size && (
+                                    <div className="summaryItemSub">
+                                        ({item.item.size})
+                                    </div>
+                                )}
+
+                                {item.specialInstruction && (
+                                    <div className="summaryItemSub">
+                                        {item.specialInstruction}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="summaryTotals">
+                        <div>
+                            <span>Subtotal</span>
+                            <span>${API.priceAPI.price(subtotal)}</span>
+                        </div>
+                        <div>
+                            <span>Tax</span>
+                            <span>${API.priceAPI.price(subtotal * 0.07)}</span>
+                        </div>
+                        <div className="summaryTotal">
+                            <span>Total</span>
+                            <span>${API.priceAPI.price(subtotal * 1.07)}</span>
+                        </div>
+                        </div>
+
+                    <button className="placeOrderBtn" onClick={makeOrder}>Place Order</button>
+                </div>
+            </aside>
         </main>
+
+
+        {/*<main>*/}
+        {/*    <h1 className={"dancing-script fontDark"} style={{marginBottom: "2%"}}>Checkout</h1>*/}
+
+        {/*    {showError && <ErrorAlert heading={errorHeading} content={errorContent} onClose={() => setShowError(false)} />}*/}
+
+        {/*    <Row>*/}
+        {/*        <Col xs={1}></Col>*/}
+        {/*        <Col xs={7}>*/}
+        {/*            <CheckoutLeft orderType={orderType} user={user} handleChangeUser={handleChangeUser} fields={fields} handleChangeFields={handleChangeField} cart={cart} validated={validated} submitButton={makeOrder} />*/}
+        {/*        </Col>*/}
+        {/*        <Col xs={4}>*/}
+        {/*            <CartTotal id={"cartTotal"} page={"Place Order"} onChange={(type) => onChangeOrderType(type)} orderType={orderType} orderTime={orderTime} handleChangeTime={(time) => onChangeOrderTime(time)} subtotal={subtotal} makeOrder={() => makeOrder} ></CartTotal>*/}
+        {/*        </Col>*/}
+        {/*    </Row>*/}
+
+        {/*</main>*/}
 
     </div>
 

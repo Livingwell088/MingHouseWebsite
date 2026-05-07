@@ -115,39 +115,66 @@ const MenuComponent = (props) => {
         await testing()
     }
 
+    // const checkIfLogged = () => {
+    //
+    //     if (sessionStorage.getItem("loggedIn") === "false"){
+    //
+    //         console.log("NOT LOGGED IN")
+    //
+    //         if (orderType !== "Select One"){
+    //             handleShow()
+    //
+    //         }
+    //         else{
+    //             setErrorHeading("Error")
+    //             setErrorContent("Please select an order type: Pickup or Delivery")
+    //             setShowError(true)
+    //
+    //             // alert("Select an Order Type")
+    //             // return <ErrorAlert />
+    //         }
+    //     }
+    //     else {
+    //
+    //         if (cart.length === 0){
+    //             setErrorHeading("Error")
+    //             setErrorContent("Cart is Empty. Cannot Move to Checkout with An Empty Cart.")
+    //             setShowError(true)
+    //         }
+    //         else{
+    //
+    //             navigate('/checkoutPage', {state: {orderType: orderType, subtotal: subtotal, orderTime: orderTime, cart: cart}});
+    //
+    //         }
+    //
+    //     }
+    // }
+
     const checkIfLogged = () => {
-
-        if (sessionStorage.getItem("loggedIn") === "false"){
-
-            console.log("NOT LOGGED IN")
-
-            if (orderType !== "Select One"){
-                handleShow()
-
-            }
-            else{
-                setErrorHeading("Error")
-                setErrorContent("Please select an order type: Pickup or Delivery")
-                setShowError(true)
-
-                // alert("Select an Order Type")
-                // return <ErrorAlert />
-            }
+        if (cart.length === 0) {
+            setErrorHeading("Error");
+            setErrorContent("Cart is empty. Cannot move to checkout with an empty cart.");
+            setShowError(true);
+            return;
         }
-        else {
 
-            if (cart.length === 0){
-                setErrorHeading("Error")
-                setErrorContent("Cart is Empty. Cannot Move to Checkout with An Empty Cart.")
-                setShowError(true)
-            }
-            else{
-                navigate('/checkoutPage', {state: {orderType: orderType, subtotal: subtotal, orderTime: orderTime, cart: cart}});
-
-            }
-
+        if (orderType === "Select One") {
+            setErrorHeading("Error");
+            setErrorContent("Please select an order type: Pickup or Delivery.");
+            setShowError(true);
+            return;
         }
-    }
+
+        navigate("/checkoutPage", {
+            state: {
+                orderType,
+                subtotal,
+                orderTime,
+                cart,
+                isGuest: sessionStorage.getItem("loggedIn") !== "true",
+            },
+        });
+    };
 
     const makeOrder = async () => {
 
@@ -165,7 +192,7 @@ const MenuComponent = (props) => {
 
         testing()
 
-    }, []) //cart, subtotal, fullMenu
+    }, [cart]) //cart, subtotal, fullMenu
 
     useEffect(() => {
         if (window.sessionStorage.getItem("orderType") === null){
@@ -215,18 +242,19 @@ const MenuComponent = (props) => {
 
         console.log(current)
 
-        if (current.quantity === 1){
+        if (current.quantity === 1) {
             API.cartAPI.delete(current.orderName, current.orderPrice, current.quantity, current.item, current.cartId, current.specialInstruction)
                 .then(r => props.updateCart())
                 .catch((error) => console.log(error.message))
-        }
-        else{
+        } else {
             API.cartAPI.delete(current.orderName, current.orderPrice, current.quantity, current.item, current.cartId, current.specialInstruction)
                 .then(r => {
                     props.updateCart();
                 })
                 .catch((error) => console.log(error.message))
         }
+
+        // testing()
     }
 
     const plus = (item) => {
@@ -239,7 +267,7 @@ const MenuComponent = (props) => {
             .catch((error) => console.log(error.message))
 
         // console.log(current)
-
+        // testing()
 
 
     }
@@ -634,7 +662,7 @@ const MenuComponent = (props) => {
                     </div>
                 </div>
 
-                <button className="cartCheckoutBtn" disabled={cart.length === 0}>Checkout</button>
+                <button className="cartCheckoutBtn" disabled={cart.length === 0} onClick={checkIfLogged} >Checkout</button>
             </aside>
 
             {/* MOBILE CART BAR */}

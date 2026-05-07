@@ -139,7 +139,7 @@ export default function Appbar() {
                         </Nav.Item>
 
                         <Nav.Item className={"navitem"}>
-                            <Link to="/cartPage" style={{textDecoration: "none"}}>
+                            <Link to="/checkoutPage" style={{textDecoration: "none"}}>
                                 <p className={"navtext"}>CART</p>
                             </Link>
                         </Nav.Item>

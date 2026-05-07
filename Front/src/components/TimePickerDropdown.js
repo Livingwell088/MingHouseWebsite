@@ -1,45 +1,43 @@
 import Form from "react-bootstrap/Form";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import API from "../api";
-import "../styles/Inputs.css"
-import {click} from "@testing-library/user-event/dist/click";
-
+import "../styles/Inputs.css";
 
 const TimePickerDropdown = (props) => {
-    const [selectedTime, setSelectedTime] = useState(props.orderTime || "")
-    const [hours, setHours] = useState([])
-    const [refresh, setRefresh] = useState(true)
-
-
-
-    const handleSelectedTimeChange = (event) => {
-        setSelectedTime(event.target.value)
-        props.handleChangeTime(event.target.value)
-    }
+    const [selectedTime, setSelectedTime] = useState(props.orderTime || "Time");
+    const [hours, setHours] = useState([]);
 
     useEffect(() => {
-        const neededHours = API.timeAPI.get()
-        setHours(neededHours)
-        // console.log(hours)
-
+        setHours(API.timeAPI.get());
     }, []);
 
+    useEffect(() => {
+        setSelectedTime(props.orderTime || "Time");
+    }, [props.orderTime]);
 
-    return <div >
-        {/*style={{width: "80%"}}*/}
-        <Form.Select id={"dropDown"} value={selectedTime} onChange={handleSelectedTimeChange}>
-            <option>Select A Time</option>
+    const handleSelectedTimeChange = (event) => {
+        const value = event.target.value;
+        setSelectedTime(value);
+        props.handleChangeTime(value);
+    };
 
-            {hours.map(current => {
-                return <option value={current}>{current}</option>
-            })}
+    return (
+        <Form.Select
+            className="scheduleTimeSelect"
+            value={selectedTime}
+            onChange={handleSelectedTimeChange}
+        >
+            <option value="Time" disabled>
+                Select a time
+            </option>
+
+            {hours.map((current) => (
+                <option key={current} value={current}>
+                    {current}
+                </option>
+            ))}
         </Form.Select>
-    </div>
-
-
-
-
-}
-
+    );
+};
 
 export default TimePickerDropdown;
