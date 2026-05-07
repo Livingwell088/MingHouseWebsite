@@ -165,7 +165,7 @@ const MenuComponent = (props) => {
 
         testing()
 
-    }, [cart, subtotal, fullMenu])
+    }, []) //cart, subtotal, fullMenu
 
     useEffect(() => {
         if (window.sessionStorage.getItem("orderType") === null){
@@ -559,7 +559,7 @@ const MenuComponent = (props) => {
             <aside className="menu-cart">
                 <div className="cartHeader">
                     <h2>Your Cart</h2>
-                    <span className="cartCount">1</span>
+                    <span className="cartCount">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
                 </div>
 
 
@@ -636,6 +636,24 @@ const MenuComponent = (props) => {
 
                 <button className="cartCheckoutBtn" disabled={cart.length === 0}>Checkout</button>
             </aside>
+
+            {/* MOBILE CART BAR */}
+            {cart.length > 0 && (
+                <button
+                    className="mobileCartBar"
+                    onClick={checkIfLogged}
+                >
+                    <span>
+                        {cart.reduce((sum, item) => sum + item.quantity, 0)} items
+                    </span>
+
+                    <strong>View Cart</strong>
+
+                    <span>
+                        ${API.priceAPI.price(subtotal * 1.07)}
+                    </span>
+                </button>
+            )}
 
             {selectedItem && (
                 // console.log(fullMenu)
