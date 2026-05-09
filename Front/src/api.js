@@ -339,6 +339,8 @@ const API = {
                 items: orderItems
             }
 
+            console.log(order)
+
             return await Api().post("/orders/placeOrder", {...order}, {
                 headers: {
                     Accept: "application/json",

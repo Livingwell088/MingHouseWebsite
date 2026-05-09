@@ -260,3 +260,65 @@
         position: static;
     }
 }
+
+@media (max-width: 768px) {
+    .checkout-page {
+        display: block;
+        padding: 14px 14px 90px;
+    }
+
+    .checkoutCard {
+        width: 100%;
+        padding: 22px 18px;
+        border-radius: 18px;
+    }
+
+    .checkoutCard h1 {
+        font-size: 2rem;
+        text-align: left;
+    }
+
+    .checkoutCard > p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .checkoutSection {
+        padding: 16px 0;
+    }
+
+    .checkoutSection h3 {
+        font-size: 1.35rem;
+        margin-bottom: 14px;
+    }
+
+    .checkoutOptionGrid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .checkoutOption {
+        min-height: auto;
+        padding: 14px 16px;
+        border-radius: 14px;
+    }
+
+    .checkoutOption strong {
+        font-size: 1rem;
+    }
+
+    .checkoutOption span {
+        font-size: 0.85rem;
+    }
+
+    .checkoutInputGrid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .checkoutSection input,
+    .checkoutSection textarea {
+        margin-top: 8px;
+        padding: 13px 14px;
+    }
+}

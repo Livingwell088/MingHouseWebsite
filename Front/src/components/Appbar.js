@@ -18,7 +18,7 @@ import {
     BrowserRouter as Router,
     Routes,
     Route,
-    Link,
+    Link, useNavigate,
 } from "react-router-dom";
 import {useEffect, useState} from "react";
 import UserPopover from "./UserPopover";
@@ -49,6 +49,7 @@ export default function Appbar() {
 
     }, [log]);
 
+    const navigate = useNavigate();
 
 
     return (
@@ -118,10 +119,10 @@ export default function Appbar() {
                         <Nav className="ms-auto align-items-center">
                     <Nav id="navLinks" className={"navLinks align-items-center gap-4"}>
 
-                        <Button id="order-btn"> Order Now </Button>
+                        <Button id="order-btn" onClick={() => navigate("/menuPage")}> Order Now </Button>
 
                         <Nav.Item className={"navitem"}>
-                            <Link to="/menupage" style={{textDecoration: "none"}}>
+                            <Link to="/menuPage" style={{textDecoration: "none"}}>
                                 <p className={"navtext"}>MENU</p>
                             </Link>
                         </Nav.Item>

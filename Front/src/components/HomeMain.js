@@ -1,8 +1,11 @@
 import {Button} from "react-bootstrap";
 import React from "react";
 import '../styles/App.css';
+import {useNavigate} from "react-router-dom";
 
 export default function HomeMain() {
+
+    const navigate = useNavigate();
 
     return (
         <div style={{
@@ -30,8 +33,8 @@ export default function HomeMain() {
                     We offer a wide range of delicious Chinese Cuisine.</p>
 
                 <div className="hero-buttons">
-                    <Button id="hero-order-btn"> Order Online </Button>
-                    <Button id="menu-btn"> View Menu </Button>
+                    <Button id="hero-order-btn" onClick={() => navigate("/menuPage")}> Order Online </Button>
+                    <Button id="menu-btn" onClick={() => window.open("/MingHouseMenu.pdf", "_blank")}> View Menu </Button>
                 </div>
 
 

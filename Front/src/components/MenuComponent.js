@@ -56,7 +56,7 @@ const MenuComponent = (props) => {
     const [errorHeading, setErrorHeading] = useState("")
     const [errorContent, setErrorContent] = useState("")
 
-
+    const [showMobileCart, setShowMobileCart] = useState(false);
 
     const onChangeOrderType = (type) => {
         window.sessionStorage.setItem("orderType", type);
@@ -666,21 +666,26 @@ const MenuComponent = (props) => {
             </aside>
 
             {/* MOBILE CART BAR */}
-            {cart.length > 0 && (
-                <button
-                    className="mobileCartBar"
-                    onClick={checkIfLogged}
-                >
-                    <span>
+            {cart.length >= 0 && (
+                <div className="mobileCartBar" >
+                    {/*onClick={checkIfLogged}*/}
+
+                    <div className="cartBar-left">
                         {cart.reduce((sum, item) => sum + item.quantity, 0)} items
-                    </span>
+                    </div>
 
-                    <strong>View Cart</strong>
-
-                    <span>
+                    <div className="cartBar-center">
                         ${API.priceAPI.price(subtotal * 1.07)}
-                    </span>
-                </button>
+                    </div>
+
+                    <button
+                        className="cartBar-button"
+                        onClick={() => setShowMobileCart(true)}
+                    >
+                        View Cart & Checkout →
+                    </button>
+
+                </div>
             )}
 
             {selectedItem && (
@@ -710,6 +715,62 @@ const MenuComponent = (props) => {
                     update={updateCart}
                     // instructions={selectedItem.specialInstruction}
                 />
+            )}
+
+            {showMobileCart && (
+                <div className="mobileCartOverlay" onClick={() => setShowMobileCart(false)}>
+                    <div className="mobileCartDrawer" onClick={(e) => e.stopPropagation()}>
+
+                        <div className="drawerHandle"></div>
+
+                        <div className="mobileCartHeader">
+                            <h2>Your Cart</h2>
+                            <button onClick={() => setShowMobileCart(false)}>×</button>
+                        </div>
+
+                        <div className="cartItems">
+                            {cart.map((item) => (
+                                <div className="cartItem" onClick={() => {
+                                    setShowMobileCart(false);
+                                    handleShow(item, "Edit")}}>
+                                    <div className="cartItemTop">
+                                        <h5 className="cartItemName">
+                                            {item.item.number}. {item.item.name}
+                                        </h5>
+                                        <span className="cartItemPrice">
+                ${API.priceAPI.price(item.orderPrice)}
+              </span>
+                                    </div>
+
+                                    <div className="cartItemRow">
+                                        <div className="cartItemModifier">{item.item.size}</div>
+
+                                        <div className="cartItemQuantity">
+                                            <button className="qtyBtn" onClick={(e) => { e.stopPropagation(); minus(item); }}>-</button>
+                                            <span>{item.quantity}</span>
+                                            <button className="qtyBtn" onClick={(e) => { e.stopPropagation(); plus(item); }}>+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="cartSummary">
+                            <div className="cartRow">
+                                <span>Subtotal</span>
+                                <span>${API.priceAPI.price(subtotal)}</span>
+                            </div>
+                            <div className="cartRow totalRow">
+                                <span>Total</span>
+                                <span>${API.priceAPI.price(subtotal * 1.07)}</span>
+                            </div>
+                        </div>
+
+                        <button className="cartCheckoutBtn" onClick={checkIfLogged}>
+                            Checkout
+                        </button>
+                    </div>
+                </div>
             )}
 
 

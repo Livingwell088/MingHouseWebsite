@@ -197,22 +197,34 @@ const CheckoutPage = (props) => {
             // setShowPopup(true)
 
             // navigate("/")
+            const current = window.sessionStorage.getItem("sessionId");
 
-            console.log("Ordering", subtotal, orderType, window.sessionStorage.getItem("username"), currentAddress, fields.phoneNumber, fields.instruction, orderTime, cart)
+            try {
+                await API.userAPI.create(current, "", "", "", "", true);
 
-            await API.orderAPI.create("Ordering", subtotal, orderType, window.sessionStorage.getItem("username"), currentAddress, fields.phoneNumber, fields.instruction, orderTime, cart)
-                .then(res => res.data)
-                .then(async r => {
-                    setPlacedOrder(r)
-                    setShowPopup(true)
+                window.sessionStorage.setItem("loggedIn", "true");
+                window.sessionStorage.setItem("username", current);
 
-                    navigate("/", {state: {placedOrder: r, confirm: true}})
-                })
-                // .then(() => {
-                //     console.log(placedOrder)
-                //     setShowPopup(true)
-                // })
-                .catch((error) => console.log(error))
+                const res = await API.orderAPI.create(
+                    "Ordering",
+                    subtotal,
+                    orderType,
+                    current,
+                    currentAddress,
+                    fields.phoneNumber,
+                    fields.instruction,
+                    orderTime,
+                    cart
+                );
+
+                const placed = res.data;
+                setPlacedOrder(placed);
+                setShowPopup(true);
+
+                navigate("/", { state: { placedOrder: placed, confirm: true } });
+            } catch (error) {
+                console.log(error.message);
+            }
         }
 
 
@@ -243,7 +255,7 @@ const CheckoutPage = (props) => {
                 <div className="summaryCard">
                     <div className="summaryHeader">
                         <h2>Your Order</h2>
-                        <button>Edit Cart</button>
+                        <button onClick={() => navigate("/menuPage")}>Edit Cart</button>
                     </div>
 
                     <div className="summaryItems">

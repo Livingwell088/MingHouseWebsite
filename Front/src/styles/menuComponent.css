@@ -32,6 +32,7 @@
     grid-template-columns: 240px 1fr 280px;
     gap: 24px;
     padding: 32px;
+    align-items: start;
 }
 
 
@@ -56,6 +57,8 @@
     overflow-y: auto;
 
     height: fit-content;
+
+    will-change: transform;
 }
 
 
@@ -514,29 +517,97 @@
         display: none;
     }
 
+    .mobileCartOverlay {
+        position: fixed;
+        inset: 0;
+        z-index: 3000;
 
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(3px);
+
+        display: flex;
+        align-items: flex-end;
+    }
+
+    .mobileCartDrawer {
+        position: relative;
+        z-index: 3001;
+    }
 
     .mobileCartBar {
         position: fixed;
-        left: 16px;
-        right: 16px;
-        bottom: 16px;
-        z-index: 1000;
+        bottom: 0;
+        left: 0;
 
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        width: 100%;
+        height: 70px;
 
-        padding: 16px 18px;
-        border-radius: 16px;
-
-        background: linear-gradient(to right, #c69222, #e8b84a);
+        background: linear-gradient(to right, #d4a437, #e6c067);
         color: #661a06;
 
-        border: 2px solid #7a2a0a;
-        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
-        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        padding: 0 16px;
+
+        border-top: 2px solid #661a06;
+        border-radius: 0; /* remove rounded */
+
+        z-index: 999;
+    }
+
+    /*.cartBar-button {*/
+    /*    background: #661a06;*/
+    /*    color: #f8d7a4;*/
+
+    /*    border: none;*/
+    /*    border-radius: 10px;*/
+
+    /*    padding: 8px 14px;*/
+    /*    font-size: 13px;*/
+    /*    font-weight: 600;*/
+
+    /*    cursor: pointer;*/
+    /*    transition: all 0.2s ease;*/
+    /*}*/
+
+    .cartBar-button:hover {
+        background: #8a2a0c;
+    }
+
+    .cartBar-button:active {
+        transform: scale(0.95);
+    }
+
+    /* sections */
+    .cartBar-left {
+        font-size: 14px;
+    }
+
+    .cartBar-center {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .cartBar-button {
+        background: #661a06;
+        color: #f8d7a4;
+
+        border: none;
+        border-radius: 10px;
+
+        padding: 10px 16px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .menuPage {
+        padding-bottom: 80px; /* prevents content from being hidden under bar */
+    }
+
+    .cartBar-right {
+        font-size: 14px;
     }
 
 
@@ -609,5 +680,79 @@
 
     .menu-sidebar {
         scrollbar-width: none;
+    }
+
+
+
+    .mobileCartDrawer {
+        width: 100%;
+        max-height: 85vh;
+        overflow-y: auto;
+
+        background: #f4d88f;
+
+        border-radius: 20px 20px 0 0; /* ONLY top corners */
+        border-top: 3px solid #7a2a0a;
+
+        padding: 20px 18px 24px;
+
+        box-shadow: 0 -10px 30px rgba(0,0,0,0.25);
+    }
+
+    .mobileCartHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+
+    .mobileCartHeader h2 {
+        font-size: 1.6rem;
+        color: #661a06;
+    }
+
+    .mobileCartHeader button {
+        font-size: 1.6rem;
+        font-weight: bold;
+        padding: 4px 10px;
+    }
+
+    .qtyBtn {
+        width: 32px;
+        height: 32px;
+
+        border-radius: 10px;
+        border: 2px solid #7a2a0a;
+
+        background: linear-gradient(to bottom, #f3e2b5, #e6c987);
+
+        color: #661a06;
+        font-size: 1.2rem;
+        font-weight: 700;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    .mobileCartDrawer {
+        transform: translateY(100%);
+        animation: slideUp 0.25s ease forwards;
+    }
+
+    @keyframes slideUp {
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    .drawerHandle {
+        width: 40px;
+        height: 5px;
+        background: rgba(102, 26, 6, 0.4);
+        border-radius: 999px;
+        margin: 0 auto 12px;
     }
 }
