@@ -16,6 +16,7 @@ import CheckoutPage from "./Pages/CheckoutPage";
 import ContactPage from "./Pages/ContactPage";
 import OrdersPage from "./Pages/OrdersPage";
 import Footer from "./components/Footer";
+import ConfirmationModal from "./components/ConfirmationModal";
 
 class App extends Component {
 
@@ -31,6 +32,7 @@ class App extends Component {
                     <Route path="/checkoutPage" element={<CheckoutPage />} />
                     <Route path="/contactPage" element={<ContactPage />} />
                     <Route path="/ordersPage" element={<OrdersPage /> } />
+                    <Route path="/order-confirmation" element={<ConfirmationModal />} />
                 </Routes>
 
                 <Footer />

@@ -1,0 +1,111 @@
+.confirmationItems {
+    margin-top: 10px;
+}
+
+.confirmationItem {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(102,26,6,0.2);
+}
+
+.itemTop {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+}
+
+.itemBottom {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #661a06;
+}
+
+.itemNote {
+    font-style: italic;
+    opacity: 0.7;
+}
+
+
+.confirmationBtn {
+    width: 100%;
+    margin-top: 15px;
+
+    background: linear-gradient(to right, #d4a437, #e6c067);
+    color: #661a06;
+
+    border: 2px solid #661a06;
+    border-radius: 14px;
+
+    padding: 12px;
+    font-weight: bold;
+}
+
+.orderMeta {
+    margin-bottom: 12px;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.summaryBox {
+    max-width: 600px;
+    margin: 0 auto 16px;
+
+    border: 1px solid rgba(102,26,6,0.3);
+    border-radius: 14px;
+    padding: 14px;
+}
+
+.orderMeta {
+    margin: 10px 0 5px;
+    font-size: 0.95rem;
+}
+
+.cartSummary {
+    /*margin-top: 12px;*/
+    max-width: 600px;
+    margin: 0 auto;
+
+}
+
+.confirmationBtn {
+    max-width: 600px;
+    margin: 20px auto 0;
+    display: block;
+}
+
+
+.orderInfoRow {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0 16px;
+    padding: 10px 12px;
+
+    border: 1px solid rgba(102,26,6,0.25);
+    border-radius: 10px;
+}
+
+.orderInfoRow div {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+}
+
+.label {
+    font-size: 0.75rem;
+    opacity: 0.6;
+}
+
+
+.sectionTitle {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.confirmationHeader {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.confirmationHeader h2 {
+    margin-bottom: 4px;
+}

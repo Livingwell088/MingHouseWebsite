@@ -129,32 +129,13 @@ const CheckoutPage = (props) => {
 
 
 
-
     const makeOrder = async (event) => {
         console.log("Making Order")
 
 
         event.preventDefault()
         const form = event.currentTarget;
-        // if (form.checkValidity() === false || orderType === "Select One" || orderTime === "Time") {
-        //     event.stopPropagation()
-        //     setValidated(true)
-        //
-        //
-        //     if (orderType === "Select One") {
-        //         setErrorHeading("Error")
-        //         setErrorContent("Select an Order Type")
-        //         setShowError(true)
-        //     } else if (orderTime === "Time") {
-        //         setErrorHeading("Error")
-        //         setErrorContent("Select a Time for the Order.")
-        //         setShowError(true)
-        //     } else {
-        //         setErrorHeading("Error")
-        //         setErrorContent("Make sure all required fields are provided")
-        //         setShowError(true)
-        //     }
-        // }
+
         if (
             !user.firstName ||
             !user.lastName ||
@@ -167,8 +148,7 @@ const CheckoutPage = (props) => {
             setErrorContent("Make sure all required fields are provided.");
             setShowError(true);
             return;
-        }
-        else {
+        } else {
             setValidated(true)
 
 
@@ -177,26 +157,8 @@ const CheckoutPage = (props) => {
             if (orderType === "Delivery") {
                 currentAddress = fields.address + ", Worcester MA, " + fields.zipcode;
             }
-            // const placing = await API.orderAPI.create("Ordering", subtotal, orderType, window.sessionStorage.getItem("username"), currentAddress, fields.phoneNumber, fields.instruction, orderTime, cart)
 
 
-            // let order = {
-            //     orderName: "Ordering",
-            //     orderPrice: subtotal,
-            //     orderType: orderType,
-            //     user: user,
-            //     address: currentAddress,
-            //     phoneNumber: fields.phoneNumber,
-            //     specialInstruction: fields.specialInstruction,
-            //     orderTime: orderTime,
-            //     datePlaced: "Date Placed",
-            //     timePlaced: "Time Placed",
-            //     items: cart
-            // }
-            // setPlacedOrder(order)
-            // setShowPopup(true)
-
-            // navigate("/")
             const current = window.sessionStorage.getItem("sessionId");
 
             try {
@@ -221,17 +183,18 @@ const CheckoutPage = (props) => {
                 setPlacedOrder(placed);
                 setShowPopup(true);
 
-                navigate("/", { state: { placedOrder: placed, confirm: true } });
+
             } catch (error) {
                 console.log(error.message);
             }
         }
+    }
 
 
         // API.orderAPI.create("Test Order", API.priceAPI.price(subtotal * 1.07), orderType, fields.address, window.sessionStorage.getItem("username"), cart)
         //     .then(r => console.log(r.data))
         //     .catch((error) => console.log(error))
-    }
+
 
 
 
@@ -290,9 +253,16 @@ const CheckoutPage = (props) => {
                             <span>Tax</span>
                             <span>${API.priceAPI.price(subtotal * 0.07)}</span>
                         </div>
+
+                        {orderType == "Delivery" && <div>
+                            <span>Delivery Fee</span>
+                            <span>$2.00</span>
+                        </div>
+                        }
+
                         <div className="summaryTotal">
                             <span>Total</span>
-                            <span>${API.priceAPI.price(subtotal * 1.07)}</span>
+                            {orderType == "Delivery" ? <span>${API.priceAPI.price((subtotal + 2) * 1.07)}</span> : <span>${API.priceAPI.price(subtotal * 1.07)}</span>}
                         </div>
                         </div>
 
@@ -300,6 +270,17 @@ const CheckoutPage = (props) => {
                 </div>
             </aside>
         </main>
+
+        {showPopup && (
+            <ConfirmationModal
+                show={showPopup}
+                onClose={() => {
+                    setShowPopup(false);
+                    navigate("/");
+                }}
+                order={placedOrder}
+            />
+        )}
 
 
         {/*<main>*/}
@@ -320,6 +301,7 @@ const CheckoutPage = (props) => {
         {/*</main>*/}
 
     </div>
+
 
 }
 
