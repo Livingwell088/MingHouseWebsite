@@ -1,0 +1,92 @@
+.adminPage {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    background: #f4e0b3;
+}
+
+.adminSidebar {
+    background: #1a1a1a;
+    color: #f5c542;
+    padding: 24px;
+}
+
+.adminSidebar h2 {
+    margin-bottom: 28px;
+}
+
+.adminSidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.adminSidebar a {
+    color: #f8d7a4 !important;
+    text-decoration: none;
+    padding: 12px 14px;
+    border-radius: 10px;
+}
+
+.adminSidebar a.active,
+.adminSidebar a:hover {
+    background: linear-gradient(to right, #d4a437, #f0c96a);
+    color: #1a0f05 !important;
+}
+
+.adminContent {
+    padding: 32px;
+}
+
+
+
+/*Admin Orders*/
+
+
+.adminPageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.adminPageHeader button {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(to right, #d4a437, #f0c96a);
+    font-weight: 700;
+}
+
+.adminTableCard {
+    background: #fff7e8;
+    border: 1px solid rgba(102, 26, 6, 0.2);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.adminTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.adminTable th,
+.adminTable td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(102, 26, 6, 0.12);
+}
+
+.adminTable th {
+    background: #f4d88f;
+    color: #661a06;
+}
+
+.statusBadge {
+    background: #d4a437;
+    color: #1a0f05;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}

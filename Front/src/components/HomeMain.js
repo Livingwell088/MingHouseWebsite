@@ -22,12 +22,18 @@ export default function HomeMain() {
                 flexDirection: "column",
                 // justifyContent: "center",
                 display: "flex",
-            }} className="hero-left">
+            }} className="hero-left teko">
                 {/* TEXT HERE */}
+
+                <p className="hero-subtitle">
+                    AUTHENTIC CHINESE CUISINE
+                </p>
                 <h1 className={"kolker-brush-regular fontDark fontLarge"} style={{
                     marginBottom: "20px",
                 }}>
                     Ming House</h1>
+
+                <div className="hero-divider"></div>
 
                 <p className={"teko fontDark"} style={{textAlign: "left"}}>Located at 217A Chandler St, Worcester MA 01609,
                     We offer a wide range of delicious Chinese Cuisine.</p>

@@ -162,7 +162,7 @@ const CheckoutPage = (props) => {
             const current = window.sessionStorage.getItem("sessionId");
 
             try {
-                await API.userAPI.create(current, "", "", "", "", true);
+                await API.userAPI.create(current, "", user.firstName, user.lastName, (user.email || ""), true);
 
                 window.sessionStorage.setItem("loggedIn", "true");
                 window.sessionStorage.setItem("username", current);

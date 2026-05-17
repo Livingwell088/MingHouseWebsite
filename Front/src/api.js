@@ -351,7 +351,7 @@ const API = {
 
         },
         get: async () => {
-            const result = await (Api().get("/orders/getOrders"))
+            const result = await (Api().get("/orders/getAllOrders"))
             // console.log(result.data)
 
             return result //.data
@@ -375,6 +375,8 @@ const API = {
                 email: email,
                 guest: isGuest
             }
+
+            console.log(user)
 
             return await Api().post("/users/add", {...user}, {
                 headers: {
