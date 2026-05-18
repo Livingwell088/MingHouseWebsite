@@ -129,6 +129,11 @@
     background: rgba(212, 164, 55, 0.18);
 }
 
+
+
+
+/*Admin Menu*/
+
 .bulkEditBar {
     display: flex;
     gap: 12px;
@@ -170,8 +175,8 @@
 
 .adminTable th,
 .adminTable td {
-    overflow: hidden;
-    text-overflow: ellipsis;
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
     white-space: nowrap;
 }
 
@@ -202,4 +207,57 @@
 
 .colSpicy {
     width: 80px;
+}
+
+.colActions {
+    width: 140px;
+}
+
+.colActions,
+.colActions * {
+    overflow: visible !important;
+    text-overflow: unset !important;
+}
+
+.adminModalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+}
+
+.adminModal {
+    width: min(520px, 92vw);
+    background: #fff7e8;
+    border: 2px solid #d4a437;
+    border-radius: 18px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.adminModal input {
+    padding: 11px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(102, 26, 6, 0.25);
+}
+
+.adminModalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.editButton {
+    border: none;
+    background: #661a06;
+    color: #f8d7a4;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-weight: 600;
 }

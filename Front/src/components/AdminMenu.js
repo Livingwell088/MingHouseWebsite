@@ -7,6 +7,8 @@ import React from 'react';
 export default function AdminMenu() {
 
     const [menu, setMenu] = React.useState([]);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editingItem, setEditingItem] = useState(null);
 
 
     const loadMenu = async () => {
@@ -211,6 +213,8 @@ export default function AdminMenu() {
                         <th className="colPrice">Price</th>
                         {/*<th className="colNewPrice">New Price</th>*/}
                         <th className="colSpicy">Spicy</th>
+                        <th className="colActions">Actions</th>
+
                     </tr>
                     </thead>
 
@@ -241,27 +245,106 @@ export default function AdminMenu() {
                                 <td>${item.price}</td>
                                 {/*<td>{previewPrice && `$${previewPrice}`}</td>*/}
                                 <td>{item.spicy}</td>
+                                <td>
+                                    <button
+                                        onClick={() => {
+                                            setEditingItem(item);
+                                            setShowEditModal(true);
+                                        }}
+                                        className="editButton"
+                                    >
+                                        Edit
+                                    </button>
+                                </td>
                             </tr>
                         );
                     })}
                     </tbody>
 
-                    {/*<tbody>*/}
-                    {/*{menu.map((item) => {*/}
-                    {/*        <tr key={item.id}>*/}
-                    {/*            <td>{item.number}</td>*/}
-                    {/*            <td>{item.name}</td>*/}
-                    {/*            <td>{item.size}</td>*/}
-                    {/*            <td>{item.category}</td>*/}
-                    {/*            <td>{item.price}</td>*/}
-                    {/*            <td>{item.spicy}</td>*/}
-
-                    {/*        </tr>*/}
-                    {/*    }*/}
-
-                    {/*))}*/}
-                    {/*</tbody>*/}
                 </table>
+
+                {showEditModal && editingItem && (
+                    <div className="adminModalOverlay">
+                        <div className="adminModal">
+                            <h2>Edit Menu Item</h2>
+
+                            <input
+                                value={editingItem.number || ""}
+                                onChange={(e) =>
+                                    setEditingItem({ ...editingItem, number: e.target.value })
+                                }
+                                placeholder="Number"
+                            />
+
+                            <input
+                                value={editingItem.name || ""}
+                                onChange={(e) =>
+                                    setEditingItem({ ...editingItem, name: e.target.value })
+                                }
+                                placeholder="Name"
+                            />
+
+                            <input
+                                value={editingItem.size || ""}
+                                onChange={(e) =>
+                                    setEditingItem({ ...editingItem, size: e.target.value })
+                                }
+                                placeholder="Size"
+                            />
+
+                            <input
+                                value={editingItem.category || ""}
+                                onChange={(e) =>
+                                    setEditingItem({ ...editingItem, category: e.target.value })
+                                }
+                                placeholder="Category"
+                            />
+
+                            <input
+                                value={editingItem.price || ""}
+                                onChange={(e) =>
+                                    setEditingItem({ ...editingItem, price: e.target.value })
+                                }
+                                placeholder="Price"
+                            />
+
+                            <input
+                                value={editingItem.spicy || ""}
+                                onChange={(e) =>
+                                    setEditingItem({ ...editingItem, spicy: e.target.value })
+                                }
+                                placeholder="Spicy"
+                            />
+
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={editingItem.available ?? true}
+                                    onChange={(e) =>
+                                        setEditingItem({ ...editingItem, available: e.target.checked })
+                                    }
+                                />
+                                Available
+                            </label>
+
+                            <div className="adminModalActions">
+                                <button onClick={() => setShowEditModal(false)}>Cancel</button>
+
+                                <button
+                                    onClick={async () => {
+                                        await API.menuAPI.edit(editingItem);
+                                        await loadMenu();
+                                        setShowEditModal(false);
+                                        setEditingItem(null);
+                                    }}
+                                >
+                                    Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
             </div>
 
         </div>
