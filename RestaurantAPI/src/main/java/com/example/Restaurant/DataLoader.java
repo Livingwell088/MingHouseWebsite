@@ -95,7 +95,7 @@ public class DataLoader {
                         String[] split = line.split(";");
 
                         Menu current = new Menu(
-                                split[0],
+                                (split[0]),
                                 split[1],
                                 split[2],
                                 split[3],

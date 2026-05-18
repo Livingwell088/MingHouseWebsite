@@ -124,3 +124,82 @@
     border-bottom: 1px solid rgba(102, 26, 6, 0.12);
     padding-bottom: 8px;
 }
+
+.selectedRow {
+    background: rgba(212, 164, 55, 0.18);
+}
+
+.bulkEditBar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+
+.adminMenuFilters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.adminMenuFilters input,
+.adminMenuFilters select {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(102, 26, 6, 0.25);
+}
+
+.adminMenuFilters input {
+    flex: 1;
+}
+
+.adminMenuFilters button {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: none;
+    background: #661a06;
+    color: #f8d7a4;
+}
+
+.adminTable {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.adminTable th,
+.adminTable td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.colCheck {
+    width: 44px;
+}
+
+.colNumber {
+    width: 70px;
+}
+
+.colName {
+    width: 28%;
+}
+
+.colSize {
+    width: 90px;
+}
+
+.colCategory {
+    width: 160px;
+}
+
+.colPrice,
+.colNewPrice {
+    width: 110px;
+}
+
+.colSpicy {
+    width: 80px;
+}

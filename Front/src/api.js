@@ -199,6 +199,16 @@ const API = {
             // console.log(result.data)
 
             return result;
+        },
+        edit: async (menuItem) => {
+
+            return await Api().put("/menu/edit", menuItem, {
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                timeout: 10000,
+            });
         }
     },
     cartAPI: {

@@ -10,7 +10,7 @@ import java.util.List;
 
 
 //@Repository
-public interface MenuRepository extends JpaRepository<Menu, Long> {
+public interface MenuRepository extends JpaRepository<Menu, String> {
 
     @Query("SELECT m FROM Menu m WHERE m.number = :menuNumber")
     List<Menu> findAllMenuByNumber(@Param("menuNumber") String menuNumber);

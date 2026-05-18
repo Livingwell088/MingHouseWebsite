@@ -13,4 +13,5 @@ public interface MenuService {
 
     List<Menu> findAllMenuByNumber(String menuNumber);
 
+    Menu updateMenuItem(Menu updatedItem);
 }

@@ -2,6 +2,8 @@ package com.example.Restaurant.model;
 
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
@@ -11,6 +13,8 @@ public class Menu {
     private String id;
 
     private String number, name, size, category, price, spicy;
+
+    private Boolean available = true;
 
     public Menu() {
     }
@@ -23,6 +27,17 @@ public class Menu {
         this.category = category;
         this.price = price;
         this.spicy = spicy;
+    }
+
+    public Menu(String id, String number, String name, String size, String category, String price, String spicy, Boolean available) {
+        this.id = id;
+        this.number = number;
+        this.name = name;
+        this.size = size;
+        this.category = category;
+        this.price = price;
+        this.spicy = spicy;
+        this.available = available;
     }
 
     public String getId() {
@@ -92,6 +107,14 @@ public class Menu {
                 ", price='" + price + '\'' +
                 ", spicy='" + spicy + '\'' +
                 '}';
+    }
+
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
     }
 }
 

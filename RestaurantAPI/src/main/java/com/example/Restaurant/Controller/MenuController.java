@@ -55,4 +55,10 @@ public class MenuController {
     public List<Menu> getMenuByNumber(@PathVariable String menuNumber) {
         return menuService.findAllMenuByNumber(menuNumber);
     }
+
+
+    @PutMapping(path = "/edit")
+    public void editMenu(@RequestBody Menu menuItem){
+        menuService.updateMenuItem(menuItem);
+    }
 }
