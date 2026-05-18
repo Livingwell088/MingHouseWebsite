@@ -80,7 +80,7 @@ export default function AdminOrders() {
                         <td>{order.items?.length || 0}</td>
                         <td>${API.priceAPI.price(order.orderPrice * 1.07)}</td>
                         <td>
-                            <span className="statusBadge">New</span>
+                            <span className="statusBadge">{order.orderStatus}</span>
                         </td>
                     </tr>
 

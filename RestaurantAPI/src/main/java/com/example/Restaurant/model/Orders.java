@@ -38,6 +38,8 @@ public class Orders {
 
     private String timePlaced;
 
+    private String orderStatus = "New";
+
     @OneToMany
     private List<CartItem> items;
 
@@ -59,7 +61,21 @@ public class Orders {
         this.items = items;
     }
 
-
+    public Orders(Long id, String orderName, double orderPrice, String orderType, StoreUser user, String address, String phoneNumber, String specialInstructions, String orderTime, String datePlaced, String timePlaced, String orderStatus, List<CartItem> items) {
+        this.id = id;
+        this.orderName = orderName;
+        this.orderPrice = orderPrice;
+        this.orderType = orderType;
+        this.user = user;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.specialInstructions = specialInstructions;
+        this.orderTime = orderTime;
+        this.datePlaced = datePlaced;
+        this.timePlaced = timePlaced;
+        this.orderStatus = orderStatus;
+        this.items = items;
+    }
 
     public Long getId() {
         return id;
@@ -174,6 +190,14 @@ public class Orders {
                 ", timePlaced='" + timePlaced + '\'' +
                 ", items=" + items +
                 '}';
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }
 

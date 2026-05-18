@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/orders")
@@ -51,6 +52,14 @@ public class OrderController {
     public List<Orders> getOrderByUser(@PathVariable String userId){
 
         return orderService.getOrdersByUser(userId);
+    }
+
+    @PutMapping("/{id}/status")
+    public Orders updateStatus(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body
+    ) {
+        return orderService.updateOrderStatus(id, body.get("status"));
     }
 
 }

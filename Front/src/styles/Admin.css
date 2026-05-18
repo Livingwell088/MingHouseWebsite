@@ -261,3 +261,50 @@
     border-radius: 10px;
     font-weight: 600;
 }
+
+
+
+
+/*Admin Dashboard*/
+.dashboardStatsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.dashboardCard {
+    background: #fff7e8;
+    border: 1px solid rgba(102, 26, 6, 0.15);
+    border-radius: 18px;
+    padding: 24px;
+}
+
+.dashboardCard h3 {
+    color: #661a06;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.dashboardCard p {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a0f05;
+}
+
+.dashboardQuickActions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.dashboardQuickActions button {
+    border: none;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: linear-gradient(to right, #d4a437, #f0c96a);
+    color: #1a0f05;
+    font-weight: 700;
+}
+
+

@@ -17,6 +17,8 @@ public interface OrderService {
 
     public void deleteAll();
 
+    Orders updateOrderStatus(Long id, String status);
+
 //    public List<Orders> getOrdersByUser();
 
 //    List<Orders> getOrdersByUser(StoreUser user);

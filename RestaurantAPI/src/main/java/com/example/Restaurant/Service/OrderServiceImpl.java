@@ -5,6 +5,7 @@ import com.example.Restaurant.Repository.CartRepository;
 import com.example.Restaurant.Repository.OrderRepository;
 import com.example.Restaurant.Repository.UserRepository;
 import com.example.Restaurant.model.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -316,8 +317,21 @@ public class OrderServiceImpl implements OrderService{
         orderRepository.deleteAll();
     }
 
+    @Override
+    public Orders updateOrderStatus(Long id, String status) {
 
-//    @Override
+        Orders current = orderRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Order Not Found with ID: " + id
+                ));
+
+        current.setOrderStatus(status);
+
+        return orderRepository.saveAndFlush(current);
+    }
+
+
+    //    @Override
     public List<Orders> getOrdersByUser(StoreUser user) {
 
         return orderRepository.findAllByUser(user);

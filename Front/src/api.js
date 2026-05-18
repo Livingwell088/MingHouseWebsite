@@ -371,6 +371,11 @@ const API = {
             // console.log(result.data)
 
             return result //.data
+        },
+        updateStatus: async (id, status) => {
+            return await Api().put(`/orders/${id}/status`, {
+                status: status
+            });
         }
     },
 
@@ -457,6 +462,16 @@ const API = {
         },
         compare: (time1, time2) => {
             return compareTime(time1, time2)
+        },
+
+        getDate: () => {
+            const date = new Date();
+            // console.log(date);
+            // return date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
+            const currentDate = months[date.getMonth()] + " " + date.getDate() + " " + date.getFullYear();
+            const currentTime = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+
+            return currentDate;
         }
     }
 }
