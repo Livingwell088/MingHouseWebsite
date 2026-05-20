@@ -22,7 +22,7 @@ export default function AdminDashboard() {
                 const dateB = new Date(`${b.datePlaced} ${b.timePlaced}`);
                 return dateB - dateA;
             }).filter((item) => {
-                console.log(item.datePlaced);
+                // console.log(item.datePlaced);
                 return item.datePlaced == API.timeAPI.getDate()
             });
 
@@ -43,6 +43,7 @@ export default function AdminDashboard() {
 
             setOrders(latestOrders);
             setRevenue(currentRevenue);
+            setActiveOrder(currentActiveOrder);
         } catch (error) {
             console.log(error.message);
         }
@@ -72,7 +73,7 @@ export default function AdminDashboard() {
 
                 <div className="dashboardCard">
                     <h3>Revenue</h3>
-                    <p>${revenue}</p>
+                    <p>${API.priceAPI.price(revenue)}</p>
                 </div>
 
                 <div className="dashboardCard">
@@ -82,7 +83,11 @@ export default function AdminDashboard() {
 
                 <div className="dashboardCard">
                     <h3>Avg Order</h3>
-                    <p>${revenue / orders.length}</p>
+                    ${
+                    API.priceAPI.price(
+                        orders.length > 0 ? revenue / orders.length : 0
+                    )
+                }
                 </div>
 
             </div>

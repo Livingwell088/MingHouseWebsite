@@ -12,7 +12,7 @@ const AdminLayout = (props) => {
                     <NavLink to="/admin/orders">Orders</NavLink>
                     <NavLink to="/admin/menu">Menu</NavLink>
                     <NavLink to="/admin/analytics">Analytics</NavLink>
-                    <NavLink to="/admin/pos">POS</NavLink>
+                    <NavLink to="/admin/store">Store Settings</NavLink>
                 </nav>
             </aside>
 

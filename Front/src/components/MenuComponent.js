@@ -462,28 +462,91 @@ const MenuComponent = (props) => {
 
                 {searchTerm ? (
                     <div className="menu-grid grid-3">
+
                         {Object.keys(props.menu).map((item) => {
+
                             const menuItems = props.menu[item];
 
-                            // flatten + filter
-                            return menuItems
-                                .filter(m =>
-                                    m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                    String(m.number).includes(searchTerm)
-                                )
-                                .map((current) => (
+                            const filteredItems = menuItems.filter(m =>
+                                m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                String(m.number).includes(searchTerm)
+                            );
+
+                            if (filteredItems.length === 0) {
+                                return null;
+                            }
+
+                            let names = [];
+
+                            for (let i = 0; i < filteredItems.length; i++) {
+                                if (!names.includes(filteredItems[i].name)) {
+                                    names.push(filteredItems[i].name);
+                                }
+                            }
+
+                            if (names.length === 1) {
+
+                                let sizes = [];
+                                let prices = [];
+                                let items = [];
+
+                                for (let i = 0; i < filteredItems.length; i++) {
+                                    sizes.push(filteredItems[i].size);
+                                    prices.push(filteredItems[i].price);
+                                    items.push(filteredItems[i]);
+                                }
+
+                                return (
                                     <MenuCard
-                                        key={current.id}
-                                        id={current.id}
-                                        number={current.number}
-                                        name={current.name}
-                                        size={[current.size]}
-                                        price={[current.price]}
-                                        menu={[current]}
-                                        onOpen={(menuItems) => handleShow({ menu: menuItems }, "Add")}
+                                        key={items[0].id}
+                                        id={items[0].id}
+                                        number={items[0].number}
+                                        name={items[0].name}
+                                        size={sizes}
+                                        price={prices}
+                                        menu={items}
+                                        onOpen={(menuItems) =>
+                                            handleShow({ menu: menuItems }, "Add")
+                                        }
                                     />
-                                ));
+                                );
+                            }
+
+                            return names.map((name) => {
+
+                                let sizes = [];
+                                let prices = [];
+                                let items = [];
+
+                                for (let i = 0; i < filteredItems.length; i++) {
+
+                                    let current = filteredItems[i];
+
+                                    if (current.name === name) {
+                                        sizes.push(current.size);
+                                        prices.push(current.price);
+                                        items.push(current);
+                                    }
+                                }
+
+                                return (
+                                    <MenuCard
+                                        key={items[0].id}
+                                        id={items[0].id}
+                                        number={items[0].number}
+                                        name={name}
+                                        size={sizes}
+                                        price={prices}
+                                        menu={items}
+                                        onOpen={(menuItems) =>
+                                            handleShow({ menu: menuItems }, "Add")
+                                        }
+                                    />
+                                );
+                            });
+
                         })}
+
                     </div>
                 ) : (
                     categories.map(category => (

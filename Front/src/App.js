@@ -24,6 +24,7 @@ import AdminMenu from "./components/AdminMenu";
 import AdminLogin from "./components/AdminLogin";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import MainLayout from "./MainLayout";
+import AdminAnalytics from "./components/AdminAnalytics";
 
 class App extends Component {
 
@@ -80,7 +81,7 @@ class App extends Component {
                             <Route index element={<AdminDashboard />} />
                             <Route path="orders" element={<AdminOrders />} />
                             <Route path="menu" element={<AdminMenu />} />
-                            {/*<Route path="analytics" element={<AdminAnalytics />} />*/}
+                            <Route path="analytics" element={<AdminAnalytics />} />
                             {/*<Route path="pos" element={<AdminPOS />} />*/}
                         </Route>
                     </Route>

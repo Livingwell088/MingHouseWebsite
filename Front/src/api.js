@@ -183,7 +183,14 @@ const months = ["January", "February", "March", "April", "May", "June", "July", 
 const API = {
     priceAPI: {
         price: (price) => {
-            return price.toFixed(2);
+
+            const value = Number(price);
+
+            if (!Number.isFinite(value)) {
+                return "0.00";
+            }
+
+            return value.toFixed(2);
         }
     },
     menuAPI: {
