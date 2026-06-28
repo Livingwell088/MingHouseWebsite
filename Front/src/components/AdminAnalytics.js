@@ -1,11 +1,40 @@
 import "../styles/Admin.css";
 import {useEffect, useState} from "react";
 import API from "../api";
-import {isCompositeComponentWithType} from "react-dom/test-utils";
+// import {isCompositeComponentWithType} from "react-dom/test-utils";
+// import {
+//     Chart as ChartJS,
+//     CategoryScale,
+//     LinearScale,
+//     BarElement,
+//     Tooltip,
+//     Legend
+// } from "chart.js";
+//
+// import { Bar } from "react-chartjs-2";
+//
+// ChartJS.register(
+//     CategoryScale,
+//     LinearScale,
+//     BarElement,
+//     Tooltip,
+//     Legend
+// );
+
+import {
+    ResponsiveContainer,
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    Tooltip,
+    CartesianGrid
+} from "recharts";
 
 
 
 export default function AdminAnalytics() {
+
 
     const today = new Date().toISOString().split("T")[0];
     const [startDate, setStartDate] = useState(today);
@@ -20,7 +49,6 @@ export default function AdminAnalytics() {
 
 
     const loadOrders = async () => {
-
         try {
             const res = await API.orderAPI.get();
 
@@ -109,6 +137,30 @@ export default function AdminAnalytics() {
         loadOrders();
     }, []);
 
+    const ordersByHour = [
+        { hour: "11 AM", orders: 3 },
+        { hour: "12 PM", orders: 8 },
+        { hour: "1 PM", orders: 5 },
+        { hour: "5 PM", orders: 6 },
+        { hour: "6 PM", orders: 12 },
+        { hour: "7 PM", orders: 9 },
+    ];
+
+    const chartData = {
+        labels: ordersByHour.map(item => item.hour),
+        datasets: [
+            {
+                label: "Orders",
+                data: ordersByHour.map(item => item.orders),
+            }
+        ]
+    };
+
+    // const ordersByHour = orders.reduce((acc, order) => {
+    //   const hour = order.timePlaced?.split(":")[0];
+    //   // group by hour
+    // }, {});
+
     return (
         <div>
             <div className="adminPageHeader">
@@ -165,10 +217,38 @@ export default function AdminAnalytics() {
                 </div>
             </div>
 
+            {/*<div className="dashboardChartCard">*/}
+            {/*    <h2>Orders by Hour</h2>*/}
+            {/*    <Bar data={chartData} />*/}
+            {/*</div>*/}
+
             <div className="dashboardChartCard">
                 <h2>Orders by Hour</h2>
-                <div className="analyticsPlaceholder">Chart goes here</div>
+
+                <ResponsiveContainer width="100%" height={320}>
+                    <LineChart data={ordersByHour}>
+
+                        <CartesianGrid strokeDasharray="3 3" />
+
+                        <XAxis dataKey="hour" />
+
+                        <YAxis allowDecimals={false} />
+
+                        <Tooltip />
+
+                        <Line
+                            type="monotone"
+                            dataKey="orders"
+                            stroke="#d4a437"
+                            strokeWidth={3}
+                            dot={{ r: 5 }}
+                        />
+
+                    </LineChart>
+                </ResponsiveContainer>
             </div>
+
+
 
             <div className="adminTableCard analyticsTable">
                 <h2>Top Selling Items</h2>

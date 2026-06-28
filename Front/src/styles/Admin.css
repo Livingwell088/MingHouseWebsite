@@ -353,3 +353,17 @@
     font-weight: 700;
 }
 
+
+.dashboardChartCard {
+    background: #fff7e8;
+    border: 1px solid rgba(102, 26, 6, 0.15);
+    border-radius: 18px;
+    padding: 24px;
+    margin-top: 28px;
+}
+
+.dashboardChartCard h2 {
+    color: #661a06;
+    margin-bottom: 18px;
+}
+
