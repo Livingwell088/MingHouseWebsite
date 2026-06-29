@@ -6,6 +6,7 @@ com\example\Restaurant\WebConfig$1.class
 com\example\Restaurant\Service\OrderService.class
 com\example\Restaurant\Repository\MenuRepository.class
 com\example\Restaurant\model\StoreUser.class
+com\example\Restaurant\Controller\HealthController.class
 com\example\Restaurant\RestaurantApplication.class
 com\example\Restaurant\Service\CartServiceImpl.class
 com\example\Restaurant\Service\EmailService.class
