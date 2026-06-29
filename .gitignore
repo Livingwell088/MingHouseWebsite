@@ -1,0 +1,17 @@
+# IntelliJ
+.idea/
+**/.idea/
+
+# Node
+node_modules/
+**/node_modules/
+
+# React build output
+Front/build/
+
+# Spring Boot
+RestaurantAPI/target/
+
+# Environment files
+.env
+*.env
