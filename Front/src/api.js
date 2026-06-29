@@ -11,8 +11,8 @@ function Api() {
         },
         timeout: 10000,
     };
-    // axiosConfig.baseURL = "https://minghousewebsite-backend.onrender.com";
-    axiosConfig.baseURL = "http://localhost:8080";
+    axiosConfig.baseURL = "https://minghousewebsite-backend.onrender.com";
+    // axiosConfig.baseURL = "http://localhost:8080";
     // http://localhost:8080
 
     return axios.create(axiosConfig);
