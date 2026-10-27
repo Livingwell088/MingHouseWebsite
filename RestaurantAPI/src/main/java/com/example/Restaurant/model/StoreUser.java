@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class StoreUser {
@@ -18,6 +19,7 @@ public class StoreUser {
     @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String usernameId;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private String firstName;
@@ -101,7 +103,6 @@ public class StoreUser {
     public String toString() {
         return "StoreUser{" +
                 "usernameId='" + usernameId + '\'' +
-                ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +

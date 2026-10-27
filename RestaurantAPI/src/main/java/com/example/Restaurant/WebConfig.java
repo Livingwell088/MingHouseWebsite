@@ -29,7 +29,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("*")
+                        .allowedOrigins("https://minghousema.com", "https://www.minghousema.com", "http://localhost:3000")
                         .allowedMethods("*")
                         .allowedHeaders("*");
             }

@@ -1,7 +1,9 @@
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
+import API from "../api";
 import "../styles/Admin.css";
 
 const AdminLayout = (props) => {
+    const navigate = useNavigate();
     return (
         <div className="adminPage">
             <aside className="adminSidebar">
@@ -14,6 +16,9 @@ const AdminLayout = (props) => {
                     <NavLink to="/admin/analytics">Analytics</NavLink>
                     <NavLink to="/admin/store">Store Settings</NavLink>
                 </nav>
+                <button onClick={() => { API.adminAPI.logout(); navigate('/admin/login', {replace: true}); }}>
+                    Log out
+                </button>
             </aside>
 
             <main className="adminContent">

@@ -2,6 +2,12 @@ import axios from "axios";
 
 let apiToken = null;
 let apiTokenFetchTime = new Date();
+// Admin credentials live only in memory and are cleared on logout/reload.
+let adminAuthorization = null;
+
+export function clearAdminCredentials() {
+    adminAuthorization = null;
+}
 
 function Api() {
     const axiosConfig = {
@@ -11,7 +17,11 @@ function Api() {
         },
         timeout: 10000,
     };
-    axiosConfig.baseURL = "https://minghousewebsite-backend.onrender.com";
+    axiosConfig.baseURL = process.env.REACT_APP_API_URL || "https://minghousewebsite-backend.onrender.com";
+    if (adminAuthorization) {
+        axiosConfig.headers.Authorization = adminAuthorization;
+        axiosConfig.headers["X-Admin-Request"] = "true";
+    }
     // axiosConfig.baseURL = "http://localhost:8080";
     // http://localhost:8080
 
@@ -181,6 +191,20 @@ const months = ["January", "February", "March", "April", "May", "June", "July", 
 
 
 const API = {
+    adminAPI: {
+        login: async (username, password) => {
+            const bytes = new TextEncoder().encode(`${username}:${password}`);
+            adminAuthorization = `Basic ${btoa(String.fromCharCode(...bytes))}`;
+            try {
+                return await Api().get('/admin/session');
+            } catch (error) {
+                clearAdminCredentials();
+                throw error;
+            }
+        },
+        session: () => Api().get('/admin/session'),
+        logout: clearAdminCredentials,
+    },
     priceAPI: {
         price: (price) => {
 
