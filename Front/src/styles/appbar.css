@@ -212,6 +212,9 @@ a {
 
 
 /*Mobile Responsive Design*/
+.mobileNavCart {
+    display: none;
+}
 
 @media (max-width: 768px) {
     #navbar1 {
@@ -256,5 +259,138 @@ a {
     .navbar-toggler {
         border: none;
         filter: brightness(1.5);
+    }
+}
+
+/* Match Bootstrap's md collapse breakpoint; desktop navigation stays unchanged. */
+@media (max-width: 767.98px) {
+    #navbar1 {
+        height: 76px;
+        padding: 8px 16px;
+        overflow: visible;
+    }
+
+    #navbar1 .navcontainer {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr) 44px;
+        gap: 8px;
+        padding: 0;
+    }
+
+    #navbar1 #logo {
+        justify-self: center;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    #navbar1 #logo a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 58px;
+    }
+
+    #navbar1 #logo img {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        height: 58px;
+        object-fit: contain;
+        object-position: center;
+    }
+
+    #navbar1 .navbar-toggler {
+        width: 44px;
+        height: 44px;
+        padding: 9px;
+        border: 1px solid rgba(247, 210, 90, 0.5);
+        border-radius: 10px;
+        filter: none;
+        color: #f7d25a;
+    }
+
+    #navbar1 .navbar-toggler-icon {
+        width: 24px;
+        height: 24px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath stroke='%23f7d25a' stroke-width='2' stroke-linecap='round' d='M3 6h18M3 12h18M3 18h18'/%3E%3C/svg%3E");
+    }
+
+    #navbar1 .mobileNavCart {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        color: #f7d25a !important;
+        border: 1px solid rgba(247, 210, 90, 0.5);
+        border-radius: 10px;
+        font-size: 1.1rem;
+        text-decoration: none;
+    }
+
+    #navbar1 #basic-navbar-nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin: 0;
+        padding: 16px;
+        border-radius: 0 0 16px 16px;
+        border-bottom: 1px solid rgba(247, 210, 90, 0.4);
+        background: #1a1a1a;
+        max-height: calc(100dvh - 76px);
+        overflow-y: auto;
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    #navbar1 #basic-navbar-nav.collapsing {
+        overflow: hidden;
+    }
+
+    #navbar1 #basic-navbar-nav {
+        scrollbar-width: none;
+    }
+
+    #navbar1 #basic-navbar-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    #navbar1 #basic-navbar-nav > .navbar-nav {
+        width: 100%;
+    }
+
+    #navbar1 #navLinks {
+        width: 100%;
+        align-items: stretch !important;
+        gap: 4px !important;
+    }
+
+    #navbar1 #order-btn {
+        width: 100%;
+        max-width: none;
+        min-height: 48px;
+        margin: 0 0 8px;
+    }
+
+    #navbar1 .navitem a {
+        display: flex;
+        align-items: center;
+        min-height: 48px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        text-align: left;
+        font-size: 1.2rem;
+    }
+
+    #navbar1 .navitem a:hover {
+        background: rgba(247, 210, 90, 0.1);
+    }
+
+    #navbar1 a:focus-visible,
+    #navbar1 button:focus-visible {
+        outline: 2px solid #f7d25a;
+        outline-offset: 2px;
     }
 }

@@ -132,8 +132,9 @@ const ConfirmationModal = (props) => {
 
             <Modal.Body style={{textAlign: "center"}}>
 
-                <h2>✅ Order Confirmed!</h2>
-                <p>Thank you for your order</p>
+                <h2>Order received</h2>
+                <p>Thank you for ordering from Ming House.</p>
+                <p>For questions about your order, call <a href="tel:15087566888">(508) 756-6888</a>.</p>
 
                 {/*<div className="orderMeta">*/}
                 {/*    <p><strong>Order #:</strong> {props.order.orderName}</p>*/}

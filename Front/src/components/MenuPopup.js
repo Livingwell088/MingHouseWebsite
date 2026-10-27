@@ -5,10 +5,12 @@ import Image from 'react-bootstrap/Image';
 import "../styles/menuPopup.css"
 import '../styles/fonts.css';
 import API from "../api";
+import {useMenuPhoto} from "../Services/MenuPhotos";
 
 // import dumpling from "/"
 
 const MenuPopup = (props) => {
+    const {photo, onPhotoError} = useMenuPhoto(props.item?.[0]?.number);
 
     const [show, setShow] = useState(false)
     const [count, setCount] = useState(1)
@@ -347,11 +349,13 @@ const MenuPopup = (props) => {
                                 {/*    className="menuImg"*/}
                                 {/*    rounded={false}*/}
                                 {/*/>*/}
-                                <Image
-                                    src={"/images/" + "1" + ".png"}
+                                {photo ? <Image
+                                    src={photo}
+                                    alt={props.name}
+                                    onError={onPhotoError}
                                     className="menuImg"
                                     rounded={false}
-                                />
+                                /> : <div className="popupPhotoPlaceholder">Photo coming soon</div>}
                                 <div className="popupImageCaption">
                                     <strong>{props.name}</strong>
                                 </div>
@@ -359,7 +363,9 @@ const MenuPopup = (props) => {
                         </div>
 
                         <div className="popupRight">
-                            <div className="popupDesc">Spicy, sweet & tangy chicken</div>
+                            {props.item[0]?.description && (
+                                <div className="popupDesc">{props.item[0].description}</div>
+                            )}
 
                             <div>
                                 <div className="popupOptionsTitle">Options</div>

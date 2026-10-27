@@ -322,7 +322,7 @@ const API = {
     },
 
     orderAPI: {
-        create: async (orderName, orderPrice, orderType, username, address, phoneNumber, specialInstruction, orderTime, orderItems) => {
+        create: async (orderName, orderPrice, orderType, username, address, phoneNumber, specialInstruction, orderTime, orderItems, customerEmail) => {
 
             const date = new Date();
             const currentDate = months[date.getMonth()] + " " + date.getDate() + " " + date.getFullYear();
@@ -346,10 +346,10 @@ const API = {
                 orderName: date.getMonth().toString() + date.getDate().toString() + date.getFullYear().toString(),
                 orderPrice: orderPrice,
                 orderType: orderType,
-                user: user,
+                user: {...user, email: customerEmail === undefined ? user.email : customerEmail.trim()},
                 address: address,
                 phoneNumber: phoneNumber,
-                specialInstruction: specialInstruction,
+                specialInstructions: specialInstruction,
                 orderTime: orderTime,
                 datePlaced: currentDate,
                 timePlaced: currentTime,

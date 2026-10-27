@@ -150,7 +150,10 @@ const CheckoutLeft = (props) => {
 
                         <input
                             name="email"
-                            placeholder="Email (optional)"
+                            type="email"
+                            placeholder="Email for your order receipt"
+                            aria-label="Email for your order receipt (required)"
+                            required
                             value={props.user?.email || ""}
                             onChange={props.handleChangeUser}
                         />

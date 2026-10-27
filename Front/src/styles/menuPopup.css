@@ -106,6 +106,16 @@ a:hover {
     background: #f6deb5;
 }
 
+.popupPhotoPlaceholder {
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    color: #661a06;
+    background: #f6deb5;
+}
+
 .popupImageCaption {
     padding: 14px 16px;
     font-size: 1.2rem;
@@ -266,22 +276,158 @@ a:hover {
 }
 
 @media (max-width: 768px) {
-    .popupContent {
-        grid-template-columns: 1fr;
+    .popup.modal {
+        z-index: 4000;
     }
 
-    .menuImg {
-        height: 220px;
+    .popup .modal-dialog {
+        margin: 0;
+        min-height: 100%;
+        max-width: none;
+        align-items: flex-end;
+    }
+
+    .popup .modal-content {
+        max-height: 94vh;
+        max-height: 94dvh;
+        border-radius: 20px 20px 0 0 !important;
+        border-bottom: 0 !important;
+    }
+
+    .popup .modal-header {
+        flex-shrink: 0;
+        padding: 4px 12px !important;
+        min-height: 48px;
+    }
+
+    .popup .modal-header .btn-close {
+        min-width: 44px;
+        min-height: 44px;
+        box-sizing: border-box;
+        padding: 12px;
+        margin: 0 0 0 auto;
+    }
+
+    .popup .modal-body {
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .popup .popupTitle {
+        padding: 0 16px 12px;
+        margin: 12px 0 0;
+        font-size: 1.6rem;
+        line-height: 1.2;
+        overflow-wrap: anywhere;
+    }
+
+    .popup .popupContent {
+        grid-template-columns: 1fr;
+        padding: 16px;
+        gap: 16px;
+    }
+
+    .popup .menuImg {
+        height: 150px;
+    }
+
+    .popup .popupImageCaption {
+        display: none;
+    }
+
+    .popup .popupPhotoPlaceholder {
+        min-height: 0;
+        padding: 12px;
+        font-size: 1rem;
+    }
+
+    .popup .popupRight {
+        min-width: 0;
+        gap: 16px;
+    }
+
+    .popup .popupOptionsTitle {
+        font-size: 1.2rem;
+    }
+
+    .popup .popupOptions {
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    .popup .popupOptionRow {
+        min-height: 48px;
+        grid-template-columns: 20px minmax(0, 1fr) auto;
+        gap: 10px;
+        padding: 10px 12px;
+        font-size: 1.05rem;
+        line-height: 1.25;
+    }
+
+    .popup .popupOptionText {
+        overflow-wrap: anywhere;
+    }
+
+    .popup .specialText {
+        font-size: 16px;
+        min-height: 88px;
     }
 
     .popup .modal-footer {
-        flex-direction: column !important;
-        align-items: stretch !important;
+        flex-shrink: 0;
+        display: grid !important;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 10px;
+        padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+        border-top: 1px solid rgba(102, 26, 6, 0.25) !important;
+        background: #f8d7a4;
+        box-shadow: 0 -4px 12px rgba(102, 26, 6, 0.08);
     }
 
-    .popupActions {
+    .popup .modal-footer > * {
+        margin: 0;
+    }
+
+    .popup .popupQtyRow {
+        gap: 4px;
+    }
+
+    .popup .popupQtyRow button {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 8px;
+    }
+
+    .popup .popupQtyValue {
+        min-width: 24px;
+        font-size: 1.2rem;
+    }
+
+    .popup .popupActions {
+        display: grid;
+        grid-template-columns: 1fr;
         width: 100%;
         margin-left: 0;
-        flex-direction: column;
+        gap: 8px;
+    }
+
+    .popup .popupActions button {
+        min-height: 44px;
+        width: 100%;
+        padding: 10px 8px;
+        line-height: 1.2;
+        font-size: 1.05rem;
+    }
+
+    .popup .popupActions button:first-child {
+        grid-row: 2;
+    }
+
+    .popup .popupOptionRow:focus-within,
+    .popup button:focus-visible {
+        outline: 2px solid #661a06;
+        outline-offset: 2px;
     }
 }

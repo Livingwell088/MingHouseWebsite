@@ -1,5 +1,6 @@
 // import logo from './logo.svg';
 import '../styles/menuPage.css';
+import '../styles/menuMobile.css';
 import Appbar from "../components/Appbar"
 import MenuComponent from "../components/MenuComponent";
 import {Component} from "react";
@@ -85,11 +86,10 @@ const MenuPage = (props) => {
         <>
 
             <CssBaseline />
-            <div className="App teko">
+            <div className="App teko menu-page">
 
 
 
-                    <h1 className={"dancing-script fontDark"}>Menu</h1>
                     <div>
 
                         <div id={"cont"}>

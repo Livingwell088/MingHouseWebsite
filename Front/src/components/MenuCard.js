@@ -5,6 +5,7 @@ import {Button, Col, Row} from "react-bootstrap";
 import MenuPopup from "./MenuPopup";
 import {useState} from "react";
 import Image from "react-bootstrap/Image";
+import {useMenuPhoto} from "../Services/MenuPhotos";
 
 
 const MenuCard = (props) => {
@@ -12,7 +13,7 @@ const MenuCard = (props) => {
     // const handleShow = () => setShowPopup(true);
     // const handleClose = () => setShowPopup(false);
 
-    const [imgError, setImgError] = useState(false);
+    const {photo, onPhotoError} = useMenuPhoto(props.number);
 
 
     // console.log(props)
@@ -80,16 +81,16 @@ const MenuCard = (props) => {
             {/*    <span>Appetizer</span>*/}
             {/*</div>*/}
 
-            {!imgError ? (
+            {photo ? (
                 <img
-                    src={`/images/${props.number}.png`}
+                    src={photo}
                     className="menuCardImage"
-                    onError={() => setImgError(true)}
-                    alt=""
+                    onError={onPhotoError}
+                    alt={props.name}
                 />
             ) : (
                 <div className="menuCardImage noImage">
-                    <span className="noImageLabel">Appetizer</span>
+                    <span className="noImageLabel">Photo coming soon</span>
                 </div>
             )}
 
@@ -98,11 +99,6 @@ const MenuCard = (props) => {
                     <h5>{props.number + ". " + props.name}</h5>
                     <span className="menuCardPrice">${props.price[0]}</span>
                 </Card.Title>
-
-                <p className="menuCardDescription">
-                    {/*{props.description}*/}
-                    Spicy and Sweet
-                </p>
 
                 <Button className="menuCardBottom"  onClick={(e) => {
                     e.stopPropagation();

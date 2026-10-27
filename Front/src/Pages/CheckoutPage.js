@@ -139,13 +139,14 @@ const CheckoutPage = (props) => {
         if (
             !user.firstName ||
             !user.lastName ||
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((user.email || "").trim()) ||
             !fields.phoneNumber ||
             orderType === "Select One" ||
             orderTime === "Time" ||
             (orderType === "Delivery" && (!fields.address || !fields.zipcode))
         ) {
             setErrorHeading("Error");
-            setErrorContent("Make sure all required fields are provided.");
+            setErrorContent("Complete all required fields, including a valid email address for your order receipt.");
             setShowError(true);
             return;
         } else {
@@ -176,7 +177,8 @@ const CheckoutPage = (props) => {
                     fields.phoneNumber,
                     fields.instruction,
                     orderTime,
-                    cart
+                    cart,
+                    user.email.trim()
                 );
 
                 const placed = res.data;
@@ -266,6 +268,12 @@ const CheckoutPage = (props) => {
                         </div>
                         </div>
 
+                    <p className="checkoutPaymentNote">
+                        Paying by card? Please call the restaurant at <a href="tel:15087566888">(508) 756-6888</a> after placing your order to arrange payment.
+                    </p>
+                    {showError && (
+                        <div role="alert">{errorContent}</div>
+                    )}
                     <button className="placeOrderBtn" onClick={makeOrder}>Place Order</button>
                 </div>
             </aside>

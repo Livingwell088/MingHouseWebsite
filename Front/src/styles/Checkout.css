@@ -10,6 +10,8 @@
 
 
 
+
+
 .checkout-page {
     display: grid;
     /*grid-template-columns: 1fr 420px;*/
@@ -169,6 +171,23 @@
     color: #661a06;
 }
 
+.checkout-page .checkoutPaymentNote {
+    margin: 18px 0 0;
+    padding: 12px 14px;
+    border: 1px solid rgba(102, 26, 6, 0.3);
+    border-radius: 10px;
+    background: #f8edd5;
+    color: #661a06;
+    font-size: 1.1rem;
+    line-height: 1.4;
+}
+
+.checkout-page .checkoutPaymentNote a {
+    font-weight: 700;
+    text-decoration: underline;
+    white-space: nowrap;
+}
+
 .placeOrderBtn {
     width: 100%;
     margin-top: 20px;
@@ -320,5 +339,176 @@
     .checkoutSection textarea {
         margin-top: 8px;
         padding: 13px 14px;
+    }
+}
+
+/* Phone layout: keep all checkout behavior and desktop presentation intact. */
+@media (max-width: 768px) {
+    .checkout-page {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 16px 14px calc(100px + env(safe-area-inset-bottom, 0px));
+        gap: 18px;
+    }
+
+    .checkout-page .checkout-main,
+    .checkout-page .checkoutSummary {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .checkout-page .checkoutCard,
+    .checkout-page .summaryCard {
+        width: 100%;
+        padding: 18px 16px;
+        border-radius: 16px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    }
+
+    .checkout-page .checkoutCard h1 {
+        margin-bottom: 8px;
+        font-size: 1.8rem;
+        line-height: 1.2;
+    }
+
+    .checkout-page .checkoutCard > p {
+        margin-bottom: 4px;
+        font-size: 1rem;
+        line-height: 1.35;
+    }
+
+    .checkout-page .checkoutSection {
+        padding: 16px 0;
+    }
+
+    .checkout-page .checkoutSection:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .checkout-page .checkoutSection h3 {
+        margin-bottom: 10px;
+        font-size: 1.4rem;
+        line-height: 1.2;
+    }
+
+    .checkout-page .checkoutOptionGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .checkout-page .checkoutOption {
+        min-width: 0;
+        min-height: 64px;
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .checkout-page .checkoutOption strong {
+        font-size: 1.1rem;
+        line-height: 1.2;
+    }
+
+    .checkout-page .checkoutOption span {
+        margin-top: 4px;
+        font-size: 1rem;
+        line-height: 1.2;
+    }
+
+    .checkout-page .checkoutInputGrid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 4px;
+    }
+
+    .checkout-page input,
+    .checkout-page textarea,
+    .checkout-page select {
+        min-width: 0;
+        max-width: 100%;
+        font-size: 16px;
+    }
+
+    .checkout-page .checkoutSection input,
+    .checkout-page .checkoutSection select {
+        min-height: 48px;
+    }
+
+    .checkout-page .schedulePanel {
+        padding: 12px;
+        margin-top: 12px;
+    }
+
+    .checkout-page .scheduleTimeSelect {
+        padding: 12px;
+    }
+
+    .checkout-page .summaryHeader {
+        gap: 12px;
+        padding-bottom: 10px;
+    }
+
+    .checkout-page .summaryHeader h2 {
+        margin: 0;
+        font-size: 1.6rem;
+    }
+
+    .checkout-page .summaryHeader button {
+        min-height: 44px;
+        padding: 8px 12px;
+        border: 1px solid #7a2a0a;
+        border-radius: 10px;
+        font-size: 1rem;
+    }
+
+    .checkout-page .summaryItems {
+        min-height: 0;
+        margin-bottom: 14px;
+    }
+
+    .checkout-page .summaryItemRow {
+        align-items: flex-start;
+        gap: 14px;
+        font-size: 1.15rem;
+        line-height: 1.3;
+    }
+
+    .checkout-page .summaryItemRow span:first-child,
+    .checkout-page .summaryItemSub {
+        overflow-wrap: anywhere;
+    }
+
+    .checkout-page .summaryItemRow span:last-child {
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+
+    .checkout-page .summaryItemSub {
+        font-size: 1rem;
+        line-height: 1.3;
+    }
+
+    .checkout-page .summaryTotals {
+        gap: 10px;
+        font-size: 1.15rem;
+    }
+
+    .checkout-page .summaryTotal {
+        padding-top: 12px;
+        font-size: 1.5rem;
+    }
+
+    .checkout-page .placeOrderBtn {
+        min-height: 52px;
+        margin-top: 16px;
+        padding: 12px;
+        font-size: 1.2rem;
+    }
+
+    .checkout-page button:focus-visible,
+    .checkout-page input:focus-visible,
+    .checkout-page textarea:focus-visible {
+        outline: 2px solid #661a06;
+        outline-offset: 2px;
     }
 }
