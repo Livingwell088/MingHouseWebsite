@@ -11,17 +11,25 @@ const PopularCard = (props) => {
     return (
         <>
             <Card className="dish-card">
-                <CardImg className="card-img-top" src={"/images/1.png"}/>
+                <button
+                    type="button"
+                    className="dish-open-button"
+                    aria-label={`Choose #${props.number} ${props.name}`}
+                    disabled={props.disabled}
+                    onClick={props.onOpen}
+                />
+                <CardImg className="card-img-top" src={props.image} alt={props.name} loading="lazy"/>
 
 
                 <CardContent className="dish-content">
+                    <span className="dish-number teko">#{props.number}</span>
                     <h3 className="teko">{props.name}</h3>
                     <p className="dancing-script">{props.description}</p>
                 </CardContent>
 
                 <CardFooter className="dish-footer">
-                    <span className="price teko">${props.price}</span>
-                    <button className="add-btn">+</button>
+                    <span className="price teko">{props.price ? `${props.fromPrice ? 'From ' : ''}$${props.price}` : 'See menu'}</span>
+                    <span className="add-btn" aria-hidden="true">+</span>
                 </CardFooter>
 
             </Card>

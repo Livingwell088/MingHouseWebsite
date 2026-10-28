@@ -1,230 +1,89 @@
-import {Button, Col, FloatingLabel, Image, Modal, Row} from "react-bootstrap";
-import ErrorAlert from "./ErrorAlert";
-import Form from "react-bootstrap/Form";
+import { Image, Modal } from "react-bootstrap";
 import API from "../api";
-import CartItem from "./CartItem";
-import * as React from "react";
-import {useState} from "react";
-import "../styles/Confirmation.css"
+import "../styles/Confirmation.css";
 
+const ConfirmationModal = ({ show, onClose, order }) => {
+    if (!order) return null;
 
-const ConfirmationModal = (props) => {
+    const items = order.items ?? [];
+    const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+    const subtotal = Number(order.orderPrice || 0);
+    const delivery = Number(order.deliveryFee ?? (order.orderType === "Delivery" ? 2 : 0));
+    const tax = Number(order.tax ?? (subtotal + delivery) * 0.07);
+    const total = Number(order.total ?? (subtotal + delivery) * 1.07);
+    const money = value => `$${API.priceAPI.price(value)}`;
 
-    const [totalQuantity, setTotalQuantity] = useState(0)
-    if (!props.order) return null;
-    let test = 0;
-
-    const totalItems = (props.order.items ?? []).reduce(
-        (sum, item) => sum + item.quantity,
-        0
-    );
-
-    // console.log(props.order)
-    return <>
+    return (
         <Modal
-            show={props.show}
-            onHide={props.onClose}
+            show={show}
+            onHide={onClose}
             backdrop="static"
             keyboard={false}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
             centered
-            className={"popup teko"}
-            onClick={e => e.stopPropagation()}
+            scrollable
+            className="order-confirmation"
+            backdropClassName="order-confirmation-backdrop"
+            aria-labelledby="order-confirmation-title"
+            aria-describedby="order-confirmation-description"
+            onClick={event => event.stopPropagation()}
         >
-
-            <Modal.Header closeButton className="justify-content-center">
-                <Image src={"/images/LogoOneLine.png"} width='100vm'/>
+            <Modal.Header closeButton>
+                <Image src="/images/LogoOneLine.png" alt="Ming House" className="receipt-logo" />
             </Modal.Header>
 
-
-            {/*<Modal.Body style={{textAlign: "center"}}>*/}
-
-
-            {/*</Modal.Body>*/}
-
-
-      {/*      <Modal.Body style={{textAlign: "center"}}>*/}
-      {/*          <h3>Order Confirmation</h3>*/}
-      {/*          Thank You For Your Order*/}
-
-      {/*          <div style={{border: "1px solid", textAlign: "left", padding: "0 3% 0 3%"}}>*/}
-      {/*              <h4>Summary</h4>*/}
-
-      {/*              <div className="confirmationItems">*/}
-      {/*                  {(props.order.items ?? []).map((item, index) => (*/}
-      {/*                      <div key={index} className="confirmationItem">*/}
-
-      {/*                          <div className="itemTop">*/}
-      {/*                              <span className="itemName">*/}
-      {/*                                {item.item.name} {item.item.size}*/}
-      {/*                              </span>*/}
-
-      {/*                                                          <span className="itemPrice">*/}
-      {/*                                ${API.priceAPI.price(item.orderPrice)}*/}
-      {/*                              </span>*/}
-      {/*                          </div>*/}
-
-      {/*                          <div className="itemBottom">*/}
-      {/*                              <span>x{item.quantity}</span>*/}
-
-      {/*                              {item.specialInstruction && (*/}
-      {/*                                  <span className="itemNote">{item.specialInstruction}</span>*/}
-      {/*                              )}*/}
-      {/*                          </div>*/}
-
-      {/*                      </div>*/}
-      {/*                  ))}*/}
-      {/*              </div>*/}
-
-
-
-
-
-      {/*          </div>*/}
-
-      {/*      </Modal.Body>*/}
-
-      {/*      <div className="orderMeta">*/}
-      {/*          <p><strong>Order #:</strong> {props.order.orderName}</p>*/}
-      {/*          <p><strong>Type:</strong> {props.order.orderType}</p>*/}
-      {/*          <p><strong>Time:</strong> {props.order.orderTime}</p>*/}
-      {/*      </div>*/}
-
-      {/*      <div className="cartSummary">*/}
-      {/*          <div className="cartRow">*/}
-      {/*              <span>Subtotal ({test} items)</span>*/}
-      {/*              <span>${props.order.orderPrice}</span>*/}
-      {/*          </div>*/}
-
-      {/*          {props.order.orderType === "Delivery" && (*/}
-      {/*              <div className="cartRow">*/}
-      {/*                  <span>Delivery Fee</span>*/}
-      {/*                  <span>$2.00</span>*/}
-      {/*              </div>*/}
-      {/*          )}*/}
-
-      {/*          <div className="cartRow">*/}
-      {/*              <span>Tax</span>*/}
-      {/*              <span>*/}
-      {/*${props.order.orderType === "Pickup"*/}
-      {/*                  ? API.priceAPI.price(props.order.orderPrice * 0.07)*/}
-      {/*                  : API.priceAPI.price((props.order.orderPrice + 2) * 0.07)}*/}
-      {/*              </span>*/}
-      {/*                          </div>*/}
-
-      {/*                          <div className="cartRow totalRow">*/}
-      {/*                              <span>Total</span>*/}
-      {/*                              <span>*/}
-      {/*                ${props.order.orderType === "Pickup"*/}
-      {/*                                  ? API.priceAPI.price(props.order.orderPrice * 1.07)*/}
-      {/*                                  : API.priceAPI.price((props.order.orderPrice + 2) * 1.07)}*/}
-      {/*              </span>*/}
-      {/*          </div>*/}
-      {/*      </div>*/}
-
-      {/*      <Button*/}
-      {/*          onClick={props.onClose}*/}
-      {/*          className="confirmationBtn"*/}
-      {/*      >*/}
-      {/*          Back to Home*/}
-      {/*      </Button>*/}
-
-            <Modal.Body style={{textAlign: "center"}}>
-
-                <h2>Order received</h2>
-                <p>Thank you for ordering from Ming House.</p>
-                <p>For questions about your order, call <a href="tel:15087566888">(508) 756-6888</a>.</p>
-
-                {/*<div className="orderMeta">*/}
-                {/*    <p><strong>Order #:</strong> {props.order.orderName}</p>*/}
-                {/*    <p><strong>Type:</strong> {props.order.orderType}</p>*/}
-                {/*    <p><strong>Time:</strong> {props.order.orderTime}</p>*/}
-                {/*</div>*/}
-
-                <div className="orderInfoRow">
-                    <div>
-                        <span className="label">Order #</span>
-                        <span>{props.order.orderName}</span>
-                    </div>
-
-                    <div>
-                        <span className="label">Type</span>
-                        <span>{props.order.orderType}</span>
-                    </div>
-
-                    <div>
-                        <span className="label">Time</span>
-                        <span>{props.order.orderTime}</span>
-                    </div>
+            <Modal.Body>
+                <div className="receipt-intro">
+                    <span className="receipt-check" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="m6 12 4 4 8-8" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    </span>
+                    <h2 id="order-confirmation-title">Order received</h2>
+                    <p id="order-confirmation-description">Thank you for ordering from Ming House.</p>
                 </div>
 
-                <div className="summaryBox">
-                    <h3 className="sectionTitle">Order Summary</h3>
+                <section className="receipt-details" aria-label="Order information">
+                    <div className="receipt-reference">
+                        <span>Order number</span>
+                        <strong>{order.orderName}</strong>
+                    </div>
+                    <div className="receipt-fulfillment">
+                        <div><span>Order type</span><strong>{order.orderType}</strong></div>
+                        <div><span>Requested time</span><strong>{order.orderTime}</strong></div>
+                    </div>
+                </section>
 
-                    <div className="confirmationItems">
-                        {(props.order.items ?? []).map((item, index) => (
-                            <div key={index} className="confirmationItem">
-                                <div className="itemTop">
-                                    <span className="itemName">
-                                      {item.item.name} {item.item.size}
-                                    </span>
-                                                            <span className="itemPrice">
-                                      ${API.priceAPI.price(item.orderPrice)}
-                                    </span>
+                <section className="receipt-summary" aria-labelledby="receipt-summary-title">
+                    <div className="receipt-section-heading">
+                        <h3 id="receipt-summary-title">Your order</h3>
+                        <span>{totalItems} {totalItems === 1 ? "item" : "items"}</span>
+                    </div>
+                    <ul className="receipt-items">
+                        {items.map((item, index) => (
+                            <li key={item.id ?? index} className="receipt-item">
+                                <span className="receipt-quantity" aria-label={`Quantity ${item.quantity}`}>{item.quantity}×</span>
+                                <div className="receipt-item-copy">
+                                    <strong>{item.item?.name || item.orderName}</strong>
+                                    {item.item?.size && <span className="receipt-item-size">{item.item.size}</span>}
+                                    {item.specialInstruction && <p className="receipt-item-note">{item.specialInstruction}</p>}
                                 </div>
-
-                                <div className="itemBottom">
-                                    <span>x{item.quantity}</span>
-                                    {item.specialInstruction && (
-                                        <span className="itemNote">{item.specialInstruction}</span>
-                                    )}
-                                </div>
-                            </div>
+                                <strong className="receipt-price">{money(item.orderPrice)}</strong>
+                            </li>
                         ))}
-                    </div>
-                </div>
-
-                <div className="cartSummary">
-                    <div className="cartRow">
-                        <span>Subtotal ({totalItems} items)</span>
-                        <span>${props.order.orderPrice}</span>
-                    </div>
-
-                    {props.order.orderType === "Delivery" && (
-                        <div className="cartRow">
-                            <span>Delivery Fee</span>
-                            <span>$2.00</span>
-                        </div>
-                    )}
-
-                    <div className="cartRow">
-                        <span>Tax</span>
-                        <span>
-        ${props.order.orderType === "Pickup"
-                            ? API.priceAPI.price(props.order.orderPrice * 0.07)
-                            : API.priceAPI.price((props.order.orderPrice + 2) * 0.07)}
-      </span>
-                    </div>
-
-                    <div className="cartRow totalRow">
-                        <span>Total</span>
-                        <span>
-        ${props.order.orderType === "Pickup"
-                            ? API.priceAPI.price(props.order.orderPrice * 1.07)
-                            : API.priceAPI.price((props.order.orderPrice + 2) * 1.07)}
-      </span>
-                    </div>
-                </div>
-
-                <Button onClick={props.onClose} className="confirmationBtn">
-                    Back to Home
-                </Button>
-
+                    </ul>
+                    <dl className="receipt-totals">
+                        <div><dt>Subtotal</dt><dd>{money(subtotal)}</dd></div>
+                        {order.orderType === "Delivery" && <div><dt>Delivery fee</dt><dd>{money(delivery)}</dd></div>}
+                        <div><dt>Tax</dt><dd>{money(tax)}</dd></div>
+                        <div className="receipt-total"><dt>Total</dt><dd>{money(total)}</dd></div>
+                    </dl>
+                </section>
             </Modal.Body>
-        </Modal>
-    </>
-}
 
+            <Modal.Footer>
+                <p className="receipt-help">Questions about your order? <a href="tel:15087566888">Call (508) 756-6888</a></p>
+                <button type="button" className="receipt-home" onClick={onClose}>Back to Home <span aria-hidden="true">→</span></button>
+            </Modal.Footer>
+        </Modal>
+    );
+};
 
 export default ConfirmationModal;

@@ -109,3 +109,77 @@
 .confirmationHeader h2 {
     margin-bottom: 4px;
 }
+/* Scoped receipt styling; other menu and checkout popups retain their styles. */
+.order-confirmation.modal { color: #661a06; font-family: Arial, sans-serif; z-index: 2010; }
+.order-confirmation-backdrop.modal-backdrop { z-index: 2000; }
+.order-confirmation .modal-dialog { max-width: 580px; }
+.order-confirmation .modal-content {
+    background: #fff5e2;
+    border: 1px solid #d4a437;
+    border-radius: 24px;
+    box-shadow: 0 24px 80px rgba(51, 18, 5, .3);
+    overflow: hidden;
+}
+.order-confirmation .modal-header {
+    position: relative;
+    justify-content: center;
+    padding: 20px 56px;
+    background: #661a06;
+    border-bottom: 1px solid rgba(102, 26, 6, .12);
+}
+.order-confirmation .receipt-logo { width: 180px; max-width: 100%; height: 36px; object-fit: cover; }
+.order-confirmation .modal-header .btn-close { position: absolute; right: 16px; margin: 0; padding: 14px; opacity: .85; filter: brightness(0) invert(1); }
+.order-confirmation .modal-body { padding: 26px 28px 8px; }
+.order-confirmation .receipt-intro { text-align: center; margin-bottom: 24px; }
+.order-confirmation .receipt-check {
+    display: flex; align-items: center; justify-content: center;
+    width: 52px; height: 52px; margin: 0 auto 14px;
+    border-radius: 50%; background: #f2d089; border: 1px solid rgba(102, 26, 6, .15);
+}
+.order-confirmation .receipt-check svg { width: 28px; height: 28px; }
+.order-confirmation .receipt-intro h2 { font-size: 28px; font-weight: 750; letter-spacing: -.7px; margin: 0 0 8px; color: #661a06; }
+.order-confirmation .receipt-intro p { font-size: 14px; line-height: 1.5; margin: 0; color: #86523a; }
+.order-confirmation .receipt-details { background: #f8e6c4; border: 1px solid rgba(102, 26, 6, .13); border-radius: 14px; margin-bottom: 26px; overflow: hidden; }
+.order-confirmation .receipt-reference { padding: 14px 16px; border-bottom: 1px solid rgba(102, 26, 6, .12); }
+.order-confirmation .receipt-details span { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #86523a; margin-bottom: 5px; }
+.order-confirmation .receipt-reference strong { display: block; font-size: 14px; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.order-confirmation .receipt-fulfillment { display: grid; grid-template-columns: 1fr 1fr; }
+.order-confirmation .receipt-fulfillment > div { padding: 14px 16px; min-width: 0; }
+.order-confirmation .receipt-fulfillment > div + div { border-left: 1px solid rgba(102, 26, 6, .12); }
+.order-confirmation .receipt-fulfillment strong { font-size: 16px; overflow-wrap: anywhere; }
+.order-confirmation .receipt-section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+.order-confirmation .receipt-section-heading h3 { font-size: 17px; font-weight: 700; margin: 0; color: #661a06; }
+.order-confirmation .receipt-section-heading > span { font-size: 12px; color: #86523a; }
+.order-confirmation .receipt-items { padding: 0; margin: 0; list-style: none; }
+.order-confirmation .receipt-item { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 12px; padding: 17px 0; border-bottom: 1px solid rgba(102, 26, 6, .12); align-items: start; }
+.order-confirmation .receipt-quantity { background: #f8e6c4; border-radius: 7px; text-align: center; padding: 5px 2px; font-size: 12px; font-weight: 700; }
+.order-confirmation .receipt-item-copy { min-width: 0; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.order-confirmation .receipt-item-copy strong { display: block; font-weight: 600; }
+.order-confirmation .receipt-item-size { display: block; font-size: 12px; color: #86523a; }
+.order-confirmation .receipt-item-note { font-size: 12px; color: #86523a; margin: 5px 0 0; white-space: pre-wrap; }
+.order-confirmation .receipt-price { font-size: 14px; line-height: 1.5; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.order-confirmation .receipt-totals { padding-top: 16px; margin: 0; }
+.order-confirmation .receipt-totals > div { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 10px; font-size: 13px; }
+.order-confirmation .receipt-totals dt { font-weight: 400; color: #86523a; }
+.order-confirmation .receipt-totals dd { margin: 0; font-variant-numeric: tabular-nums; }
+.order-confirmation .receipt-totals .receipt-total { border-top: 1px dashed rgba(102, 26, 6, .3); padding-top: 16px; margin-top: 16px; margin-bottom: 8px; font-size: 23px; font-weight: 750; }
+.order-confirmation .receipt-total dt { font-weight: 750; color: #661a06; }
+.order-confirmation .modal-footer { display: block; padding: 16px 28px 24px; border: 0; background: #fff5e2; }
+.order-confirmation .receipt-help { font-size: 12px; line-height: 1.6; text-align: center; color: #86523a; margin: 0 0 14px; }
+.order-confirmation .receipt-help a { display: inline-block; font-weight: 600; text-underline-offset: 3px; }
+.order-confirmation .receipt-home { display: flex; align-items: center; justify-content: center; gap: 16px; width: 100%; min-height: 48px; margin: 0; padding: 12px 18px; border: 1px solid #661a06; border-radius: 12px; background: #661a06; color: #fff5e2; font-size: 14px; font-weight: 600; transition: background .15s; }
+.order-confirmation .receipt-home:hover { background: #842b10; }
+.order-confirmation button:focus-visible, .order-confirmation a:focus-visible { outline: 3px solid #d4a437; outline-offset: 3px; }
+@media (max-width: 600px) {
+    .order-confirmation .modal-dialog { margin: 12px; max-width: none; }
+    .order-confirmation .modal-dialog-scrollable { height: calc(100% - 24px); height: calc(100dvh - 24px); }
+    .order-confirmation .modal-content { border-radius: 18px; }
+    .order-confirmation .modal-header { padding: 15px 56px; }
+    .order-confirmation .receipt-logo { height: 30px; }
+    .order-confirmation .modal-body { padding: 22px 18px 8px; }
+    .order-confirmation .receipt-intro h2 { font-size: 26px; }
+    .order-confirmation .receipt-intro { margin-bottom: 20px; }
+    .order-confirmation .receipt-details { margin-bottom: 22px; }
+    .order-confirmation .receipt-item { gap: 9px; }
+    .order-confirmation .modal-footer { padding: 12px 18px max(18px, env(safe-area-inset-bottom)); }
+}
