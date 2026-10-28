@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import com.example.Restaurant.Ownership;
+import com.example.Restaurant.CustomerTokens;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -20,6 +23,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired private Ownership ownership;
+    @Autowired private CustomerTokens tokens;
 
 
     @GetMapping(path = "/getAllUsers")
@@ -30,6 +35,7 @@ public class UserController {
 
     @GetMapping(path = "/getUser/{userId}")
     public StoreUser getUserById(@PathVariable String userId){
+        ownership.require(userId);
         return userService.getUserById(userId);
     }
 
@@ -40,12 +46,20 @@ public class UserController {
     }
 
     @PostMapping(path = "/validate")
-    public String validate(@RequestBody StoreUser storeUser){
+    public String validate(@RequestBody StoreUser storeUser, HttpServletResponse response){
 
-        System.out.println(storeUser);
-//        System.out.println(pass);
+        String result = userService.validateUser(storeUser.getUsernameId(), storeUser.getPassword());
+        if ("Match".equals(result)) response.setHeader("X-Customer-Token", tokens.issue(storeUser.getUsernameId()));
+        return result;
+    }
 
-        return userService.validateUser(storeUser.getUsernameId(), storeUser.getPassword());
+    @GetMapping("/me")
+    public StoreUser me() { return userService.getUserById(ownership.current()); }
+
+    @PutMapping("/contact")
+    public StoreUser updateContact(@RequestBody StoreUser contact) {
+        ownership.require(contact.getUsernameId());
+        return userService.updateContact(contact);
     }
 
     @PostMapping(path = "/delete/{userId}")

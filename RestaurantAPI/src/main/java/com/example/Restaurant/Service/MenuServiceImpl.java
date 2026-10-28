@@ -13,9 +13,11 @@ public class MenuServiceImpl implements MenuService{
 
     @Autowired
     private MenuRepository menuRepository;
+    @Autowired private MenuPricing pricing;
 
     @Override
     public Menu saveMenu(Menu menu) {
+        pricing.unit(menu);
         return menuRepository.save(menu);
     }
 
@@ -34,6 +36,7 @@ public class MenuServiceImpl implements MenuService{
 
     @Override
     public Menu updateMenuItem(Menu updatedItem) {
+        pricing.unit(updatedItem);
 
         Menu currentItem = menuRepository.findById(updatedItem.getId())
                 .orElseThrow(() -> new EntityNotFoundException(

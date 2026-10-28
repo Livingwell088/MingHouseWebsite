@@ -20,13 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @WebMvcTest({AdminAuthController.class, OrderController.class, UserController.class, MenuController.class, CartController.class})
-@Import({SecurityConfig.class, WebConfig.class})
+@Import({SecurityConfig.class, WebConfig.class, CustomerTokens.class, Ownership.class})
 class SecurityConfigTest {
     @Autowired MockMvc mvc;
     @MockBean OrderService orders;
     @MockBean UserService users;
     @MockBean MenuService menu;
     @MockBean CartService cart;
+    @MockBean com.example.Restaurant.Repository.OrderRepository submissions;
 
     @DynamicPropertySource
     static void credentials(DynamicPropertyRegistry registry) {

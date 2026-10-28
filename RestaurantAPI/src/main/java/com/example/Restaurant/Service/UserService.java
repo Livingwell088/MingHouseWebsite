@@ -6,6 +6,7 @@ import com.example.Restaurant.model.StoreUser;
 import java.util.List;
 
 public interface UserService {
+    StoreUser updateContact(StoreUser contact);
 
     public StoreUser addUser(StoreUser storeUser);
 

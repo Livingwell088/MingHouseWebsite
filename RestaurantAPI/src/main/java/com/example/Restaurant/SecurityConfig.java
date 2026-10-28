@@ -35,7 +35,7 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain apiSecurity(HttpSecurity http, UserDetailsService users,
-                                   BCryptPasswordEncoder encoder) throws Exception {
+                                   BCryptPasswordEncoder encoder, CustomerTokens tokens) throws Exception {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(users);
         provider.setPasswordEncoder(encoder);
@@ -59,9 +59,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/menu/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/menu/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
-                        // Existing guest flows are retained for this first pass. Ownership
-                        // checks for individual cart/user/order routes are a separate phase.
-                        .anyRequest().permitAll());
+                        .requestMatchers("/health", "/error", "/carts/generate", "/users/validate", "/users/add").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/menu/**").permitAll()
+                        .requestMatchers("/users/getUser/**", "/users/contact", "/users/me", "/orders/placeOrder", "/orders/getOrder/**", "/orders/submissions/**", "/carts/**")
+                            .hasAnyRole("CUSTOMER", "ADMIN")
+                        .anyRequest().denyAll());
         http.addFilterAfter(new OncePerRequestFilter() {
             @Override
             protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request,
@@ -69,6 +71,14 @@ public class SecurityConfig {
                                             jakarta.servlet.FilterChain chain)
                     throws java.io.IOException, jakarta.servlet.ServletException {
                 String method = request.getMethod();
+                String token = request.getHeader("X-Customer-Token");
+                var context = org.springframework.security.core.context.SecurityContextHolder.getContext();
+                if (context.getAuthentication() == null && token != null) {
+                    String owner = tokens.verify(token);
+                    if (owner != null) context.setAuthentication(
+                            org.springframework.security.authentication.UsernamePasswordAuthenticationToken.authenticated(owner, null,
+                                    java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_CUSTOMER"))));
+                }
                 boolean mutation = !java.util.Set.of("GET", "HEAD", "OPTIONS").contains(method);
                 var auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
                 if (mutation && auth != null && auth.getAuthorities().stream()

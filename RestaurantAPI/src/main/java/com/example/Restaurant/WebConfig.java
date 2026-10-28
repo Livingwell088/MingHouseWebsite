@@ -31,7 +31,8 @@ public class WebConfig {
                 registry.addMapping("/**")
                         .allowedOrigins("https://minghousema.com", "https://www.minghousema.com", "http://localhost:3000")
                         .allowedMethods("*")
-                        .allowedHeaders("*");
+                        .allowedHeaders("*")
+                        .exposedHeaders("X-Customer-Token");
             }
 
             @PostConstruct

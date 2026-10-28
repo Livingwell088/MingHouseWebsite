@@ -10,6 +10,19 @@ import java.util.List;
 
 @Entity
 public class Orders {
+    @Column(unique = true) private String requestKey;
+    private java.math.BigDecimal tax;
+    private java.math.BigDecimal deliveryFee;
+    private java.math.BigDecimal total;
+    public String getRequestKey() { return requestKey; }
+    public void setRequestKey(String value) { requestKey = value; }
+    public java.math.BigDecimal getTax() { return tax; }
+    public void setTax(java.math.BigDecimal value) { tax = value; }
+    public java.math.BigDecimal getDeliveryFee() { return deliveryFee; }
+    public void setDeliveryFee(java.math.BigDecimal value) { deliveryFee = value; }
+    public java.math.BigDecimal getTotal() { return total; }
+    public void setTotal(java.math.BigDecimal value) { total = value; }
+
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -26,11 +39,11 @@ public class Orders {
     @JoinColumn(name = "user_id")
     private StoreUser user;
 
-    private String address;
+    @Column(length = 500) private String address;
 
     private String phoneNumber;
 
-    private String specialInstructions;
+    @Column(length = 2000) private String specialInstructions;
 
     private String orderTime;
 
@@ -40,7 +53,7 @@ public class Orders {
 
     private String orderStatus = "New";
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<CartItem> items;
 
     public Orders() {

@@ -36,12 +36,17 @@ public class OrderController {
     @PostMapping(path = "/placeOrder")
     public Orders placeOrder(@RequestBody Orders orders){
 
-        System.out.println(orders.toString());
-        System.out.println();
+
+
 
         return orderService.placeOrder(orders);
 //        return 0L;
     }
+
+    @Autowired private com.example.Restaurant.Repository.OrderRepository submissions;
+    @Autowired private com.example.Restaurant.Ownership ownership;
+    @GetMapping("/submissions/{key}")
+    public Orders submission(@PathVariable String key) { try { return submissions.findByRequestKey(ownership.current() + ":" + java.util.UUID.fromString(key)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)); } catch (IllegalArgumentException e) { throw new ResponseStatusException(HttpStatus.BAD_REQUEST); } }
 
     @PostMapping(path = "/deleteAll")
     public void deleteAll(){

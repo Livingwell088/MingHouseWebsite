@@ -37,30 +37,7 @@ const Home = (props) => {
         // }
     }, [location]);
 
-    useEffect( () => {
 
-        const generate = async () => {
-            const sessionId = window.sessionStorage.getItem('sessionId');
-            // console.log(sessionId)
-            if (sessionId === null){
-                await API.cartAPI.generate()
-                    .then(r => {
-                        console.log(r)
-                        sessionStorage.setItem("sessionId", r.data)
-                    })
-                    .catch((error) => console.log(error.message))
-            }
-
-            if (window.sessionStorage.getItem('loggedIn') === null){
-                window.sessionStorage.setItem('loggedIn', "false")
-            }
-            console.log(sessionStorage.getItem("sessionId"))
-
-        }
-
-        generate()
-
-    }, [])
 
     return (
         <>

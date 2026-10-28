@@ -27,7 +27,7 @@ public class CartItem {
 
     private String cartId;
 
-    private String specialInstruction;
+    @Column(length = 2000) private String specialInstruction;
 
     private boolean orderPlaced;
 

@@ -15,8 +15,10 @@
 	<description>Working Project </description>
 	<properties>
 		<java.version>17</java.version>
+		<restaurant.build.directory>${project.basedir}/target</restaurant.build.directory>
 	</properties>
 	<dependencies>
+<dependency><groupId>com.h2database</groupId><artifactId>h2</artifactId><version>2.2.220</version><scope>test</scope></dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -96,6 +98,7 @@
 	</dependencies>
 
 	<build>
+		<directory>${restaurant.build.directory}</directory>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

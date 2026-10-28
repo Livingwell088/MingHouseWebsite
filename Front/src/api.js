@@ -9,6 +9,25 @@ export function clearAdminCredentials() {
     adminAuthorization = null;
 }
 
+export function clearCustomerSession() {
+    ['customerToken','guestToken','username','sessionId','loggedIn','checkoutAttempt'].forEach(key => sessionStorage.removeItem(key));
+}
+let sessionPending;
+export function ensureCustomerSession() {
+    if (!sessionPending) sessionPending = (async () => {
+        if (sessionStorage.getItem('customerToken')) {
+            try {
+                const {data} = await Api().get('/users/me');
+                if (!data.guest) { sessionStorage.setItem('username',data.usernameId); sessionStorage.setItem('loggedIn','true'); }
+                return;
+            } catch (e) { if (e.response?.status !== 401 && e.response?.status !== 403) throw e; }
+        }
+        clearCustomerSession();
+        await API.cartAPI.generate();
+    })().finally(() => { sessionPending = null; });
+    return sessionPending;
+}
+
 function Api() {
     const axiosConfig = {
         headers: {
@@ -17,15 +36,23 @@ function Api() {
         },
         timeout: 10000,
     };
-    axiosConfig.baseURL = process.env.REACT_APP_API_URL || "https://minghousewebsite-backend.onrender.com";
+    const local = ['localhost','127.0.0.1'].includes(window.location.hostname);
+    axiosConfig.baseURL = process.env.REACT_APP_API_URL || (local ? 'http://localhost:8080' : 'https://minghousewebsite-backend.onrender.com');
     if (adminAuthorization) {
         axiosConfig.headers.Authorization = adminAuthorization;
         axiosConfig.headers["X-Admin-Request"] = "true";
     }
+    const token = sessionStorage.getItem('customerToken');
+    if (token) axiosConfig.headers['X-Customer-Token'] = token;
     // axiosConfig.baseURL = "http://localhost:8080";
     // http://localhost:8080
 
-    return axios.create(axiosConfig);
+    const client = axios.create(axiosConfig);
+    client.interceptors.response.use(response => {
+        if (response.headers['x-customer-token']) sessionStorage.setItem('customerToken', response.headers['x-customer-token']);
+        return response;
+    });
+    return client;
 }
 
 
@@ -202,6 +229,8 @@ const API = {
                 throw error;
             }
         },
+        notifications: () => Api().get('/admin/notifications'),
+        retryNotification: id => Api().post('/admin/notifications/' + id + '/retry'),
         session: () => Api().get('/admin/session'),
         logout: clearAdminCredentials,
     },
@@ -328,7 +357,11 @@ const API = {
         },
         generate: async () => {
 
-            const result = await (Api().get("/carts/generate"))
+            const result = await (Api().get("/carts/generate"));
+            if (!result.headers['x-customer-token']) throw new Error('The server did not issue a guest credential');
+            sessionStorage.setItem('sessionId', result.data);
+            sessionStorage.setItem('guestToken', result.headers['x-customer-token']);
+            sessionStorage.setItem('loggedIn', 'false');
 
             return result
         },
@@ -337,6 +370,7 @@ const API = {
 
             return await Api().post("carts/cartLogin/" + username, cartId, {
                 headers: {
+                    'X-Guest-Token': sessionStorage.getItem('guestToken') || '',
                     Accept: "text/plain",
                     "Content-Type": "text/plain",
                 },
@@ -346,7 +380,8 @@ const API = {
     },
 
     orderAPI: {
-        create: async (orderName, orderPrice, orderType, username, address, phoneNumber, specialInstruction, orderTime, orderItems, customerEmail) => {
+        submission: key => Api().get('/orders/submissions/' + encodeURIComponent(key)),
+        create: async (orderName, orderPrice, orderType, username, address, phoneNumber, specialInstruction, orderTime, orderItems, customerEmail, requestKey) => {
 
             const date = new Date();
             const currentDate = months[date.getMonth()] + " " + date.getDate() + " " + date.getFullYear();
@@ -359,16 +394,14 @@ const API = {
             await API.userAPI.getUser(username)
                 .then(r => {
                     user = r.data
-                    console.log(r.data)
                 })
                 .catch((error) => console.log(error.message))
-
-            console.log("GetUser: " + user)
 
 
             let order = {
                 orderName: date.getMonth().toString() + date.getDate().toString() + date.getFullYear().toString(),
                 orderPrice: orderPrice,
+                requestKey: requestKey,
                 orderType: orderType,
                 user: {...user, email: customerEmail === undefined ? user.email : customerEmail.trim()},
                 address: address,
@@ -379,8 +412,6 @@ const API = {
                 timePlaced: currentTime,
                 items: orderItems
             }
-
-            console.log(order)
 
             return await Api().post("/orders/placeOrder", {...order}, {
                 headers: {
@@ -411,6 +442,7 @@ const API = {
     },
 
     userAPI: {
+        updateContact: contact => Api().put('/users/contact', contact),
         create: async(usernameId, password, firstName, lastName, email, isGuest) => {
 
             let user = {
@@ -421,8 +453,6 @@ const API = {
                 email: email,
                 guest: isGuest
             }
-
-            console.log(user)
 
             return await Api().post("/users/add", {...user}, {
                 headers: {
@@ -459,7 +489,7 @@ const API = {
 
         getUser: async(userId) => {
 
-            return await Api().get("/users/getUser/" + userId, {
+            return await Api().get("/users/getUser/" + encodeURIComponent(userId || sessionStorage.getItem("username") || sessionStorage.getItem("sessionId")), {
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json",

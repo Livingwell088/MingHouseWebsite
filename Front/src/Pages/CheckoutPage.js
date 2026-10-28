@@ -1,7 +1,7 @@
 import {Col, Row} from "react-bootstrap";
 import CartTotal from "../components/CartTotal";
 import {useLocation, useNavigate} from "react-router-dom";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import CheckoutLeft from "../components/CheckoutLeft";
 import API from "../api";
 import "../styles/Checkout.css"
@@ -27,7 +27,24 @@ const CheckoutPage = (props) => {
     // console.log(cart)
 
 
-    const [placedOrder, setPlacedOrder] = useState({})
+    const [placedOrder, setPlacedOrder] = useState({});
+    const [placing, setPlacing] = useState(false);
+    const submitting = useRef(false);
+    const [pending, setPending] = useState(!!sessionStorage.getItem('checkoutAttempt'));
+    const showSaved = order => { setPlacedOrder(order); setShowPopup(true); sessionStorage.removeItem('checkoutAttempt'); setPending(false); };
+    const checkSubmission = async () => {
+        const attempt = sessionStorage.getItem('checkoutAttempt');
+        if (!attempt) return;
+        try { const res = await API.orderAPI.submission(JSON.parse(attempt).key); showSaved(res.data); }
+        catch (e) {
+            if (e.response?.status === 404) {
+                setPending(false);
+                setErrorContent('No saved order was found. You can retry safely using the same submission reference.');
+            } else setErrorContent('We could not verify this submission yet. Check again before placing another order, or call (508) 756-6888.');
+            setShowError(true);
+        }
+    };
+    useEffect(() => { if (sessionStorage.getItem('checkoutAttempt')) checkSubmission(); }, []);
 
     const testing = async () => {
         let currentData = window.sessionStorage.getItem("sessionId")
@@ -74,8 +91,6 @@ const CheckoutPage = (props) => {
     const handleChangeUser = (event) => {
         const name = event.target.name;
         const value = event.target.value;
-
-        console.log("changing:", name, value);
 
         setUser(values => ({...values, [name]: value}))
 
@@ -130,10 +145,12 @@ const CheckoutPage = (props) => {
 
 
     const makeOrder = async (event) => {
-        console.log("Making Order")
 
 
-        event.preventDefault()
+
+        event.preventDefault();
+        if (submitting.current) return;
+        if (pending) { await checkSubmission(); return; }
         const form = event.currentTarget;
 
         if (
@@ -141,8 +158,9 @@ const CheckoutPage = (props) => {
             !user.lastName ||
             !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((user.email || "").trim()) ||
             !fields.phoneNumber ||
-            orderType === "Select One" ||
-            orderTime === "Time" ||
+            !["Pickup", "Delivery"].includes(orderType) ||
+            !orderTime || orderTime === "Time" ||
+            cart.length === 0 ||
             (orderType === "Delivery" && (!fields.address || !fields.zipcode))
         ) {
             setErrorHeading("Error");
@@ -160,14 +178,15 @@ const CheckoutPage = (props) => {
             }
 
 
-            const current = window.sessionStorage.getItem("sessionId");
+            const current = window.sessionStorage.getItem("username") || window.sessionStorage.getItem("sessionId");
+            const existingAttempt = sessionStorage.getItem('checkoutAttempt');
+            const key = existingAttempt ? JSON.parse(existingAttempt).key : crypto.randomUUID();
+            submitting.current = true; setPlacing(true); setShowError(false);
 
             try {
-                await API.userAPI.create(current, "", user.firstName, user.lastName, (user.email || ""), true);
-
-                window.sessionStorage.setItem("loggedIn", "true");
-                window.sessionStorage.setItem("username", current);
-
+                await API.userAPI.updateContact({usernameId:current, firstName:user.firstName, lastName:user.lastName, email:user.email.trim()});
+                sessionStorage.setItem('checkoutAttempt', JSON.stringify({key}));
+                setPending(true);
                 const res = await API.orderAPI.create(
                     "Ordering",
                     subtotal,
@@ -178,16 +197,24 @@ const CheckoutPage = (props) => {
                     fields.instruction,
                     orderTime,
                     cart,
-                    user.email.trim()
+                    user.email.trim(),
+                    key
                 );
 
                 const placed = res.data;
-                setPlacedOrder(placed);
-                setShowPopup(true);
+                showSaved(placed);
 
 
             } catch (error) {
-                console.log(error.message);
+                if (error.response && error.response.status >= 400 && error.response.status < 500) {
+                    sessionStorage.removeItem('checkoutAttempt'); setPending(false);
+                    setErrorContent(error.response.data?.message || 'Please review your contact details and cart, then try again.');
+                    if (error.response.status === 409) await testing();
+                } else {
+                    setErrorContent('The connection was interrupted. Check your submission before placing another order, or call (508) 756-6888.');
+                }
+                setShowError(true);
+            } finally { submitting.current = false; setPlacing(false);
             }
         }
     }
@@ -253,7 +280,7 @@ const CheckoutPage = (props) => {
                         </div>
                         <div>
                             <span>Tax</span>
-                            <span>${API.priceAPI.price(subtotal * 0.07)}</span>
+                            <span>${API.priceAPI.price((subtotal + (orderType === "Delivery" ? 2 : 0)) * 0.07)}</span>
                         </div>
 
                         {orderType == "Delivery" && <div>
@@ -274,7 +301,7 @@ const CheckoutPage = (props) => {
                     {showError && (
                         <div role="alert">{errorContent}</div>
                     )}
-                    <button className="placeOrderBtn" onClick={makeOrder}>Place Order</button>
+                    <button className="placeOrderBtn" disabled={placing || showPopup} onClick={makeOrder}>{placing ? 'Placing order…' : pending ? 'Check order submission' : 'Place Order'}</button>
                 </div>
             </aside>
         </main>

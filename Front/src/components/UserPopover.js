@@ -2,7 +2,7 @@ import {OverlayTrigger, Popover, Row} from "react-bootstrap";
 import * as React from "react";
 import Button from "@mui/material/Button";
 import {useEffect, useState} from "react";
-import API from "../api";
+import API, { clearCustomerSession } from "../api";
 import LoginModal from "./LoginModal";
 import '../styles/fonts.css';
 import "../styles/menuPopup.css"
@@ -83,6 +83,7 @@ const UserPopover = (props) => {
     }
 
     const handleSignOut = () => {
+        clearCustomerSession();
         window.sessionStorage.removeItem("username")
         window.sessionStorage.setItem("loggedIn", "false")
 

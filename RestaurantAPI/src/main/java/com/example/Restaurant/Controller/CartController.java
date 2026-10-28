@@ -20,6 +20,7 @@ import java.util.List;
 
 //@SessionAttributes("cart")
 public class CartController {
+    @Autowired private com.example.Restaurant.CustomerTokens tokens;
 
     @Autowired
     private CartService cartService;
@@ -50,15 +51,12 @@ public class CartController {
     @PutMapping(path = "/{cartId}")
     public void editCart(@PathVariable String cartId, @RequestBody CartItem item) {
 
+        if (!java.util.Objects.equals(cartId,item.getCartId())) throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST,"Cart identifiers must match");
         cartService.updateCartItem(item);
     }
 
     @PostMapping(path = "cartLogin/{username}")
     public String cartLogIn(@PathVariable String username, @RequestBody String cartId){
-
-        System.out.println("Cart Login");
-        System.out.println(username);
-        System.out.println(cartId);
 
         cartService.cartLogin(cartId, username);
 
@@ -97,9 +95,9 @@ public class CartController {
     }
 
     @GetMapping(path = "/generate")
-    public String generateCart() {
+    public String generateCart(jakarta.servlet.http.HttpServletResponse response) {
         String generated = cartService.generateCart();
-        System.out.println(generated);
+        response.setHeader("X-Customer-Token", tokens.issue(generated));
         return generated;
     }
 

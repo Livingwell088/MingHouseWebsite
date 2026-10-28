@@ -8,6 +8,10 @@ import React from 'react';
 export default function AdminOrders() {
 
     const [orders, setOrders] = useState([]);
+    const [notifications, setNotifications] = useState([]);
+    const [error, setError] = useState('');
+    const loadNotifications = async () => { try { const res=await API.adminAPI.notifications(); setNotifications(res.data); } catch(e) { setError('Unable to refresh email delivery status.'); } };
+    const retry = async id => { try { await API.adminAPI.retryNotification(id); await loadNotifications(); } catch(e) { setError('Unable to retry this email. Refresh and try again.'); } };
     const [openOrder, setOpenOrder] = useState(null);
     const [sortConfig, setSortConfig] = useState({
         key: null,
@@ -27,19 +31,29 @@ export default function AdminOrders() {
 
             setOrders(latestOrders);
         } catch (error) {
-            console.log(error.message);
+            setError('Unable to refresh orders. Please try again.');
         }
     }
 
 
     useEffect(() => {
-        loadOrders();
+        loadOrders(); loadNotifications();
+        const timer=setInterval(() => {loadOrders(); loadNotifications();},30000);
+        return () => clearInterval(timer);
     }, []);
 
     return (
         <div>
             <h1>Orders</h1>
-            <p>View incoming and past customer orders.</p>
+            <p>View incoming and past customer orders. Refreshes every 30 seconds.</p>
+            {error && <p role="alert">{error}</p>}
+            <button onClick={() => {setError('');loadOrders();loadNotifications();}}>Refresh orders</button>
+            <div aria-label="Email delivery">
+                {notifications.filter(n => n.status !== 'Sent').map(n => <p key={n.id}>
+                    Order {orders.find(o => o.id === n.orderId)?.orderName || n.orderId}: {n.audience} email — {n.status} (attempts: {n.attempts}). {n.error}
+                    {(n.status === 'Failed' || n.status === 'Retrying') && <button onClick={() => retry(n.id)}>Retry email</button>}
+                </p>)}
+            </div>
 
 
 
@@ -78,7 +92,7 @@ export default function AdminOrders() {
                         <td>{order.datePlaced}</td>
                         <td>{order.timePlaced}</td>
                         <td>{order.items?.length || 0}</td>
-                        <td>${API.priceAPI.price(order.orderPrice * 1.07)}</td>
+                        <td>${API.priceAPI.price(order.total ?? (order.orderPrice + (order.orderType === "Delivery" ? 2 : 0)) * 1.07)}</td>
                         <td>
                             <span className="statusBadge">{order.orderStatus}</span>
                         </td>
@@ -86,7 +100,7 @@ export default function AdminOrders() {
 
                         {openOrder === order.orderName && (
                             <tr>
-                                <td colSpan="7">
+                                <td colSpan="9">
                                     <div className="orderDetailsBox">
                                         <h3>Order Details</h3>
 
@@ -95,7 +109,7 @@ export default function AdminOrders() {
                                         )}
 
                                         <p><strong>Phone:</strong> {order.phoneNumber}</p>
-                                        <p><strong>Instructions:</strong> {order.specialInstruction || "None"}</p>
+                                        <p><strong>Instructions:</strong> {order.specialInstructions || "None"}</p>
 
                                         <div className="orderItemsList">
                                             {order.items?.map((item) => (

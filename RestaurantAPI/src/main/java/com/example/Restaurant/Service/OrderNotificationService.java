@@ -14,12 +14,12 @@ import java.util.Locale;
 @Service
 public class OrderNotificationService {
     private static final Logger log = LoggerFactory.getLogger(OrderNotificationService.class);
-    private final EmailService emailService;
+    private final com.example.Restaurant.Repository.MailOutboxRepository outbox;
     private final String restaurantEmail;
 
-    public OrderNotificationService(EmailService emailService,
+    public OrderNotificationService(com.example.Restaurant.Repository.MailOutboxRepository outbox,
             @Value("${restaurant.orders.email:Livingwell088@gmail.com}") String restaurantEmail) {
-        this.emailService = emailService;
+        this.outbox = outbox;
         this.restaurantEmail = restaurantEmail;
     }
 
@@ -40,14 +40,10 @@ public class OrderNotificationService {
     }
 
     private void send(String recipient, String subject, String body, Orders order) {
-        try {
-            emailService.sendEmail(recipient, subject, body);
-        } catch (RuntimeException exception) {
-            // The order is already saved. Never encourage a duplicate order because
-            // one notification failed; still attempt the other recipient.
-            log.error("Order {} notification failed for {} recipient", order.getOrderName(),
-                    recipient.equals(restaurantEmail) ? "restaurant" : "customer", exception);
-        }
+        var mail = new com.example.Restaurant.model.MailOutbox();
+        mail.orderId=order.getId(); mail.recipient=recipient; mail.subject=subject; mail.body=body;
+        mail.audience=recipient.equals(restaurantEmail) ? "restaurant" : "customer";
+        outbox.save(mail);
     }
 
     static String buildTicket(Orders order) {
@@ -83,12 +79,14 @@ public class OrderNotificationService {
                         .append("</td><td style='text-align:right'>").append(money(item.getOrderPrice())).append("</td></tr>");
             }
         }
-        double delivery = "Delivery".equals(order.getOrderType()) ? 2 : 0;
-        double taxable = order.getOrderPrice() + delivery;
+        double delivery = order.getDeliveryFee() == null ? ("Delivery".equals(order.getOrderType()) ? 2 : 0) : order.getDeliveryFee().doubleValue();
+        java.math.BigDecimal taxable = java.math.BigDecimal.valueOf(order.getOrderPrice()).add(java.math.BigDecimal.valueOf(delivery));
+        java.math.BigDecimal tax = order.getTax() == null ? taxable.multiply(new java.math.BigDecimal("0.07")).setScale(2, java.math.RoundingMode.HALF_UP) : order.getTax();
+        java.math.BigDecimal total = order.getTotal() == null ? taxable.add(tax) : order.getTotal();
         html.append("</tbody></table><p><strong>Subtotal:</strong> ").append(money(order.getOrderPrice()));
         if (delivery > 0) html.append("<br><strong>Delivery fee:</strong> ").append(money(delivery));
-        return html.append("<br><strong>Tax:</strong> ").append(money(taxable * 0.07))
-                .append("<br><strong>Total:</strong> ").append(money(taxable * 1.07))
+        return html.append("<br><strong>Tax:</strong> ").append(money(tax.doubleValue()))
+                .append("<br><strong>Total:</strong> ").append(money(total.doubleValue()))
                 .append("</p><p>Ming House · 217A Chandler St, Worcester, MA · (508) 756-6888</p>").toString();
     }
 

@@ -70,73 +70,21 @@ const LoginModal = (props) => {
     }
 
     const handleGuest = () => {
-
-        const current = window.sessionStorage.getItem("sessionId")
-        API.userAPI.create(current, "", "", "", "", true)
-            .then(r => console.log(r))
-            .catch((error) => console.log(error.message))
-
-        window.sessionStorage.setItem("loggedIn", "true")
-        window.sessionStorage.setItem("username", current)
-
-        // props.onClose()
-        closeModal()
-        handleRefresh()
-
-    }
-
-
-    const handleLogIn = (event) => {
-        event.preventDefault()
-        const form = event.currentTarget;
-
-        if (form.checkValidity() === false) {
-            event.stopPropagation()
-            setValidated(true)
-        }
-        else{
-            setValidated(true)
-
-            API.userAPI.validate(inputs.username, inputs.password)
-                .then(r => {
-                    if (r.data === "Match"){
-                        window.sessionStorage.setItem("username", inputs.username)
-                        window.sessionStorage.setItem("loggedIn", "true")
-
-
-                        closeModal()
-                        handleRefresh()
-                    }
-                    else if (r.data === "Incorrect Password"){
-                        setErrorHeading("Error")
-                        setErrorContent("Incorrect Username or Password")
-                        setShowError(true)
-
-                    }
-                    else{
-                        setErrorHeading("Error")
-                        setErrorContent("Username Does Not Exist. You Can Create An Account By Pressing Sign Up Below.")
-                        setShowError(true)
-
-                    }
-                })
-                .then(() => {
-                    clearStates()
-
-                    if (window.sessionStorage.getItem("loggedIn") === "true"){
-                        console.log("Should be CartLogin")
-                        API.cartAPI.cartLogin(window.sessionStorage.getItem("sessionId"), window.sessionStorage.getItem("username"))
-                            .then(r => console.log(r))
-                            .catch((error) => console.log(error.message))
-
-                        // window.sessionStorage.setItem("sessionId", window.sessionStorage.getItem("username"))
-                    }
-
-                })
-                .catch((error) => console.log(error.message))
-
-        }
-    }
+        const current = sessionStorage.getItem('sessionId');
+        sessionStorage.setItem('username', current); sessionStorage.setItem('loggedIn', 'true');
+        closeModal(); handleRefresh();
+    };
+    const handleLogIn = async event => {
+        event.preventDefault();
+        if (!event.currentTarget.checkValidity()) { event.stopPropagation(); setValidated(true); return; }
+        try {
+            const response = await API.userAPI.validate(inputs.username,inputs.password);
+            if (response.data !== 'Match') { setErrorContent('Incorrect username or password.'); setShowError(true); return; }
+            sessionStorage.setItem('username',inputs.username); sessionStorage.setItem('loggedIn','true');
+            await API.cartAPI.cartLogin(sessionStorage.getItem('sessionId'), inputs.username);
+            clearStates(); closeModal(); handleRefresh();
+        } catch(error) { setErrorContent('Unable to complete sign-in. Please try again.'); setShowError(true); }
+    };
 
     // const handleSignUp = (event) => {
     //

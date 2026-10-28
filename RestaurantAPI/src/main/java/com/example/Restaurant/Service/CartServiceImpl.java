@@ -1,381 +1,149 @@
 package com.example.Restaurant.Service;
 
-//import com.example.Restaurant.Repository.CartRepository;
-import com.example.Restaurant.Repository.CartItemRepository;
-import com.example.Restaurant.Repository.CartRepository;
-import com.example.Restaurant.model.Cart;
-import com.example.Restaurant.model.CartItem;
-import com.example.Restaurant.model.Menu;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.Restaurant.Ownership;
+import com.example.Restaurant.Repository.*;
+import com.example.Restaurant.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import java.util.*;
 
-
 @Service
-public class CartServiceImpl implements CartService{
+@Transactional
+public class CartServiceImpl implements CartService {
+    @Autowired private CartRepository cartRepository;
+    @Autowired private CartItemRepository cartItemRepository;
+    @Autowired private UserRepository users;
+    @Autowired private Ownership ownership;
+    @Autowired private MenuPricing pricing;
 
-
-    @Autowired
-    private CartRepository cartRepository;
-
-    @Autowired
-    private CartItemRepository cartItemRepository;
-
-    @Override
-    public List<CartItem> getCartItems(String sessionId) {
-
-        Optional<Cart> cart = cartRepository.findById(sessionId);
-
-        if (cart.isPresent()){
-            return cart.get().getCartItems();
-        }
-        else{
-            return new ArrayList<>();
-        }
+    public List<CartItem> getCartItems(String id) {
+        lock(id);
+        List<CartItem> items = cartItemRepository.findAllByCartId(id);
+        for (CartItem item : items) item.setOrderPrice(pricing.line(item.getItem(), item.getQuantity()).doubleValue());
+        return items;
     }
-
-    @Override
-    public Cart addItemToCart(CartItem item) {
-
-        Optional<Cart> cart = cartRepository.findById(item.getCartId());
-
-        if (cart.isPresent()){
-//            System.out.println("Found");
-        }
-        else{
-            Cart current = new Cart();
-            current.setCart_Id(item.getCartId());
-            cartRepository.saveAndFlush(current);
-//            System.out.println("Make One!");
-        }
-
-        cart = cartRepository.findById(item.getCartId());
-
-
-        Long exist = cartItemRepository.findAllByItemAndSpecialInstruction(item.getCartId(), item.getItem(), item.getSpecialInstruction());
-
-        if (exist != null){
-//            System.out.println("Found Duplicate: " + cartItemRepository.findById(exist));
-
-            CartItem currentItem = cartItemRepository.findById(exist).get();
-            currentItem.setQuantity(currentItem.getQuantity() + item.getQuantity());
-            currentItem.setOrderPrice(Double.parseDouble(currentItem.getItem().getPrice()) * currentItem.getQuantity());
-
-            cartItemRepository.saveAndFlush(currentItem);
-        }
-        else{
-            cartItemRepository.saveAndFlush(item);
-        }
-
-
-        List<CartItem> items = cartItemRepository.findAllByCartId(item.getCartId());
-
-//        System.out.println("Cart:" + cart.get().toString());
-//        System.out.println("Cart Items: " + items);
-
-
-        Cart newCart = cart.get();
-        newCart.setCartItems(items);
-
-
-        cartRepository.saveAndFlush(newCart);
-
-
-//
-//        Cart current;
-//        if (cart.isPresent()){
-//            current = cart.get();
-//
-//            List<CartItem> items = current.getCartItems();
-//
-//            items.add(item);
-//            current.setCartItems(items);
-//
-//        }
-//        else{
-//            current = new Cart();
-//            current.setCart_Id(item.getCartId());
-//
-//            List<CartItem> items = new ArrayList<>();
-//            items.add(item);
-//
-//            current.setCartItems(items);
-//        }
-//        System.out.println(current.toString());
-//
-//        cartRepository.saveAndFlush(current);
-        return new Cart();
+    private Cart lock(String id) {
+        ownership.require(id);
+        return cartRepository.findLockedById(id).orElseThrow(() -> bad("Cart not found"));
     }
+    private ResponseStatusException bad(String message) { return new ResponseStatusException(HttpStatus.BAD_REQUEST, message); }
 
-    @Override
-    public Cart saveOrUpdate(Cart cart){
-
-        return cart;
+    public Cart addItemToCart(CartItem input) {
+        Cart cart = lock(input.getCartId());
+        Menu menu = pricing.menu(input.getItem() == null ? null : input.getItem().getId());
+        pricing.line(menu, input.getQuantity());
+        String note = pricing.note(input.getSpecialInstruction());
+        List<CartItem> active = cartItemRepository.findAllByCartId(cart.getCart_Id());
+        CartItem line = active.stream().filter(i -> i.getItem().getId().equals(menu.getId()) && Objects.equals(note, i.getSpecialInstruction()))
+                .findFirst().orElseGet(CartItem::new);
+        int quantity = line.getId() == null ? input.getQuantity() : line.getQuantity() + input.getQuantity();
+        line.setOrderPrice(pricing.line(menu, quantity).doubleValue());
+        line.setQuantity(quantity);
+        line.setItem(menu);
+        line.setCartId(cart.getCart_Id());
+        line.setOrderName(menu.getName());
+        line.setSpecialInstruction(note);
+        line.setOrderPlaced(false);
+        cartItemRepository.saveAndFlush(line);
+        cart.setCartItems(cartItemRepository.findAllByCartId(cart.getCart_Id()));
+        return cartRepository.saveAndFlush(cart);
     }
-
-    public Optional<Cart> getCartById(String id) {
-        return cartRepository.findById(id);
+    private CartItem editable(Long id, String cartId) {
+        if (id == null) throw bad("Cart item required");
+        CartItem line = cartItemRepository.findById(id).orElseThrow(() -> bad("Cart item not found"));
+        if (line.isOrderPlaced() || !Objects.equals(cartId, line.getCartId()))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cart item does not belong to this cart");
+        return line;
     }
-
-
-//    @Override
-//    public Cart updateCartItem(CartItem item) {
-//
-//        System.out.println(item.toString());
-//
-//
-////        cartItemRepository.saveAndFlush(item);
-////        List<CartItem> items = cartItemRepository.findAllByCartId(item.getCartId());
-////
-////
-////        Optional<Cart> cart = cartRepository.findById(item.getCartId());
-////        cart = cartRepository.findById(item.getCartId());
-////
-////        Cart newCart = cart.get();
-////        newCart.setCartItems(items);
-////
-////
-////
-////        cartRepository.saveAndFlush(newCart);
-////        return new Cart();
-//
-////        deleteCartItemById(String.valueOf(item.getId()));
-//
-//        CartItem currentItem = cartItemRepository.findById(item.getId()).get();
-//
-//        String cartId = item.getCartId();
-//        Cart cart = getCartById(cartId).orElseThrow(() -> new EntityNotFoundException(
-//                String.format("Carts with id %d not found.", cartId)));
-//
-//        Long currentId = cartItemRepository.findAllByItemAndSpecialInstruction(cartId, currentItem.getItem(), item.getSpecialInstruction());
-//        CartItem current = cartItemRepository.getById(currentId);
-//        cart.getCartItems().remove(current);
-//        cartItemRepository.deleteById(currentId);
-//
-//
-//        if (item.getQuantity() > 0){
-//            addItemToCart(item);
-//        }
-//
-//        return new Cart();
-//
-//
-//
-//    }
-
-    @Override
-    public Cart updateCartItem(CartItem item) {
-
-        System.out.println(item.toString());
-
-        CartItem currentItem = cartItemRepository.findById(item.getId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Cart item with id " + item.getId() + " not found."
-                ));
-
-        String cartId = item.getCartId();
-
-        Cart cart = getCartById(cartId).orElseThrow(() -> new EntityNotFoundException(
-                "Cart with id " + cartId + " not found."
-        ));
-
-        cart.getCartItems().remove(currentItem);
-        cartItemRepository.deleteById(item.getId());
-
-        if (item.getQuantity() > 0) {
-            addItemToCart(item);
+    public Cart updateCartItem(CartItem input) {
+        Cart cart = lock(input.getCartId());
+        CartItem line = editable(input.getId(), cart.getCart_Id());
+        if (input.getQuantity() == 0) {
+            cart.getCartItems().remove(line);
+            cartItemRepository.delete(line);
+        } else {
+            Menu menu = pricing.menu(input.getItem() == null ? null : input.getItem().getId());
+            line.setItem(menu);
+            line.setQuantity(input.getQuantity());
+            line.setOrderPrice(pricing.line(menu, input.getQuantity()).doubleValue());
+            line.setSpecialInstruction(pricing.note(input.getSpecialInstruction()));
+            line.setOrderName(menu.getName());
         }
-
-        return cart;
+        return cartRepository.saveAndFlush(cart);
     }
-
-
-    public void deleteCartItem(CartItem item) throws RuntimeException {
-
-//        System.out.println("Deleting");
-//        System.out.println(item.toString());
-
-        String cartId = item.getCartId();
-        Cart cart = getCartById(cartId).orElseThrow(() -> new EntityNotFoundException(
-                String.format("Carts with id %d not found.", cartId)));
-
-        Long currentId = cartItemRepository.findAllByItemAndSpecialInstruction(cartId, item.getItem(), item.getSpecialInstruction());
-        CartItem current = cartItemRepository.getById(currentId);
-
-        if (current.getQuantity() == 1){
-            cart.getCartItems().remove(current);
-            cartItemRepository.deleteById(currentId);
-
+    public void deleteCartItem(CartItem input) {
+        Cart cart = lock(input.getCartId());
+        if (input.getItem() == null) throw bad("Menu item required");
+        CartItem line = cartItemRepository.findAllByCartId(cart.getCart_Id()).stream()
+                .filter(i -> i.getItem().getId().equals(input.getItem().getId())
+                        && Objects.equals(pricing.note(input.getSpecialInstruction()), pricing.note(i.getSpecialInstruction())))
+                .findFirst().orElseThrow(() -> bad("Cart item not found"));
+        decrease(cart, line);
+    }
+    private void decrease(Cart cart, CartItem line) {
+        if (line.getQuantity() <= 1) {
+            cart.getCartItems().remove(line);
+            cartItemRepository.delete(line);
+        } else {
+            line.setQuantity(line.getQuantity() - 1);
+            line.setOrderPrice(pricing.line(line.getItem(), line.getQuantity()).doubleValue());
         }
-        else{
-            current.setQuantity(current.getQuantity() - 1);
-            current.setOrderPrice(current.getQuantity() * Double.parseDouble(current.getItem().getPrice()));
-
-            cartItemRepository.flush();
-        }
-
-
-        cartRepository.flush();
+        cartRepository.saveAndFlush(cart);
     }
-
-    public void deleteAll() {
-        cartRepository.deleteAll();
-        cartRepository.flush();
+    public void deleteCartItemById(String id) {
+        CartItem line = cartItemRepository.findById(Long.valueOf(id)).orElseThrow(() -> bad("Cart item not found"));
+        Cart cart = lock(line.getCartId());
+        editable(line.getId(), cart.getCart_Id());
+        decrease(cart, line);
     }
-
-    public boolean existByItem(Menu menu, String instructions){
-
-//        return cartRepository.existsByItemAndSpecialInstruction(menu, instructions);
-        return true;
+    public void deleteCartItemsInCart(String id) {
+        Cart cart = lock(id);
+        List<CartItem> active = cartItemRepository.findAllByCartId(id);
+        cart.getCartItems().clear();
+        cartRepository.saveAndFlush(cart);
+        cartItemRepository.deleteAll(active);
     }
+    public Optional<Cart> getCartById(String id) { ownership.require(id); var cart=cartRepository.findById(id); cart.ifPresent(c -> c.getCartItems().size()); return cart; }
+    public Cart saveOrUpdate(Cart cart) { throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED); }
+    public boolean existByItem(Menu menu, String note) { return false; }
+    public void deleteCart(String id) { deleteCartItemsInCart(id); }
+    public List<Cart> getAll() { var carts=cartRepository.findAll(); carts.forEach(c -> c.getCartItems().size()); return carts; }
+    public List<CartItem> getAllItems() { return cartItemRepository.findAll(); }
+    public void deleteAll() { cartRepository.deleteAll(); }
 
-    @Override
     public String generateCart() {
-
-        Random rand = new Random();
-        return "Guest" + String.valueOf(rand.nextInt());
+        String id = "Guest-" + UUID.randomUUID();
+        StoreUser guest = new StoreUser(id, "", "", "", "", true);
+        users.saveAndFlush(guest);
+        Cart cart = new Cart();
+        cart.setCart_Id(id);
+        cartRepository.saveAndFlush(cart);
+        return id;
     }
-
-
-    public String cartLogin(String cartId, String username){
-
-        if (cartRepository.findById(cartId).isEmpty()){
-            return "No Cart Found";
+    public String cartLogin(String source, String target) {
+        ownership.require(target);
+        if (Objects.equals(source, target)) return "";
+        ownership.requireGuestSource(source);
+        List<String> ordered = new ArrayList<>(List.of(source, target));
+        Collections.sort(ordered);
+        Map<String, Cart> locked = new HashMap<>();
+        for (String id : ordered) cartRepository.findLockedById(id).ifPresent(c -> locked.put(id, c));
+        Cart from = locked.get(source);
+        if (from == null) return "";
+        Cart to = locked.get(target);
+        if (to == null) {
+            to = new Cart(); to.setCart_Id(target); to = cartRepository.saveAndFlush(to);
         }
-        else{
-            Cart currentCart = cartRepository.findById(cartId).get();
-
-            Optional<Cart> userCart = cartRepository.findById(username);
-
-//            System.out.println(currentCart.toString());
-            if (userCart.isEmpty()){
-//                System.out.println("New User Cart");
-
-
-                Cart newCart = new Cart();
-                newCart.setCart_Id(username);
-                List<CartItem> cartItems = currentCart.getCartItems();
-
-                for (CartItem item: cartItems){
-                    item.setCartId(username);
-                    cartItemRepository.saveAndFlush(item);
-                }
-                currentCart.setCartItems(cartItemRepository.findAllByCartId(cartId));
-                cartRepository.saveAndFlush(currentCart);
-
-
-                newCart.setCartItems(cartItemRepository.findAllByCartId(username));
-                cartRepository.saveAndFlush(newCart);
-
-
-                List<CartItem> deletingItems = cartItemRepository.findAllByCartId(cartId);
-                cartItemRepository.deleteAll(deletingItems);
-                cartRepository.deleteById(cartId);
-
-            }
-            else{
-                Cart newCart = userCart.get();
-
-                List<CartItem> cartItems = currentCart.getCartItems();
-
-                currentCart.getCartItems().removeIf(cartItem -> cartItem.getCartId().equals(cartId));
-
-                cartItems = cartItemRepository.findAllByCartId(cartId);
-//                System.out.println(cartItems);
-                for (CartItem item: cartItems){
-
-                    Long exist = cartItemRepository.findAllByItemAndSpecialInstruction(username, item.getItem(), item.getSpecialInstruction());
-
-                    if (exist != null){
-//                        System.out.println("Found Duplicate: " + cartItemRepository.findById(exist));
-
-                        CartItem currentItem = cartItemRepository.findById(exist).get();
-                        currentItem.setQuantity(currentItem.getQuantity() + item.getQuantity());
-                        currentItem.setOrderPrice(Double.parseDouble(currentItem.getItem().getPrice()) * currentItem.getQuantity());
-
-                        cartItemRepository.saveAndFlush(currentItem);
-
-                    }
-                    else{
-                        item.setCartId(username);
-                        cartItemRepository.saveAndFlush(item);
-                    }
-                }
-//                System.out.println("Test: " + cartItems);
-                deleteCartItemsInCart(cartId);
-
-
-                newCart.setCartItems(cartItemRepository.findAllByCartId(username));
-                cartRepository.saveAndFlush(newCart);
-            }
-        }
-
+        List<CartItem> items = new ArrayList<>(cartItemRepository.findAllByCartId(source));
+        from.getCartItems().clear();
+        cartRepository.saveAndFlush(from);
+        for (CartItem item : items) item.setCartId(target);
+        cartItemRepository.flush();
+        to.setCartItems(cartItemRepository.findAllByCartId(target));
+        cartRepository.saveAndFlush(to);
         return "";
     }
-
-
-    public List<Cart> getAll(){
-
-        return cartRepository.findAll();
-    }
-
-
-    public void deleteCartItemsInCart(String cartId){
-
-        Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new IllegalArgumentException("Cart not found"));
-
-        cart.getCartItems().removeIf(cartItem -> cartItem.getCartId().equals(cartId));
-        cartRepository.save(cart);
-
-        List<CartItem> items = cartItemRepository.findAllByCartId(cartId);
-        cartItemRepository.deleteAll(items);
-
-        cartRepository.delete(cart);
-    }
-
-    @Override
-    public void deleteCartItemById(String cartItemId) {
-//        cartItemRepository.deleteById(Long.parseLong(cartItemId));
-
-        CartItem item = cartItemRepository.findById(Long.parseLong(cartItemId)).get();
-
-        String cartId = item.getCartId();
-        Cart cart = getCartById(cartId).orElseThrow(() -> new EntityNotFoundException(
-                String.format("Carts with id %d not found.", cartId)));
-
-        Long currentId = cartItemRepository.findAllByItemAndSpecialInstruction(cartId, item.getItem(), item.getSpecialInstruction());
-        CartItem current = cartItemRepository.getById(currentId);
-
-        if (current.getQuantity() == 1){
-            cart.getCartItems().remove(current);
-            cartItemRepository.deleteById(currentId);
-
-        }
-        else{
-            current.setQuantity(current.getQuantity() - 1);
-            current.setOrderPrice(current.getQuantity() * Double.parseDouble(current.getItem().getPrice()));
-
-            cartItemRepository.flush();
-        }
-
-
-        cartRepository.flush();
-
-
-
-
-    }
-
-    public void deleteCart(String cartId){
-        cartRepository.deleteById(cartId);
-    }
-
-    public List<CartItem> getAllItems(){
-        return cartItemRepository.findAll();
-    }
-
-
 }
