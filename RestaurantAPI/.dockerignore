@@ -4,3 +4,4 @@ application-local.properties
 *.log
 .env
 .git
+private-release

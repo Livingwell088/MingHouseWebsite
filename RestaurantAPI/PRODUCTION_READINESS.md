@@ -33,7 +33,16 @@ npm run build
 
 The separate Maven build directory avoids OneDrive locks on the existing target folder. The React build retains warnings from the existing codebase; framework/toolchain modernization is a separate change.
 
-Verification: 24 backend tests and 7 frontend tests passed, including HTTP guest checkout, simultaneous retries, transaction rollback, ownership rejection, password migration, queued email retries, double-click protection, and lost-response recovery. The frontend production build passed with existing lint/toolchain warnings. A local API preview runs on port 8080 with an in-memory H2 database and email delivery disabled.
+Verification: 24 backend tests and 12 frontend tests passed, including HTTP guest checkout, simultaneous retries, transaction rollback, ownership rejection, password migration, queued email retries, double-click protection, lost-response recovery, and the featured-dish ordering controls. The frontend production build passed with existing lint/toolchain warnings. Automated tests keep email delivery disabled; real email was enabled separately for the user-requested local preview.
+
+## Release preparation verified October 30, 2026
+
+- Took consistent read-only PostgreSQL snapshots and retained encrypted rollback backups in ignored `private-release/`. The `.dump.dpapi` files use Windows CurrentUser protection and require this Windows profile to decrypt; arrange a separately retained provider backup for portable disaster recovery.
+- Decrypted and restored the latest backup into a separate local PostgreSQL 17 database. Row counts and SHA-256 contents matched across all eight public tables.
+- Applied the migration twice to the restored database, verifying repeatability and unchanged existing table contents.
+- Started the API against restored PostgreSQL with the production profile and schema validation. Verified guest checkout, authoritative pricing, idempotent retries, cross-customer rejection, account login/cart transfer, admin authentication, and two persisted email notifications without sending email.
+- Applied the reviewed additive migration to the live database in a transaction with short lock and statement timeouts. The existing deployed application remains on its original release.
+- Prepared ignored private settings and a new website-admin login. Production rollout remains pending user entry of replacement Supabase/Gmail credentials and Render environment settings. The existing `SPRING_DATASOURCE_*` variables and canonical `SPRING_MAIL_*` / `RESTAURANT_*` settings can be used directly instead of the aliases shown in `.env.example`.
 
 ## Release steps
 

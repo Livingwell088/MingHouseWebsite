@@ -22,3 +22,6 @@ RestaurantAPI/target/
 readiness-*.cjs
 RestaurantAPI/target-readiness/
 readiness-*.log
+
+# Private release credentials and encrypted database backups
+RestaurantAPI/private-release/
