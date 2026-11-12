@@ -1,521 +1,133 @@
-import MenuCard from "./MenuCard";
-import {Button, Col, Form, Modal, Row} from "react-bootstrap";
-import {useEffect, useState} from "react";
+import {Button, Form, Modal} from 'react-bootstrap';
+import {useEffect, useState} from 'react';
 import Image from 'react-bootstrap/Image';
-import "../styles/menuPopup.css"
+import '../styles/menuPopup.css';
 import '../styles/fonts.css';
-import API from "../api";
-import {useMenuPhoto} from "../Services/MenuPhotos";
+import API from '../api';
+import {useMenuPhoto} from '../Services/MenuPhotos';
+import {sortMenuOptions, includedWith, lunchInstructions, splitLunchInstructions} from '../Services/MenuPresentation';
+import {cannedSodas} from '../Services/DrinkCatalog';
+import {comboCategories, comboSubstitutions, splitComboInstructions, comboInstructions} from '../Services/ComboSubstitutions';
 
-// import dumpling from "/"
-
-const MenuPopup = (props) => {
-    const {photo, onPhotoError} = useMenuPhoto(props.item?.[0]?.number);
-
-    const [show, setShow] = useState(false)
-    const [count, setCount] = useState(1)
-
-
-
-    // String orderName, Double orderPrice, Integer quantity, Menu item, String specialInstruction
-    const addToCart = (name, total, quantity, item, instructions, todo, id) => {
-
-        let addTo = sessionStorage.getItem("sessionId").toString()
-
-        if (sessionStorage.getItem("loggedIn") === "true"){
-            addTo = sessionStorage.getItem("username").toString()
-        }
-
-        if (todo === "Add"){
-            API.cartAPI.create(
-                name.toString(), total, quantity, item, addTo, instructions
-            )
-                .then(r => console.log(r))
-                .catch((error) => console.log(error.message))
-
-
-            props.onClose()
-        }
-        else{
-
-            if (quantity === 0){
-                // API.cartAPI.deleteById(id)
-                //     .then(r => console.log(r))
-                //     .catch((error) => console.log(error.message))
-                // // console.log("Attempt to delete")
-                // // console.log(id, name.toString(), props.quantity * props.item.price, props.quantity, props.item, props.instructions, props.addTo)
-                // // API.cartAPI.delete()
-
-                API.cartAPI.edit(
-                    id, name.toString(), total, quantity, item, instructions, addTo
-                )
-                    .then(r => console.log(r))
-                    .catch((error) => console.log(error.message))
-            }
-            else{
-                console.log("Submitting instructions:", instructions);
-                // console.log(name.toString(), total, quantity, item, sessionStorage.getItem("sessionId").toString(), instructions)
-                API.cartAPI.edit(
-                    id, name.toString(), total, quantity, item, instructions, addTo
-                )
-                    .then(r => console.log(r))
-                    .catch((error) => console.log(error.message))
-
-            }
-
-
-            props.update()
-            props.onClose()
-        }
-
-
-
-    }
-
-    const getInitialSize = () => {
-        if (props.do === "Edit" && props.cartItem?.item?.size) {
-            return props.cartItem.item.size;
-        }
-        return props.item[0]?.size;
-    };
-
-    const getInitialTotal = () => {
-        const size = getInitialSize();
-        const match = props.item.find(obj => obj.size === size);
-        return Number(match?.price || props.item[0]?.price);
-    };
-
-    const getInitialInstructions = () => {
-        if (props.do === "Edit") {
-            return props.cartItem?.specialInstruction || "";
-        }
-
-        return "";
-    };
-
-    const [total, setTotal] = useState(getInitialTotal());
-
-    const [sizeChosen, setSizeChosen] = useState(getInitialSize());
-
-    const [instructions, setInstructions] = useState(getInitialInstructions());
-
-    // const [total, setTotal] = useState(props.item.filter(obj => obj.size === (props.size || props.item[0].size))[0].price)
-    // const [sizeChosen, setSizeChosen] = useState(props.size || props.item[0].size)
-    // const [instructions, setInstructions] = useState(props.instructions || "")
-
-
-    const onChange = (event) => setInstructions(event.target.value);
-
-
-    let sizes = []
-    for (let i = 0; i < props.item.length; i++){
-        if (props.item[i].name === props.name){
-            sizes.push(i)
-        }
-    }
-
-    const clearStates = () => {
-        setCount(props.quantity)
-        if (props.do !== "Edit"){
-            setSizeChosen(props.item[0].size)
-            setTotal(props.item.filter(obj => obj.size === (props.size || props.item[0].size))[0].price)
-
-        }
-        else{
-            setSizeChosen(props.size)
-            setTotal(props.item.filter(obj => obj.size === (props.size || props.item[0].size))[0].price)
-
-            // setTotal(props.item)
-        }
-
-    }
-
-    const closeModal = () => {
-        // clearStates()
-        props.onClose()
-    }
-
-    // useEffect(() => {
-    //     console.log(props)
-    //     if (props.do === "Edit"){
-    //         // console.log("Entered")
-    //         setTotal(props.item.filter(obj => obj.size === (props.size || props.item[0].size))[0].price)
-    //         props.update()
-    //         setCount(props.quantity)
-    //     }
-    //     else{
-    //         // setCount(1)
-    //         setCount(props.quantity)
-    //
-    //     }
-    // }, [props.quantity]);
-
+export default function MenuPopup(props) {
+    const options = sortMenuOptions(props.item || []);
+    const first = options[0];
+    const isLunch = first?.category === 'Lunch Special';
+    const isCombo = comboCategories.includes(first?.category);
+    const {photo, onPhotoError} = useMenuPhoto(first?.number);
+    const [sizeChosen, setSizeChosen] = useState('');
+    const [count, setCount] = useState(1);
+    const [instructions, setInstructions] = useState('');
+    const [side, setSide] = useState('Egg roll');
+    const [soda, setSoda] = useState('');
+    const [riceChoice, setRiceChoice] = useState('Pork Fried Rice');
+    const [showSubstitutions, setShowSubstitutions] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState('');
     useEffect(() => {
         if (!props.show) return;
-
-        const size = getInitialSize();
-        const match = props.item.find(obj => obj.size === size);
-
-        setSizeChosen(size);
-        setTotal(Number(match?.price || props.item[0]?.price));
+        const initial = props.do === 'Edit' ? props.cartItem?.item : sortMenuOptions(props.item || [])[0];
+        const saved = props.do === 'Edit' ? props.cartItem?.specialInstruction || '' : '';
+        const combo = splitComboInstructions(saved);
+        const lunch = splitLunchInstructions(isCombo ? combo.notes : saved);
+        setSizeChosen(initial?.size || '');
         setCount(props.quantity || 1);
-        setInstructions(getInitialInstructions());
-    }, [props.show]);
-
-    return (
-        <>
-
-            {/*<Modal show={props.show}*/}
-            {/*       onHide={closeModal}*/}
-            {/*       backdrop="static"*/}
-            {/*       keyboard={false}*/}
-            {/*       size="lg"*/}
-            {/*       aria-labelledby="contained-modal-title-vcenter"*/}
-            {/*       centered*/}
-            {/*       className={"popup teko"}*/}
-            {/*       onClick={e => e.stopPropagation()}*/}
-            {/*>*/}
-
-            {/*    <Modal.Header closeButton={true}>*/}
-            {/*        /!*<Modal.Title>{props.name}</Modal.Title>*!/*/}
-            {/*        /!*<Modal.Title>{props.item.filter(obj => obj.size === sizeChosen).name}</Modal.Title>*!/*/}
-
-            {/*    </Modal.Header>*/}
-
-            {/*    <Modal.Body style={{margin: "auto"}}>*/}
-            {/*        <Image src={"/images/" + props.item[0].number + ".png"} className={"menuImg"}*/}
-            {/*               style={{width: "100%",*/}
-            {/*                   margin: "auto"}}*/}
-            {/*               rounded />*/}
-            {/*    </Modal.Body>*/}
-
-            {/*    <Modal.Body>*/}
-            {/*        <Form style={{width: "80%",*/}
-            {/*            margin: "auto"*/}
-            {/*        }}>*/}
-            {/*            <Button onClick={() => {*/}
-            {/*                console.log(props.item)*/}
-
-            {/*                console.log(props.item.filter(obj => obj.size === (props.size || props.item[0].size))[0].price)*/}
-            {/*                console.log(total)*/}
-            {/*                console.log(total * count)*/}
-            {/*            }}>Test</Button>*/}
-
-            {/*            {*/}
-
-            {/*                sizes.map((current, index) => {*/}
-
-            {/*                    // console.log(props.item[current].price)*/}
-            {/*                    // console.log(total)*/}
-
-            {/*                    if (sizes.length === 1){*/}
-            {/*                        if (props.item[current].size === ""){*/}
-            {/*                            return <Form.Check*/}
-            {/*                                id={current}*/}
-            {/*                                name={"options"}*/}
-            {/*                                type={"radio"}*/}
-            {/*                                label={"$" + props.item[current].price}*/}
-            {/*                                value={props.item[current].price}*/}
-            {/*                                checked={total === props.item[current].price}*/}
-            {/*                                onChange={() => {*/}
-            {/*                                    setTotal(props.item[current].price)*/}
-            {/*                                    setSizeChosen(0)*/}
-            {/*                                }}*/}
-
-            {/*                            />*/}
-            {/*                        }*/}
-            {/*                        else if (props.item[current].size !== "("){*/}
-            {/*                            return <Form.Check*/}
-            {/*                                id={current}*/}
-            {/*                                name={"options"}*/}
-            {/*                                type={"radio"}*/}
-            {/*                                label={"(" + props.item[current].size + ") : $" + props.item[current].price}*/}
-            {/*                                value={props.item[current].price}*/}
-            {/*                                checked={total === props.item[current].price}*/}
-            {/*                                onChange={() => {*/}
-            {/*                                    setTotal(props.item[current].price)*/}
-            {/*                                    setSizeChosen(0)*/}
-            {/*                                }}*/}
-
-            {/*                            />*/}
-            {/*                        }*/}
-            {/*                        else{*/}
-            {/*                            return <Form.Check*/}
-            {/*                                id={current}*/}
-            {/*                                name={"options"}*/}
-            {/*                                type={"radio"}*/}
-            {/*                                label={props.item[current].size + ": $" + props.item[current].price}*/}
-            {/*                                value={props.item[current].price}*/}
-            {/*                                checked={total === props.item[current].price}*/}
-            {/*                                onChange={() => {*/}
-            {/*                                    setTotal(props.item[current].price)*/}
-            {/*                                    setSizeChosen(0)*/}
-            {/*                                }}*/}
-
-            {/*                            />*/}
-            {/*                        }*/}
-            {/*                    }*/}
-            {/*                    else{*/}
-            {/*                        // console.log(sizes)*/}
-            {/*                        return <Form.Check*/}
-            {/*                            id={current}*/}
-            {/*                            name={"options"}*/}
-            {/*                            type={"radio"}*/}
-            {/*                            value={props.item[current].price}*/}
-            {/*                            label={props.item[current].size + ": $" + props.item[current].price}*/}
-            {/*                            checked={sizeChosen === props.item[current].size}*/}
-            {/*                            onChange={() => {*/}
-            {/*                                setTotal(props.item[current].price)*/}
-            {/*                                setSizeChosen(props.item[current].size)*/}
-            {/*                            }}*/}
-            {/*                        />*/}
-            {/*                    }*/}
-            {/*                })}*/}
-
-
-
-            {/*        </Form>*/}
-            {/*    </Modal.Body>*/}
-
-            {/*    <Modal.Body>*/}
-            {/*        <Form.Control as="textarea" rows={3} className={"specialText"} placeholder="Special Instructions" value={instructions} onChange={onChange}/>*/}
-            {/*    </Modal.Body>*/}
-
-                {/*<Modal.Footer style={{width: "100%"}} justify-content-between>*/}
-                {/*    /!*<Row style={{width: "100%"}}>*!/*/}
-                {/*    <Button className={"mr-auto mingButtonOutline"} variant="secondary" onClick={() => {*/}
-                {/*        if (props.do === "Edit") {*/}
-                {/*            if (count >= 1) {*/}
-                {/*                setCount(count - 1)*/}
-                {/*            }*/}
-                {/*        }*/}
-                {/*        else {*/}
-                {/*            if (count >= 2) {*/}
-                {/*                setCount(count - 1)*/}
-                {/*            }*/}
-                {/*        }*/}
-                {/*    }}>*/}
-                {/*        -*/}
-                {/*    </Button>*/}
-                {/*    <h2>{count}</h2>*/}
-                {/*    <Button className={"mingButtonOutline"} variant="secondary" onClick={() => {*/}
-                {/*        setCount(count + 1)*/}
-                {/*    }}>*/}
-                {/*        +*/}
-                {/*    </Button>*/}
-
-                {/*    <Button className={"mingButton"} variant="primary" onClick={() => {*/}
-                {/*        let id = null;*/}
-                {/*        if (props.do === "Edit") {*/}
-                {/*            id = props.id;*/}
-                {/*        }*/}
-
-                {/*        let itemSize = {}*/}
-                {/*        for (let q = 0; q < props.item.length; q++) {*/}
-                {/*            if (props.item[q].size === sizeChosen) {*/}
-                {/*                itemSize = props.item[q]*/}
-                {/*            }*/}
-                {/*        }*/}
-
-                {/*        addToCart(props.name, total * count, count, itemSize, instructions, props.do, id)*/}
-                {/*    }}>Add ${API.priceAPI.price(total * count)}</Button>*/}
-
-                {/*</Modal.Footer>*/}
-
-
-            {/*</Modal>*/}
-
-            <Modal
-                show={props.show}
-                onHide={closeModal}
-                backdrop="static"
-                keyboard={false}
-                centered
-                size="lg"
-                className="popup teko"
-                onClick={e => e.stopPropagation()}
-            >
-
-                <Modal.Header closeButton />
-
-                <Modal.Body>
-                    <h2 className="popupTitle">{props.name}</h2>
-
-                    <div className="popupContent">
-                        <div className="popupLeft">
-                            <div className="popupImageCard">
-                                {/*<Image*/}
-                                {/*    src={"/images/" + props.item[0].number + ".png"}*/}
-                                {/*    className="menuImg"*/}
-                                {/*    rounded={false}*/}
-                                {/*/>*/}
-                                {photo ? <Image
-                                    src={photo}
-                                    alt={props.name}
-                                    onError={onPhotoError}
-                                    className="menuImg"
-                                    rounded={false}
-                                /> : <div className="popupPhotoPlaceholder">Photo coming soon</div>}
-                                <div className="popupImageCaption">
-                                    <strong>{props.name}</strong>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="popupRight">
-                            {props.item[0]?.description && (
-                                <div className="popupDesc">{props.item[0].description}</div>
-                            )}
-
-                            <div>
-                                <div className="popupOptionsTitle">Options</div>
-                                {/*<Form className="popupOptions">*/}
-                                {/*    {sizes.map((current) => (*/}
-                                {/*        <Form.Check*/}
-                                {/*            key={current}*/}
-                                {/*            id={current}*/}
-                                {/*            name="options"*/}
-                                {/*            type="radio"*/}
-                                {/*            label={*/}
-                                {/*                props.item[current].size*/}
-                                {/*                    ? `${props.item[current].size}: $${props.item[current].price}`*/}
-                                {/*                    : `$${props.item[current].price}`*/}
-                                {/*            }*/}
-                                {/*            checked={sizeChosen === props.item[current].size}*/}
-                                {/*            onChange={() => {*/}
-                                {/*                setTotal(props.item[current].price);*/}
-                                {/*                setSizeChosen(props.item[current].size);*/}
-                                {/*            }}*/}
-                                {/*        />*/}
-                                {/*    ))}*/}
-                                {/*</Form>*/}
-
-                                <Form className="popupOptions">
-                                    {sizes.map((current) => {
-                                        const option = props.item[current];
-                                        const checked = sizeChosen === option.size;
-
-                                        return (
-                                            <label
-                                                key={current}
-                                                className={`popupOptionRow ${checked ? "selected" : ""}`}
-                                                onClick={() => {
-                                                    setTotal(Number(option.price));
-                                                    setSizeChosen(option.size);
-                                                }}
-                                            >
-                                                <input
-                                                    type="radio"
-                                                    name="options"
-                                                    checked={checked}
-                                                    readOnly
-                                                />
-
-                                                <span className="customRadio"></span>
-
-                                                <span className="popupOptionText">
-                                                    {option.size ? option.size.trim() : props.name}
-                                                  </span>
-
-                                                <span className="popupOptionPrice">
-                                                    ${API.priceAPI.price(Number(option.price))}
-                                                  </span>
-                                            </label>
-                                            // <label
-                                            //     key={current}
-                                            //     htmlFor={`option-${current}`}
-                                            //     className={`popupOptionRow ${checked ? "selected" : ""}`}
-                                            // >
-                                            //     <input
-                                            //         id={`option-${current}`}
-                                            //         type="radio"
-                                            //         name="options"
-                                            //         checked={checked}
-                                            //         onChange={() => {
-                                            //             setTotal(Number(option.price));
-                                            //             setSizeChosen(option.size);
-                                            //         }}
-                                            //     />
-                                            //
-                                            //     <span className="customRadio"></span>
-                                            //
-                                            //     <span className="popupOptionText">
-                                            //       {option.size ? option.size.replace(/^\[/, "")
-                                            //           .replace(/\]$/, "")
-                                            //           .replace(/^w\.\s*/i, "With ")
-                                            //           .trim() : props.name}
-                                            //     </span>
-                                            //
-                                            //     <span className="popupOptionPrice">
-                                            //       ${API.priceAPI.price(Number(option.price))}
-                                            //     </span>
-                                            // </label>
-                                        );
-                                    })}
-                                </Form>
-                            </div>
-
-                            <Form.Control
-                                as="textarea"
-                                rows={3}
-                                className="specialText"
-                                placeholder="Special Instructions"
-                                value={instructions}
-                                onChange={onChange}
-                            />
-                        </div>
-                    </div>
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <div className="popupQtyRow">
-                        <Button className="mingButtonOutline" variant="secondary" onClick={() => {
-                            if (props.do === "Edit") {
-                                if (count >= 1) {
-                                    setCount(count - 1)
-                                }
-                            }
-                            else {
-                                if (count >= 2) {
-                                    setCount(count - 1)
-                                }
-                            }
-                        }}>-</Button>
-                        <div className="popupQtyValue">{count}</div>
-                        <Button className="mingButtonOutline" variant="secondary" onClick={() => {
-                            setCount(count + 1)
-                        }}>+</Button>
-                    </div>
-
-                    <div className="popupActions">
-                        <Button className="mingButtonOutline" variant="secondary" onClick={closeModal}>
-                            Cancel
-                        </Button>
-                        <Button className="mingButton" variant="primary" onClick={() => {
-                            let id = null;
-                            if (props.do === "Edit") {
-                                id = props.id;
-                            }
-
-                            let itemSize = {}
-                            for (let q = 0; q < props.item.length; q++) {
-                                if (props.item[q].size === sizeChosen) {
-                                    itemSize = props.item[q]
-                                }
-                            }
-
-                            addToCart(props.name, total * count, count, itemSize, instructions, props.do, id)
-                        }}>
-                            Add ${API.priceAPI.price(total * count)}
-                        </Button>
-                    </div>
-                </Modal.Footer>
-
-            </Modal>
-
-        </>
-    )
+        setInstructions(isLunch ? lunch.notes : isCombo ? combo.notes : saved);
+        setRiceChoice(combo.choice);
+        setShowSubstitutions(isCombo && combo.choice !== 'Pork Fried Rice');
+        setSide(lunch.side);
+        setSoda(lunch.soda);
+        setError('');
+    }, [props.show, props.cartItem, props.item, props.quantity, props.do, isLunch, isCombo]);
+    const selected = options.find(item => (item.size || '') === sizeChosen) || first;
+    const surcharge = isCombo ? comboSubstitutions.find(choice => choice.name === riceChoice)?.price || 0 : 0;
+    const total = Math.round((Number(selected?.price || 0) + surcharge) * count * 100) / 100;
+    const save = async () => {
+        if (selected?.draft) return;
+        if (isLunch && side === 'Can of soda' && !cannedSodas.includes(soda)) {
+            setError('Please choose your canned soda.');
+            return;
+        }
+        setSaving(true); setError('');
+        try {
+            const owner = sessionStorage.getItem('loggedIn') === 'true' ? sessionStorage.getItem('username') : sessionStorage.getItem('sessionId');
+            const mealNotes = isLunch ? lunchInstructions(side, instructions, soda) : instructions;
+            const notes = isCombo ? comboInstructions(riceChoice, mealNotes) : mealNotes;
+            if (props.do === 'Edit') {
+                await API.cartAPI.edit(props.id, props.name, total, count, selected, notes, owner);
+            } else {
+                await API.cartAPI.create(props.name, total, count, selected, owner, notes);
+            }
+            props.update?.();
+            props.onClose();
+        } catch (e) { setError('Unable to save this item. Please try again.'); }
+        finally { setSaving(false); }
+    };
+    return <Modal show={props.show} onHide={props.onClose} centered className="popup teko" size="lg" aria-labelledby="menu-popup-title">
+        <Modal.Header closeButton />
+        <Modal.Body>
+            <h2 className="popupTitle" id="menu-popup-title">{first?.number}. {props.name}</h2>
+            <div className="popupContent">
+                <div className="popupLeft"><div className="popupImageCard">
+                    {photo ? <Image src={photo} alt={props.name} onError={onPhotoError} className="menuImg" /> : <div className="popupPhotoPlaceholder">Photo coming soon</div>}
+                </div></div>
+                <div className="popupRight">
+                    {includedWith(selected) && <p className="popupDesc">{isCombo ? includedWith(selected).replace(/pork fried rice/i, riceChoice.toLowerCase()) : includedWith(selected)}</p>}
+                    {options.length > 1 ? <fieldset className="popupOptions">
+                        <legend className="popupOptionsTitle">{first?.category === 'Drinks' ? 'Choose a flavor' : 'Choose an option'}</legend>
+                        {options.map(option => <label key={option.id} className={`popupOptionRow ${selected?.id === option.id ? 'selected' : ''}`}>
+                            <input type="radio" name="options" checked={selected?.id === option.id} onChange={() => setSizeChosen(option.size || '')} />
+                            <span className="customRadio" /><span className="popupOptionText">{option.size}</span>
+                            <span className="popupOptionPrice">{'$' + API.priceAPI.price(Number(option.price))}</span>
+                        </label>)}
+                    </fieldset> : <p className="popupSinglePrice">{selected?.size && <span>{selected.size} · </span>}{'$' + API.priceAPI.price(Number(selected?.price || 0))}</p>}
+                    {isCombo && <div>
+                        <Form.Check type="checkbox" id="change-combo-rice" label="Change rice or noodles (optional)"
+                            checked={showSubstitutions} onChange={event => {
+                                setShowSubstitutions(event.target.checked);
+                                if (!event.target.checked) setRiceChoice('Pork Fried Rice');
+                            }} />
+                    {showSubstitutions && <Form.Group controlId="combo-rice-choice">
+                        <Form.Label>Rice or noodle choice</Form.Label>
+                        <Form.Select value={riceChoice} onChange={event => setRiceChoice(event.target.value)}>
+                            {comboSubstitutions.map(choice => <option key={choice.name} value={choice.name}>
+                                {choice.name}{choice.name === 'Pork Fried Rice' ? ' (included)' : choice.price ? ` (+$${choice.price.toFixed(2)})` : ' (no extra charge)'}
+                            </option>)}
+                        </Form.Select>
+                        <Form.Text>Substitution charges are per plate and replace the included pork fried rice.</Form.Text>
+                    </Form.Group>}
+                    </div>}
+                    {isLunch && <fieldset className="popupOptions lunchSideOptions">
+                        <legend className="popupOptionsTitle">Choose your included side</legend>
+                        {['Egg roll', 'Can of soda'].map(choice => <label key={choice} className={`popupOptionRow ${side === choice ? 'selected' : ''}`}>
+                            <input type="radio" name="lunch-side" checked={side === choice} onChange={() => setSide(choice)} />
+                            <span className="customRadio" /><span className="popupOptionText">{choice}</span><span>Included</span>
+                        </label>)}
+                    </fieldset>}
+                    {isLunch && side === 'Can of soda' && <Form.Group controlId="lunch-soda-flavor">
+                        <Form.Label>Choose your canned soda</Form.Label>
+                        <Form.Select value={soda} onChange={event => {setSoda(event.target.value); setError('');}} required>
+                            <option value="">Select a soda</option>
+                            {cannedSodas.map(flavor => <option key={flavor} value={flavor}>{flavor}</option>)}
+                        </Form.Select>
+                    </Form.Group>}
+                    {selected?.draft && <p>This drink is currently unavailable for online ordering.</p>}
+                    <Form.Control as="textarea" rows={3} className="specialText" aria-label="Special instructions" placeholder="Special Instructions" value={instructions} onChange={e => setInstructions(e.target.value)} />
+                    {error && <p role="alert">{error}</p>}
+                </div>
+            </div>
+        </Modal.Body>
+        <Modal.Footer>
+            <div className="popupQtyRow">
+                <Button className="mingButtonOutline" variant="secondary" aria-label="Decrease quantity" disabled={saving || count <= (props.do === 'Edit' ? 0 : 1)} onClick={() => setCount(count - 1)}>-</Button>
+                <div className="popupQtyValue">{count}</div>
+                <Button className="mingButtonOutline" variant="secondary" aria-label="Increase quantity" disabled={saving || count >= 99} onClick={() => setCount(count + 1)}>+</Button>
+            </div>
+            <div className="popupActions">
+                <Button className="mingButtonOutline" variant="secondary" onClick={props.onClose} disabled={saving}>Cancel</Button>
+                <Button className="mingButton" onClick={save} disabled={saving || selected?.draft}>{selected?.draft ? 'Currently unavailable' : saving ? 'Saving…' : `${props.do === 'Edit' ? 'Update' : 'Add'} $${API.priceAPI.price(total)}`}</Button>
+            </div>
+        </Modal.Footer>
+    </Modal>;
 }
 
-
-export default MenuPopup;

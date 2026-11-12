@@ -105,4 +105,18 @@ class OrderingIntegrationTest {
   failed.nextAttempt=java.time.Instant.now().minusSeconds(1); outbox.saveAndFlush(failed); reset(email); delivery.deliver(mail.id);
   assertNotNull(outbox.findById(mail.id).orElseThrow().sentAt); delivery.deliver(mail.id); verify(email,times(1)).sendEmail(anyString(),anyString(),anyString());
  }
+ @Test void substitutionSurvivesCartEditsQuantityChangesAndCheckout() {
+  dish.setCategory("Lunch Special"); menu.saveAndFlush(dish);
+  String note="Rice/noodle choice: Beef Lo Mein\nLunch side: Can of soda — Sprite\nNo onions";
+  CartItem input=new CartItem(); input.setCartId(owner); input.setItem(dish); input.setQuantity(2); input.setSpecialInstruction(note); input.setOrderPrice(.01);
+  carts.addItemToCart(input);
+  var line=carts.getCartItems(owner).get(0); assertEquals(14.0,line.getOrderPrice());
+  line.setQuantity(3); line.setOrderPrice(.01); carts.updateCartItem(line);
+  assertEquals(21.0,carts.getCartItems(owner).get(0).getOrderPrice());
+  carts.deleteCartItem(line); assertEquals(14.0,carts.getCartItems(owner).get(0).getOrderPrice());
+  Orders saved=orders.placeOrder(request()); assertEquals(14.0,saved.getOrderPrice());
+  assertEquals(new BigDecimal("0.98"),saved.getTax()); assertEquals(new BigDecimal("14.98"),saved.getTotal());
+  assertEquals(note,saved.getItems().get(0).getSpecialInstruction());
+  assertTrue(outbox.findAll().stream().filter(m->m.orderId.equals(saved.getId())).allMatch(m->m.body.contains("Beef Lo Mein") && m.body.contains("Sprite")));
+ }
 }

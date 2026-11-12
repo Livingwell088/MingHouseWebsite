@@ -1,6 +1,7 @@
 import "../styles/Admin.css";
 import API from "../api";
 import React, {useEffect, useState} from "react";
+import {orderDateKey, restaurantDateKey} from '../orderDates';
 
 export default function AdminDashboard() {
 
@@ -8,7 +9,7 @@ export default function AdminDashboard() {
     const [orders, setOrders] = useState([]);
     const [revenue, setRevenue] = useState(0);
     const [activeOrder, setActiveOrder] = useState(0);
-    const [averageOrder, setAverageOrder] = useState(0);
+    const [error, setError] = useState('');
 
 
 
@@ -23,7 +24,7 @@ export default function AdminDashboard() {
                 return dateB - dateA;
             }).filter((item) => {
                 // console.log(item.datePlaced);
-                return item.datePlaced == API.timeAPI.getDate()
+                return orderDateKey(item.datePlaced) === restaurantDateKey();
             });
 
             let currentRevenue = 0;
@@ -44,14 +45,17 @@ export default function AdminDashboard() {
             setOrders(latestOrders);
             setRevenue(currentRevenue);
             setActiveOrder(currentActiveOrder);
+            setError('');
         } catch (error) {
-            console.log(error.message);
+            setError('Unable to refresh orders. Please try again.');
         }
     }
 
 
     useEffect(() => {
         loadOrders();
+        const timer = setInterval(loadOrders, 30000);
+        return () => clearInterval(timer);
     }, []);
 
 
@@ -62,7 +66,10 @@ export default function AdminDashboard() {
                 <h1>Dashboard</h1>
             </div>
 
-            <h4>{API.timeAPI.getDate()}</h4>
+            <h4>{restaurantDateKey()}</h4>
+            <button onClick={loadOrders}>Refresh dashboard</button>
+            <p>Refreshes every 30 seconds. Dates use restaurant time.</p>
+            {error && <p role="alert">{error}</p>}
 
             <div className="dashboardStatsGrid">
 

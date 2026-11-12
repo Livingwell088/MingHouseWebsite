@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal subtotal = BigDecimal.ZERO;
         for (CartItem item : items) {
             CartItem submitted = input.getItems().stream().filter(i -> Objects.equals(i.getId(), item.getId())).findFirst().orElseThrow(this::stale);
-            BigDecimal amount = pricing.line(pricing.menu(item.getItem().getId()), item.getQuantity());
+            BigDecimal amount = pricing.line(pricing.menu(item.getItem().getId()), item.getQuantity(), item.getSpecialInstruction());
             if (submitted.getQuantity() != item.getQuantity() || !Double.isFinite(submitted.getOrderPrice())
                     || amount.compareTo(BigDecimal.valueOf(submitted.getOrderPrice())) != 0) throw stale();
             item.setOrderPrice(amount.doubleValue());
@@ -85,3 +85,4 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus(status); return orderRepository.saveAndFlush(order);
     }
 }
+

@@ -297,7 +297,7 @@ const MenuComponent = (props) => {
         //             <ul key={"p"} id={"foodTypes"} >
         //                 {
         //                     types.map(current =>
-        //                         <li key={current} id={current} onClick={() => test(current)}>{current}</li>
+        //                         <li key={current} id={current} aria-pressed={(categories.length === 1 && categories[0] === current) || (current === "All" && categories.length > 1)} onClick={() => test(current)}>{current}</li>
         //                     // <li onClick={() => this.t(current)}>{current}</li>
         //                     )
         //                 }
@@ -310,7 +310,7 @@ const MenuComponent = (props) => {
         //                         <h3 className={"headers trade-winds-regular"} style={{color: "rgb(238, 121, 89)"}}>{current}</h3>
         //                         {
         //
-        //                             Object.keys(props.menu).map((item, i) => {
+        //                             Object.keys(props.menu).sort((a, b) => a.localeCompare(b, undefined, {numeric: true})).map((item, i) => {
         //
         //                                 if (current === props.menu[item][0].category) {
         //                                     // console.log(props.menu[item])
@@ -432,9 +432,9 @@ const MenuComponent = (props) => {
 
         <main className="menu-layout ">
 
-            <aside className="menu-sidebar">
+            <aside className="menu-sidebar" aria-label="Menu categories">
                 {types.map(current =>(
-                    <button className={`menu-category teko ${((categories == current) || (current === "All" && categories.length > 1)) ? "active" : ""}`} id={current} onClick={() => test(current)}>{current}</button>
+                    <button className={`menu-category teko ${((categories == current) || (current === "All" && categories.length > 1)) ? "active" : ""}`} id={current} aria-pressed={(categories.length === 1 && categories[0] === current) || (current === "All" && categories.length > 1)} onClick={() => test(current)}>{current}</button>
                 ))}
 
             </aside>
@@ -463,7 +463,7 @@ const MenuComponent = (props) => {
                 {searchTerm ? (
                     <div className="menu-grid grid-3">
 
-                        {Object.keys(props.menu).map((item) => {
+                        {Object.keys(props.menu).sort((a, b) => a.localeCompare(b, undefined, {numeric: true})).map((item) => {
 
                             const menuItems = props.menu[item];
 
@@ -557,7 +557,7 @@ const MenuComponent = (props) => {
                             </div>
 
                             <div className="menu-grid grid-3">
-                                {Object.keys(props.menu).map((item, i) => {
+                                {Object.keys(props.menu).sort((a, b) => a.localeCompare(b, undefined, {numeric: true})).map((item, i) => {
 
                                     if (category === props.menu[item][0].category){
 
@@ -844,3 +844,4 @@ const MenuComponent = (props) => {
 }
 
 export default MenuComponent;
+

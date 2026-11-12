@@ -22,7 +22,7 @@ public class CartServiceImpl implements CartService {
     public List<CartItem> getCartItems(String id) {
         lock(id);
         List<CartItem> items = cartItemRepository.findAllByCartId(id);
-        for (CartItem item : items) item.setOrderPrice(pricing.line(item.getItem(), item.getQuantity()).doubleValue());
+        for (CartItem item : items) item.setOrderPrice(pricing.line(item.getItem(), item.getQuantity(), item.getSpecialInstruction()).doubleValue());
         return items;
     }
     private Cart lock(String id) {
@@ -34,13 +34,13 @@ public class CartServiceImpl implements CartService {
     public Cart addItemToCart(CartItem input) {
         Cart cart = lock(input.getCartId());
         Menu menu = pricing.menu(input.getItem() == null ? null : input.getItem().getId());
-        pricing.line(menu, input.getQuantity());
+        pricing.line(menu, input.getQuantity(), input.getSpecialInstruction());
         String note = pricing.note(input.getSpecialInstruction());
         List<CartItem> active = cartItemRepository.findAllByCartId(cart.getCart_Id());
         CartItem line = active.stream().filter(i -> i.getItem().getId().equals(menu.getId()) && Objects.equals(note, i.getSpecialInstruction()))
                 .findFirst().orElseGet(CartItem::new);
         int quantity = line.getId() == null ? input.getQuantity() : line.getQuantity() + input.getQuantity();
-        line.setOrderPrice(pricing.line(menu, quantity).doubleValue());
+        line.setOrderPrice(pricing.line(menu, quantity, note).doubleValue());
         line.setQuantity(quantity);
         line.setItem(menu);
         line.setCartId(cart.getCart_Id());
@@ -68,7 +68,7 @@ public class CartServiceImpl implements CartService {
             Menu menu = pricing.menu(input.getItem() == null ? null : input.getItem().getId());
             line.setItem(menu);
             line.setQuantity(input.getQuantity());
-            line.setOrderPrice(pricing.line(menu, input.getQuantity()).doubleValue());
+            line.setOrderPrice(pricing.line(menu, input.getQuantity(), input.getSpecialInstruction()).doubleValue());
             line.setSpecialInstruction(pricing.note(input.getSpecialInstruction()));
             line.setOrderName(menu.getName());
         }
@@ -89,7 +89,7 @@ public class CartServiceImpl implements CartService {
             cartItemRepository.delete(line);
         } else {
             line.setQuantity(line.getQuantity() - 1);
-            line.setOrderPrice(pricing.line(line.getItem(), line.getQuantity()).doubleValue());
+            line.setOrderPrice(pricing.line(line.getItem(), line.getQuantity(), line.getSpecialInstruction()).doubleValue());
         }
         cartRepository.saveAndFlush(cart);
     }
@@ -147,3 +147,4 @@ public class CartServiceImpl implements CartService {
         return "";
     }
 }
+

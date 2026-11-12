@@ -1,0 +1,41 @@
+-- Reviewed drink prices supplied November 12, 2026. Apply only during an authorized release.
+-- Inserts missing drinks; preserves subsequent admin edits when re-run.
+BEGIN;
+INSERT INTO menu (id, number, name, size, category, price, spicy, available) VALUES
+('dr1-1', 'DR1', 'Can Soda', 'Pepsi', 'Drinks', '1.35', '0', true),
+('dr1-2', 'DR1', 'Can Soda', 'Coca Cola', 'Drinks', '1.35', '0', true),
+('dr1-3', 'DR1', 'Can Soda', 'Sprite', 'Drinks', '1.35', '0', true),
+('dr1-4', 'DR1', 'Can Soda', 'Brisk Iced Tea', 'Drinks', '1.35', '0', true),
+('dr1-5', 'DR1', 'Can Soda', 'Mountain Dew', 'Drinks', '1.35', '0', true),
+('dr1-6', 'DR1', 'Can Soda', 'Dr. Pepper', 'Drinks', '1.35', '0', true),
+('dr1-7', 'DR1', 'Can Soda', 'Ginger Ale', 'Drinks', '1.35', '0', true),
+('dr1-8', 'DR1', 'Can Soda', 'Orange', 'Drinks', '1.35', '0', true),
+('dr1-9', 'DR1', 'Can Soda', 'Diet Pepsi', 'Drinks', '1.35', '0', true),
+('dr1-10', 'DR1', 'Can Soda', 'Diet Coca Cola', 'Drinks', '1.35', '0', true),
+('dr2-1', 'DR2', '20 oz Soda', 'Pepsi', 'Drinks', '2.25', '0', true),
+('dr2-2', 'DR2', '20 oz Soda', 'Diet Pepsi', 'Drinks', '2.25', '0', true),
+('dr2-3', 'DR2', '20 oz Soda', 'Ginger Ale', 'Drinks', '2.25', '0', true),
+('dr2-4', 'DR2', '20 oz Soda', 'Brisk Iced Tea', 'Drinks', '2.25', '0', true),
+('dr2-5', 'DR2', '20 oz Soda', 'Root Beer', 'Drinks', '2.25', '0', true),
+('dr2-6', 'DR2', '20 oz Soda', 'Orange', 'Drinks', '2.25', '0', true),
+('dr2-7', 'DR2', '20 oz Soda', 'Grape', 'Drinks', '2.25', '0', true),
+('dr2-8', 'DR2', '20 oz Soda', 'Mountain Dew', 'Drinks', '2.25', '0', true),
+('dr2-9', 'DR2', '20 oz Soda', 'Lemonade', 'Drinks', '2.25', '0', true),
+('dr3-1', 'DR3', '2L Soda', 'Pepsi', 'Drinks', '3.50', '0', true),
+('dr3-2', 'DR3', '2L Soda', 'Diet Pepsi', 'Drinks', '3.50', '0', true),
+('dr3-3', 'DR3', '2L Soda', 'Ginger Ale', 'Drinks', '3.50', '0', true),
+('dr3-4', 'DR3', '2L Soda', 'Mountain Dew', 'Drinks', '3.50', '0', true),
+('dr3-5', 'DR3', '2L Soda', 'Brisk Iced Tea', 'Drinks', '3.50', '0', true),
+('dr3-6', 'DR3', '2L Soda', 'Orange', 'Drinks', '3.50', '0', true),
+('dr3-7', 'DR3', '2L Soda', 'Grape', 'Drinks', '3.50', '0', true),
+('dr3-8', 'DR3', '2L Soda', 'Root Beer', 'Drinks', '3.50', '0', true),
+('dr4-1', 'DR4', 'Snapple', 'Apple', 'Drinks', '2.00', '0', true),
+('dr4-2', 'DR4', 'Snapple', 'Kiwi Strawberry', 'Drinks', '2.00', '0', true),
+('dr4-3', 'DR4', 'Snapple', 'Fruit Punch', 'Drinks', '2.00', '0', true),
+('dr5-1', 'DR5', 'Arizona', 'Watermelon', 'Drinks', '2.00', '0', true),
+('dr5-2', 'DR5', 'Arizona', 'Mango', 'Drinks', '2.00', '0', true),
+('dr5-3', 'DR5', 'Arizona', 'Fruit Punch', 'Drinks', '2.00', '0', true),
+('dr6-1', 'DR6', 'Homemade Iced Tea', '', 'Drinks', '2.50', '0', true),
+('dr7-1', 'DR7', 'Homemade Fruit Punch', '', 'Drinks', '2.50', '0', true)
+ON CONFLICT (id) DO NOTHING;
+COMMIT;

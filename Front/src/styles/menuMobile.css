@@ -227,3 +227,109 @@
         top: 76px;
     }
 }
+
+/* Keep the order summary readable alongside the menu grid. */
+.menu-page .menu-cart { padding: 22px; border-radius: 18px; background: #fff9ed; border: 1px solid #dfc58e; box-shadow: 0 8px 24px #661a0610; min-width: 0; }
+.menu-page .cartHeader { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-bottom:16px; border-bottom:1px solid #dfc58e; }
+.menu-page .cartHeader h2 { margin:0; }
+.menu-page .cartItems { min-height:100px; max-height:45vh; overflow-y:auto; padding:8px 0; }
+.menu-page .cartItem { padding:16px 0; border-bottom:1px solid #ead9b4; }
+.menu-page .cartItemTop { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; align-items:start; }
+.menu-page .cartItemName { margin:0; line-height:1.3; overflow-wrap:anywhere; }
+.menu-page .cartItemPrice { white-space:nowrap; font-weight:700; }
+.menu-page .cartItemRow { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:12px; }
+.menu-page .cartItemInstructions { white-space:pre-line; font-size:.95rem; line-height:1.4; padding:8px 10px; margin-top:8px; background:#f3e8ce; border-radius:8px; }
+.menu-page .qtyBtn { min-width:36px; min-height:36px; }
+.menu-page .cartSummary { padding-top:16px; }
+.menu-page .cartRow { display:flex; justify-content:space-between; gap:12px; margin-bottom:8px; }
+.menu-page .totalRow { border-top:1px solid #dfc58e; padding-top:12px; font-weight:700; }
+.menu-page .cartCheckoutBtn { width:100%; min-height:48px; margin-top:12px; }
+.menu-page .menuCardDescription { margin:0; color:#661a06; font-size:1rem; line-height:1.35; }
+.popupSinglePrice { color:#661a06; font-size:1.35rem; font-weight:600; }
+.lunchSideOptions { margin-bottom:18px; }
+.menu-page .menu-cart { gap:12px; overflow:hidden; }
+.menu-page .menu-cart .cartItems { flex:0 1 auto; min-height:0; }
+.menu-page .menu-cart .emptyCart { min-height:0; height:auto; padding:24px 8px; gap:6px; }
+.menu-page .menu-cart .emptyCart h5 { margin:0; font-size:1.25rem; line-height:1.3; }
+.menu-page .menu-cart .emptyCart p { margin:0; max-width:24ch; font-size:1rem; line-height:1.45; }
+.menu-page .menu-cart .cartSummary { width:100%; max-width:none; margin:0; align-self:stretch; align-items:stretch; gap:8px; padding:16px 0 0; flex-shrink:0; border-top:1px solid #dfc58e; }
+.menu-page .menu-cart .cartRow { width:100%; margin:0; align-items:baseline; font-size:1.05rem; line-height:1.4; }
+.menu-page .menu-cart .cartRow span:last-child { text-align:right; font-variant-numeric:tabular-nums; }
+.menu-page .menu-cart .totalRow { margin-top:4px; padding-top:12px; font-size:1.4rem; }
+.menu-page .menu-cart .cartCheckoutBtn { flex-shrink:0; min-height:46px; padding:10px 16px; border-radius:10px; margin-top:4px; font-size:1.15rem; line-height:1.3; }
+.menu-page .menu-cart .cartHeader { padding-bottom:12px; }
+.menu-page .menu-cart .cartHeader h2 { font-size:1.7rem; line-height:1.2; }
+.menu-page .menu-cart .cartCount { width:30px; min-width:30px; height:30px; font-size:1rem; }
+
+/* Compact, consistent menu cards; styles stay within the menu page. */
+.menu-page .menu-content { container-type:inline-size; }
+.menu-page .menu-grid { gap:18px; align-items:stretch; }
+.menu-page .section-header { margin-bottom:18px; gap:16px; }
+.menu-page .section-header h2 { font-size:2rem; line-height:1.15; margin:0; color:#661a06; }
+.menu-page .section-header .line { height:1px; opacity:.55; }
+.menu-page .menuCard { border:1px solid #dfc58e; border-radius:14px; background:#fff9ed; box-shadow:0 3px 10px #661a060c; transition:transform .15s ease,box-shadow .15s ease; }
+.menu-page .menuCard:hover { border-color:#c69222 !important; box-shadow:0 6px 18px #661a061a; transform:translateY(-2px); }
+.menu-page .menuCard .menuCardImage { flex:none; width:100%; height:auto; aspect-ratio:16 / 10; object-fit:cover; border:0; border-radius:0; }
+.menu-page .menuCard .noImage { background:linear-gradient(135deg,#f4e0b3,#ecd094); }
+.menu-page .menuCard .noImageLabel { font-size:1rem; letter-spacing:.3px; font-weight:400; color:#8a5a3a; }
+.menu-page .menuCardBody { padding:16px; height:auto; gap:14px; }
+.menu-page .menuCardTop { display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; gap:8px; padding:0; border:0; margin:0; }
+.menu-page .menuCardTop h5 { margin:0; color:#661a06; font-size:1.35rem; line-height:1.3; font-weight:600; overflow-wrap:anywhere; }
+.menu-page .menuCardPrice { font-size:1.25rem; line-height:1.2; font-weight:600; color:#661a06; font-variant-numeric:tabular-nums; }
+.menu-page .menuCardBottom { min-height:42px; padding:8px 12px; border:1px solid #c69222; border-radius:8px; color:#661a06; font-size:1.1rem; line-height:1.25; box-shadow:none; }
+.menu-page .menuCardBottom:hover, .menu-page .menuCardBottom:focus-visible { background:#e8bd52; color:#661a06; border-color:#661a06; }
+@container (max-width:680px) { .menu-page .menu-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@container (max-width:420px) { .menu-page .menu-grid { grid-template-columns:minmax(0,1fr); } }
+@media (max-width:768px) {
+    .menu-page .menuCard { transform:none; padding:12px; gap:14px; }
+    .menu-page .menuCard .menuCardImage { flex:0 0 88px; width:88px; height:88px; aspect-ratio:1; border-radius:10px; }
+    .menu-page .menuCard .menuCardImage.noImage { display:none; }
+    .menu-page .menuCardBody { padding:0; gap:10px; }
+    .menu-page .menuCardTop { gap:5px; }
+    .menu-page .menuCardTop h5 { font-size:1.2rem; }
+    .menu-page .menuCardBottom { min-height:44px; }
+    .menu-page .section-header h2 { font-size:1.65rem; }
+}
+
+/* Category navigation matches the menu cards without shifting on selection. */
+@media (min-width:769px) {
+    .menu-page .menu-sidebar {
+        padding:10px;
+        gap:4px;
+        min-height:0;
+        background:#ecd7a6;
+        border:1px solid #cfad61;
+        border-radius:14px;
+        box-shadow:0 3px 10px #661a060c;
+        scrollbar-gutter:stable;
+    }
+    .menu-page .menu-category,
+    .menu-page .menu-category.active {
+        position:relative;
+        width:100%;
+        min-height:42px;
+        padding:10px 14px;
+        border:0;
+        border-radius:8px;
+        font-size:1.08rem;
+        line-height:1.25;
+        color:#661a06;
+        background:transparent;
+        font-weight:500;
+        white-space:normal;
+        transition:background .15s ease;
+    }
+    .menu-page .menu-category:hover { background:#f3e8ce; }
+    .menu-page .menu-category.active {
+        background:linear-gradient(to right,#d4a437,#efc763);
+        font-weight:600;
+        box-shadow:inset 3px 0 #661a06;
+    }
+    .menu-page .menu-category:focus-visible { outline:2px solid #661a06; outline-offset:1px; }
+}
+@media (max-width:768px) {
+    .menu-page .menu-category,
+    .menu-page .menu-category.active { padding:9px 16px; font-weight:500; }
+    .menu-page .menu-category.active { color:#661a06; box-shadow:inset 0 -3px #661a06; }
+}
+

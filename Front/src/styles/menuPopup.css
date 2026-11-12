@@ -431,3 +431,6 @@ a:hover {
         outline-offset: 2px;
     }
 }
+.popup #lunch-soda-flavor { background-color:#f8e6c5; color:#661a06; border:1px solid #b78b41; min-height:44px; }
+.popup #combo-rice-choice { background-color:#f8e6c5; color:#661a06; border:1px solid #b78b41; min-height:44px; }
+.popup .form-text { display:block; margin-top:6px; color:#8a5a3a; line-height:1.35; }

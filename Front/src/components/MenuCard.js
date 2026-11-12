@@ -1,3 +1,4 @@
+import {sortMenuOptions} from '../Services/MenuPresentation';
 import Card from 'react-bootstrap/Card';
 import "../styles/menuCard.css"
 import Typography from "@mui/material/Typography";
@@ -97,14 +98,14 @@ const MenuCard = (props) => {
             <Card.Body className="menuCardBody">
                 <Card.Title className="menuCardTop">
                     <h5>{props.number + ". " + props.name}</h5>
-                    <span className="menuCardPrice">${props.price[0]}</span>
+                    <span className="menuCardPrice">{'$' + sortMenuOptions(props.menu)[0]?.price}</span>
                 </Card.Title>
 
                 <Button className="menuCardBottom"  onClick={(e) => {
                     e.stopPropagation();
                     props.onOpen(props.menu);
                 }}>
-                    Add to Cart
+                    {props.menu[0]?.draft ? "View drink options" : "Add to Cart"}
                 </Button>
             </Card.Body>
 
@@ -115,3 +116,6 @@ const MenuCard = (props) => {
 };
 
 export default MenuCard;
+
+
+

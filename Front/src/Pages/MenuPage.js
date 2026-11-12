@@ -1,3 +1,5 @@
+import {withDrinkDrafts} from '../Services/DrinkCatalog';
+import {sortMenuOptions, menuCategory} from '../Services/MenuPresentation';
 // import logo from './logo.svg';
 import '../styles/menuPage.css';
 import '../styles/menuMobile.css';
@@ -24,7 +26,7 @@ const MenuPage = (props) => {
         API.menuAPI.get()
             .then((data) => {
                 // console.log(data)
-                setMenu(data.data)
+                setMenu(withDrinkDrafts(data.data.map(item => ({...item, category: menuCategory(item.category)}))))
             })
             .catch((error) => console.log(error.message))
 
@@ -36,7 +38,7 @@ const MenuPage = (props) => {
     // let menus = Array.from(menu)
     // console.log(menus)
 
-    const result = Object.groupBy(menus, ({ number }) => number);
+    const result = Object.fromEntries(Object.entries(Object.groupBy(menus, ({ number }) => number)).map(([number, items]) => [number, sortMenuOptions(items)]));
 
     // console.log(result.size)
 
@@ -73,13 +75,13 @@ const MenuPage = (props) => {
     const categories = ["Lunch Special", "American Dishes", "Appetizer", "Soup", "Chow Mein", "Fried Rice", "Lo Mein", "Mei Fun",
         "Pork", "Poultry", "Beef", "Seafood", "Egg Foo Young", "Sweet And Sour", "Vegetable",
         "Moo Shu", "Special Combination Plates", "Chefs Specialties", "All Day Special", "Special Healthy Diet",
-        "Other"]
+        "Other", "Drinks"]
 
 
     const types = ["All", "Lunch Special", "American Dishes", "Appetizer", "Soup", "Chow Mein", "Fried Rice", "Lo Mein", "Mei Fun",
         "Pork", "Poultry", "Beef", "Seafood", "Egg Foo Young", "Sweet And Sour", "Vegetable",
         "Moo Shu", "Special Combination Plates", "Chefs Specialties", "All Day Special", "Special Healthy Diet",
-        "Other"]
+        "Other", "Drinks"]
 
     // console.log(menu)
     return (
@@ -109,3 +111,5 @@ const MenuPage = (props) => {
 }
 
 export default MenuPage;
+
+

@@ -28,8 +28,8 @@ test.each(['S10', '9', 'D3'])('card %s opens its matching menu popup', async num
     render(<HomePopular />);
     fireEvent.click(await screen.findByRole('button', { name: new RegExp(`Choose #${number} `) }));
     const popup = await screen.findByRole('dialog');
-    expect(within(popup).getByRole('heading', { name: dishes[number][0].name })).toBeInTheDocument();
-    expect(within(popup).getAllByRole('radio')).toHaveLength(dishes[number].length);
+    expect(within(popup).getByRole('heading', { name: `${number}. ${dishes[number][0].name}` })).toBeInTheDocument();
+    expect(within(popup).queryAllByRole('radio')).toHaveLength(dishes[number].length > 1 ? dishes[number].length : 0);
 });
 
 test('size, quantity, and instructions are passed to the existing cart API', async () => {
@@ -37,7 +37,7 @@ test('size, quantity, and instructions are passed to the existing cart API', asy
     fireEvent.click(await screen.findByRole('button', { name: /Choose #9 / }));
     const popup = within(await screen.findByRole('dialog'));
     fireEvent.click(popup.getByText('(Lg 10)'));
-    fireEvent.click(popup.getByRole('button', { name: '+', exact: true }));
+    fireEvent.click(popup.getByRole('button', { name: 'Increase quantity', exact: true }));
     fireEvent.change(popup.getByPlaceholderText('Special Instructions'), { target: { value: 'No peanuts' } });
     fireEvent.click(popup.getByRole('button', { name: 'Add $17.90', exact: true }));
     await waitFor(() => expect(API.cartAPI.create).toHaveBeenCalledWith('Crab Rangoon', 17.9, 2, dishes['9'][1], 'Guest-test', 'No peanuts'));
@@ -51,3 +51,4 @@ test('a failed menu lookup gives a retryable error instead of opening an empty p
     expect(await screen.findByRole('alert')).toHaveTextContent('Please try again');
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 });
+
