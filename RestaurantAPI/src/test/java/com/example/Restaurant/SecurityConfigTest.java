@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-@WebMvcTest({AdminAuthController.class, OrderController.class, UserController.class, MenuController.class, CartController.class})
+@WebMvcTest({AdminAuthController.class, StoreOrderingController.class, OrderController.class, UserController.class, MenuController.class, CartController.class})
 @Import({SecurityConfig.class, WebConfig.class, CustomerTokens.class, Ownership.class})
 class SecurityConfigTest {
     @Autowired MockMvc mvc;
@@ -27,6 +27,8 @@ class SecurityConfigTest {
     @MockBean UserService users;
     @MockBean MenuService menu;
     @MockBean CartService cart;
+    @MockBean AdminDeviceSessions adminDevices;
+    @MockBean StoreOrderingService ordering;
     @MockBean com.example.Restaurant.Repository.OrderRepository submissions;
 
     @DynamicPropertySource
@@ -36,6 +38,20 @@ class SecurityConfigTest {
 
     @Test void menuRemainsPublic() throws Exception {
         mvc.perform(get("/menu/getMenu")).andExpect(status().isOk());
+    }
+    @Test void orderingStatusIsPublicButOnlyAdminsCanChangeIt() throws Exception {
+        when(ordering.status()).thenReturn(new StoreOrderingService.Status(true, ""));
+        mvc.perform(get("/store/ordering")).andExpect(status().isOk()).andExpect(jsonPath("$.enabled").value(true))
+                .andExpect(header().string("Cache-Control", "no-store"));
+        mvc.perform(put("/admin/ordering").contentType("application/json").content("{\"enabled\":false}"))
+                .andExpect(status().isUnauthorized());
+        mvc.perform(put("/admin/ordering").with(httpBasic("admin", "test-only-secret")).contentType("application/json").content("{\"enabled\":false}"))
+                .andExpect(status().isForbidden());
+        verify(ordering, never()).update(anyBoolean());
+        when(ordering.update(false)).thenReturn(new StoreOrderingService.Status(false, StoreOrderingService.PAUSED_MESSAGE));
+        mvc.perform(put("/admin/ordering").with(httpBasic("admin", "test-only-secret")).header("X-Admin-Request", "true")
+                        .contentType("application/json").content("{\"enabled\":false}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.enabled").value(false));
     }
 
     @Test void adminIsDisabledWithoutConfiguredHash() {

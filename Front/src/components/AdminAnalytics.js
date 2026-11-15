@@ -1,283 +1,38 @@
-import "../styles/Admin.css";
-import {useEffect, useState} from "react";
-import API from "../api";
-// import {isCompositeComponentWithType} from "react-dom/test-utils";
-// import {
-//     Chart as ChartJS,
-//     CategoryScale,
-//     LinearScale,
-//     BarElement,
-//     Tooltip,
-//     Legend
-// } from "chart.js";
-//
-// import { Bar } from "react-chartjs-2";
-//
-// ChartJS.register(
-//     CategoryScale,
-//     LinearScale,
-//     BarElement,
-//     Tooltip,
-//     Legend
-// );
+import {useState} from 'react';
+import {ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid} from 'recharts';
+import useAdminOrders from '../Services/useAdminOrders';
+import {money} from '../Services/AdminPresentation';
+import {orderDateKey, restaurantDateKey} from '../orderDates';
 
-import {
-    ResponsiveContainer,
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    Tooltip,
-    CartesianGrid
-} from "recharts";
-
-
-
+export function buildAnalytics(orders, start, end) {
+    const included = orders.filter(o => {const day = orderDateKey(o.datePlaced); return day && day >= start && day <= end && o.orderStatus !== 'Cancelled';});
+    const revenue = included.reduce((sum, o) => sum + Number(o.orderPrice || 0), 0);
+    const counts = new Map(), hours = Array.from({length: 24}, (_, hour) => ({hour: `${hour % 12 || 12}${hour < 12 ? 'a' : 'p'}`, orders: 0}));
+    included.forEach(o => {
+        const hour = Number(String(o.timePlaced || '').split(':')[0]);
+        if (o.timePlaced && Number.isInteger(hour) && hour >= 0 && hour < 24) hours[hour].orders++;
+        (o.items || []).forEach(line => {
+            const name = `${line.item?.number ? `${line.item.number}. ` : ''}${line.item?.name || line.orderName || 'Unknown item'}${line.item?.size ? ` · ${line.item.size}` : ''}`;
+            const row = counts.get(name) || {name, quantity: 0, revenue: 0};
+            row.quantity += Number(line.quantity || 0);
+            // orderPrice is already the entire line total, including quantity.
+            row.revenue += Number(line.orderPrice || 0); counts.set(name, row);
+        });
+    });
+    return {orders: included, revenue, hours, top: [...counts.values()].sort((a, b) => b.quantity - a.quantity || b.revenue - a.revenue).slice(0, 5)};
+}
 export default function AdminAnalytics() {
-
-
-    const today = new Date().toISOString().split("T")[0];
-    const [startDate, setStartDate] = useState(today);
-    const [endDate, setEndDate] = useState(today);
-    const [orders, setOrders] = useState([]);
-
-    const [orderItems, setOrderItems] = useState([]);
-
-    const [revenue, setRevenue] = useState([]);
-    const [pickUpOrders, setPickUpOrders] = useState([]);
-    const [deliveryOrders, setDeliveryOrders] = useState([]);
-
-
-    const loadOrders = async () => {
-        try {
-            const res = await API.orderAPI.get();
-
-            const latestOrders = [...res.data].sort((a, b) => {
-                const dateA = new Date(`${a.datePlaced} ${a.timePlaced}`);
-                const dateB = new Date(`${b.datePlaced} ${b.timePlaced}`);
-                return dateB - dateA;
-            });
-
-            const parseInputDateLocal = (dateString, endOfDay = false) => {
-                const [year, month, day] = dateString.split("-").map(Number);
-
-                return endOfDay
-                    ? new Date(year, month - 1, day, 23, 59, 59, 999)
-                    : new Date(year, month - 1, day, 0, 0, 0, 0);
-            };
-
-            const filteredOrders = latestOrders.filter(order => {
-                const orderDate = new Date(order.datePlaced);
-                orderDate.setHours(0, 0, 0, 0);
-
-                const start = parseInputDateLocal(startDate);
-                const end = parseInputDateLocal(endDate, true);
-
-                return orderDate >= start && orderDate <= end;
-            });
-
-            let currentRevenue = 0;
-            let items = []
-
-            let itemCounts = {}
-
-
-            filteredOrders.forEach((order) => {
-                currentRevenue += parseFloat(order.orderPrice);
-                items.push(... order.items);
-            })
-
-            items.forEach(item => {
-
-                if (!itemCounts[item.item.name]) {
-                    itemCounts[item.item.name] = {
-                        quantity: 0,
-                        revenue: 0
-                    };
-                }
-
-                console.log(item)
-
-                itemCounts[item.item.name].quantity += item.quantity;
-                itemCounts[item.item.name].revenue +=
-                    item.quantity * parseFloat(item.orderPrice);
-            });
-
-            const sortedItems = Object.entries(itemCounts)
-                .sort((a, b) => {
-                    // First sort by quantity
-                    if (b[1].quantity !== a[1].quantity) {
-                        return b[1].quantity - a[1].quantity;
-                    }
-
-                    // Then sort by revenue
-                    return b[1].revenue - a[1].revenue;
-                }).slice(0, 5);
-
-            console.log(sortedItems);
-
-            setOrders(filteredOrders);
-            setRevenue(currentRevenue);
-            setPickUpOrders(filteredOrders.filter(order => { return order.orderType === "Pickup"}));
-            setDeliveryOrders(filteredOrders.filter(order => {return order.orderType === "Delivery"}));
-            setOrderItems(sortedItems)
-        } catch (error) {
-            console.log(error.message);
-        }
-    }
-
-
-    const loadAnalytics = async () => {
-        console.log("Load analytics");
-        loadOrders();
-    }
-
-
-    useEffect(() => {
-        loadOrders();
-    }, []);
-
-    const ordersByHour = [
-        { hour: "11 AM", orders: 3 },
-        { hour: "12 PM", orders: 8 },
-        { hour: "1 PM", orders: 5 },
-        { hour: "5 PM", orders: 6 },
-        { hour: "6 PM", orders: 12 },
-        { hour: "7 PM", orders: 9 },
-    ];
-
-    const chartData = {
-        labels: ordersByHour.map(item => item.hour),
-        datasets: [
-            {
-                label: "Orders",
-                data: ordersByHour.map(item => item.orders),
-            }
-        ]
-    };
-
-    // const ordersByHour = orders.reduce((acc, order) => {
-    //   const hour = order.timePlaced?.split(":")[0];
-    //   // group by hour
-    // }, {});
-
-    return (
-        <div>
-            <div className="adminPageHeader">
-                <h1>Analytics</h1>
-            </div>
-
-            <div className="analyticsFilters">
-
-                <input
-                    type="date"
-                    value={startDate}
-                    max={endDate || today}
-                    onChange={(e) => setStartDate(e.target.value)}
-                />
-
-                <input
-                    type="date"
-                    value={endDate}
-                    min={startDate || undefined}
-                    max={today}
-                    onChange={(e) => setEndDate(e.target.value)}
-                />
-
-                <button onClick={loadAnalytics}>
-                    Apply
-                </button>
-
-            </div>
-
-            <div className="dashboardStatsGrid">
-                <div className="dashboardCard">
-                    <h3>Revenue</h3>
-                    <p>${API.priceAPI.price(revenue)}</p>
-                </div>
-
-                <div className="dashboardCard">
-                    <h3>Orders</h3>
-                    <p>{orders.length}</p>
-                </div>
-
-                <div className="dashboardCard">
-                    <h3>Avg Order</h3>
-                    <p>${
-                    API.priceAPI.price(
-                        orders.length > 0 ? revenue / orders.length : 0
-                    )
-                }
-                    </p>
-                </div>
-
-                <div className="dashboardCard">
-                    <h3>Pickup / Delivery</h3>
-                    <p>{pickUpOrders.length} / {deliveryOrders.length}</p>
-                </div>
-            </div>
-
-            {/*<div className="dashboardChartCard">*/}
-            {/*    <h2>Orders by Hour</h2>*/}
-            {/*    <Bar data={chartData} />*/}
-            {/*</div>*/}
-
-            <div className="dashboardChartCard">
-                <h2>Orders by Hour</h2>
-
-                <ResponsiveContainer width="100%" height={320}>
-                    <LineChart data={ordersByHour}>
-
-                        <CartesianGrid strokeDasharray="3 3" />
-
-                        <XAxis dataKey="hour" />
-
-                        <YAxis allowDecimals={false} />
-
-                        <Tooltip />
-
-                        <Line
-                            type="monotone"
-                            dataKey="orders"
-                            stroke="#d4a437"
-                            strokeWidth={3}
-                            dot={{ r: 5 }}
-                        />
-
-                    </LineChart>
-                </ResponsiveContainer>
-            </div>
-
-
-
-            <div className="adminTableCard analyticsTable">
-                <h2>Top Selling Items</h2>
-
-                <table className="adminTable">
-                    <thead>
-                    <tr>
-                        <th>Item</th>
-                        <th>Qty Sold</th>
-                        <th>Revenue</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-
-                    {orderItems.map(([name, data]) => {
-                        return (
-                            <tr key={name}>
-                                <td>{name}</td>
-                                <td>{data.quantity}</td>
-                                <td>${API.priceAPI.price(data.revenue)}</td>
-                            </tr>
-                        )
-                    })}
-
-                    </tbody>
-                </table>
-
-            </div>
-        </div>
-    );
+    const today = restaurantDateKey();
+    const [start, setStart] = useState(today), [end, setEnd] = useState(today), [range, setRange] = useState([today, today]);
+    const {orders, error, loading, refresh} = useAdminOrders();
+    const report = buildAnalytics(orders, ...range);
+    return <div>
+        <div className="adminPageHeader"><div><p className="adminEyebrow">Sales reports</p><h1>Analytics</h1><p>Restaurant dates · Sales before tax · Cancelled orders excluded</p></div><button onClick={refresh} disabled={loading}>Refresh report</button></div>
+        {error && <p className="adminNotice error" role="alert">{error}</p>}
+        <form className="adminFilters" onSubmit={e => {e.preventDefault(); if (start && end && start <= end) setRange([start, end]);}}><label>From<input required type="date" value={start} max={end || today} onChange={e => setStart(e.target.value)}/></label><label>Through<input required type="date" min={start} max={today} value={end} onChange={e => setEnd(e.target.value)}/></label><button>Apply dates</button></form>
+        <p className="adminSync" role="status">{loading ? 'Loading sales…' : `Showing ${range[0]} through ${range[1]}`}</p>
+        <div className="dashboardStatsGrid">{[['Sales', money(report.revenue)], ['Orders', report.orders.length], ['Average order', money(report.orders.length ? report.revenue / report.orders.length : 0)], ['Pickup / delivery', `${report.orders.filter(o => o.orderType === 'Pickup').length} / ${report.orders.filter(o => o.orderType === 'Delivery').length}`]].map(([label, value]) => <div className="dashboardCard" key={label}><h2>{label}</h2><strong>{loading ? '—' : value}</strong></div>)}</div>
+        <section className="adminPanel"><h2>Orders by hour</h2><p>Actual orders placed during the selected dates.</p>{report.orders.length ? <div className="adminChart"><ResponsiveContainer width="100%" height={260}><LineChart data={report.hours} margin={{top: 12, right: 12, left: -20, bottom: 0}}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="hour" minTickGap={24}/><YAxis allowDecimals={false}/><Tooltip/><Line type="monotone" dataKey="orders" stroke="#8b3c20" strokeWidth={3} dot={false}/></LineChart></ResponsiveContainer></div> : <div className="adminEmpty"><strong>No orders in this date range</strong><p>Choose another range to see sales activity.</p></div>}</section>
+        <section className="adminPanel"><h2>Top selling options</h2>{report.top.map((item, i) => <div className="adminRecentOrder" key={item.name}><span className="adminQuantity">{i + 1}</span><div><strong>{item.name}</strong><small>{item.quantity} sold</small></div><strong>{money(item.revenue)}</strong></div>)}{!report.top.length && <p>No items sold in this date range.</p>}</section>
+    </div>;
 }

@@ -1,369 +1,95 @@
-.adminPage {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    background: #f4e0b3;
+.adminPage, .adminLoginPage { --admin-ink: #59230f; --admin-muted: #795b40; --admin-line: #d7bf90; --admin-card: #f6ecd8; color: var(--admin-ink); background: #ecdbb7; font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.5; }
+.adminPage { min-height: 100vh; display: grid; grid-template-columns: 220px minmax(0, 1fr); }
+.adminPage *, .adminDialog * { box-sizing: border-box; }
+.adminPage h1, .adminPage h2, .adminLoginPage h1, .adminDialog .modal-title { font-family: inherit; font-weight: 750; letter-spacing: -.035em; color: #59230f; }
+.adminPage h1 { font-size: clamp(1.7rem, 3vw, 2.25rem); margin: 0 0 8px; }
+.adminPage h2 { font-size: 1.12rem; margin: 0 0 12px; }
+.adminPage p { margin: 0 0 12px; }
+.adminPage small { display: block; font-size: .8rem; font-weight: 400; color: var(--admin-muted); margin-top: 4px; }
+.adminPage a { color: #743515; text-underline-offset: 3px; }
+.adminSidebar { background: #542311; color: #f4e3bf; padding: 30px 18px; display: flex; flex-direction: column; gap: 32px; }
+.adminBrand { display: flex; align-items: center; gap: 12px; padding: 0 6px; }
+.adminBrand > span { background: #d7ad4b; color: #542311; border-radius: 12px; padding: 9px; font-weight: 800; }
+.adminBrand strong { font-size: 1.15rem; }.adminBrand small { color: #dbc49d; }
+.adminSidebar nav { display: flex; flex-direction: column; gap: 8px; }
+.adminPage .adminSidebar a { color: #f4e3bf !important; text-decoration: none; border-radius: 10px; padding: 12px 14px; font-weight: 600; }
+.adminPage .adminSidebar nav a.active { background: #dcb556; color: #47200e !important; }
+.adminPage .adminSidebar a:hover { background: #6b351d; color: #fff0d0 !important; }
+.adminSidebarActions { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+.adminPage .adminSidebarActions button { background: transparent; border-color: #a2784b; color: #f4e3bf; }
+.adminContent { padding: clamp(20px, 3vw, 44px); width: 100%; max-width: 1540px; min-width: 0; }
+.adminPageHeader { display: flex; gap: 20px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.adminPageHeader p { color: var(--admin-muted); }.adminPageHeader .adminEyebrow { color: #8a5024; font-size: .73rem; font-weight: 750; text-transform: uppercase; letter-spacing: .12em; margin-bottom: 8px; }
+.adminPage button, .adminDialog button:not(.btn-close), .adminLoginCard button { font: inherit; font-weight: 650; min-height: 44px; padding: 10px 15px; border: 1px solid #b48b42; border-radius: 9px; background: #dfbc68; color: #4b220e; cursor: pointer; }
+.adminPage button:hover, .adminDialog button:not(.btn-close):hover { background: #d4ab4d; }
+.adminPage button:disabled, .adminDialog button:disabled { opacity: .55; cursor: wait; }
+.adminPage :focus-visible, .adminDialog :focus-visible, .adminLoginPage :focus-visible { outline: 3px solid #9c5a21; outline-offset: 3px; }
+.adminPage label, .adminDialog label { display: flex; flex-direction: column; gap: 6px; font-size: .85rem; font-weight: 650; }
+.adminPage input:not([type=checkbox]), .adminPage select, .adminDialog input:not([type=checkbox]), .adminLoginCard input { width: 100%; min-width: 0; min-height: 44px; border: 1px solid #c6a976; border-radius: 9px; padding: 10px 12px; background: #fcf4e4; color: #4b220e; font: inherit; font-size: 16px; }
+.adminPage input[type=checkbox], .adminDialog input[type=checkbox] { width: 20px; height: 20px; accent-color: #823e1b; flex-shrink: 0; }
+.adminSync { color: var(--admin-muted); font-size: .8rem; margin: 0 0 22px !important; }
+.adminNotice { border: 1px solid #c8a15c; border-radius: 10px; background: #f3e1b4; color: #613719; padding: 14px 16px; margin: 16px 0; overflow-wrap: anywhere; }
+.adminNotice.error { background: #f4dcd0; color: #782712; border-color: #cb997e; }.adminNotice.success { background: #e6e8c8; border-color: #b1b781; color: #465024; }.adminNotice button { margin: 6px 0 0 12px; }
+.dashboardStatsGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 24px 0; }
+.dashboardCard { background: var(--admin-card); border: 1px solid var(--admin-line); border-radius: 15px; padding: 22px; min-width: 0; }
+.dashboardCard h2 { font-size: .85rem; letter-spacing: 0; color: var(--admin-muted); font-weight: 600; }.dashboardCard > strong { font-size: clamp(1.6rem, 2.6vw, 2.1rem); display: block; font-variant-numeric: tabular-nums; }
+.dashboardQuickActions { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0; }.dashboardQuickActions a { padding: 14px 18px; border-radius: 10px; border: 1px solid #bf974c; background: #e4c780; text-decoration: none; font-weight: 650; }
+.adminPanel, .adminOrderCard { background: var(--admin-card); border: 1px solid var(--admin-line); border-radius: 14px; margin: 20px 0; padding: 22px; }
+.adminSectionHeading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }.adminSectionHeading a { font-size: .85rem; }
+.adminEmpty { padding: 40px 16px; text-align: center; color: var(--admin-muted); }.adminEmpty strong { font-size: 1.1rem; }.adminEmpty p { margin-top: 8px; }
+.adminRecentOrder { display: flex; align-items: center; gap: 18px; border-top: 1px solid var(--admin-line); padding: 18px 0; text-decoration: none; }.adminRecentOrder > div { flex: 1; min-width: 0; }.adminRecentOrder > strong { white-space: nowrap; }
+.statusBadge { display: inline-block; border-radius: 7px; padding: 5px 10px; background: #e5d7b7; color: #624b30; font-size: .78rem; font-weight: 750; width: fit-content; white-space: nowrap; }
+.statusNew { background: #f0ce78; color: #6c340b; }.statusPreparing { background: #efd6b4; color: #74491f; }.statusReady { background: #d9e0b1; color: #405324; }.statusCancelled { background: #ecd2c7; color: #833a28; }
+.adminFilters { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; margin: 22px 0; }.adminFilters label { flex: 1; min-width: 150px; }.adminFilters > label:first-child { flex: 2; }.adminFilters > span { color: var(--admin-muted); padding-bottom: 12px; font-size: .85rem; }
+.adminOrderCard { padding: 0; overflow: hidden; margin: 12px 0; }
+.adminPage .adminOrderSummary { display: grid; grid-template-columns: minmax(100px, 1fr) minmax(160px, 1.4fr) auto minmax(115px, auto); gap: 20px; align-items: center; width: 100%; border: none; border-radius: 0; padding: 20px 22px; background: transparent; text-align: left; }
+.adminPage .adminOrderSummary:hover { background: #eeddb9; }.adminOrderSummary > div:last-child { text-align: right; }.adminOrderSummary strong { font-size: .95rem; }
+.adminOrderDetails { padding: 24px; border-top: 1px solid var(--admin-line); }.adminOrderContact { display: grid; grid-template-columns: 1fr 260px; gap: 24px; margin-bottom: 20px; }.adminOrderContact p { margin-top: 8px; }.adminOrderContact label small { max-width: 260px; }
+.adminKitchenNote { white-space: pre-wrap; background: #ead9b1; border-left: 3px solid #ac7a2c; border-radius: 4px; padding: 10px 12px; margin: 10px 0 18px; overflow-wrap: anywhere; }.adminKitchenNote p { margin: 4px 0 0; }
+.adminOrderItems { list-style: none; padding: 0; margin: 0; }.adminOrderItems li { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 12px; padding: 16px 0; border-top: 1px solid var(--admin-line); }.adminQuantity { font-weight: 750; color: #8a5024; }.adminOrderItems .adminKitchenNote { margin-bottom: 0; font-size: .9rem; }
+.adminOrderTotal { display: flex; justify-content: space-between; gap: 16px; padding: 18px 0 26px; }.adminOrderTotal strong { font-size: 1.25rem; }
+.adminEmailRow { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; border-top: 1px solid var(--admin-line); }.adminEmailRow > span { min-width: 0; }.adminMailError { overflow-wrap: anywhere; }.adminMailPanel summary, .adminBulkPanel summary { cursor: pointer; font-weight: 700; min-height: 30px; }.adminMailPanel > div { margin-top: 18px; }
+.adminBulkPanel { background: #e7d2a2; }.adminBulkPanel summary span { font-weight: 400; font-size: .85rem; margin-left: 12px; }.adminBulkPanel p { font-size: .82rem; margin-bottom: 0; }
+.adminSelection { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 20px 0 12px; font-size: .82rem; color: var(--admin-muted); }.adminSelection label { flex-direction: row; align-items: center; gap: 10px; }
+.adminMenuList { border: 1px solid var(--admin-line); border-radius: 14px; overflow: hidden; background: var(--admin-card); }.adminMenuRow { display: grid; grid-template-columns: 24px minmax(0, 1fr) 85px 130px 65px; gap: 16px; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--admin-line); }.adminMenuRow:last-child { border-bottom: 0; }.adminMenuRow.isSelected { background: #ecd9ab; }.adminMenuIdentity { display: flex; flex-direction: column; gap: 3px; min-width: 0; }.adminMenuIdentity small { font-size: .7rem; margin: 0; }.adminMenuIdentity span { font-size: .82rem; color: var(--admin-muted); }.adminMenuPrice { font-variant-numeric: tabular-nums; text-align: right; }.adminPage .adminAvailability { background: #e0e3c1; border-color: #a8ae80; color: #45502a; font-size: .8rem; padding-inline: 8px; }.adminPage .adminAvailability.unavailable { background: #ead4c5; border-color: #c09b82; color: #79432a; }
+.adminDialog { background: #f5ead2; border: 1px solid #bd9957; border-radius: 15px; color: #59230f; font: 15px/1.5 system-ui, sans-serif; }.adminDialog .modal-header, .adminDialog .modal-footer { border-color: #d7bf90; }.adminDialog .modal-body { padding: 20px; }.adminEditFields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }.adminEditFields label:nth-child(2), .adminEditFields label:nth-child(4) { grid-column: 1 / -1; }.adminDialog label.adminCheck { flex-direction: row; align-items: center; grid-column: 1 / -1; gap: 10px; }.adminPricePreview { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid #d7bf90; }.adminPricePreview strong { white-space: nowrap; }
+.adminChart { min-width: 0; width: 100%; }
+.adminOrderAlarm { background: #efe1bd; border: 1px solid #baa064; border-radius: 14px; padding: 20px; margin-bottom: 18px; }
+.adminOrderAlarm.hasOrders { border: 3px solid #a44c20; background: #f1d3a1; }
+.adminAlarmHeading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+.adminAlarmHeading strong { font-size: 1.1rem; }.adminAlarmHeading p { font-size: .85rem; margin: 6px 0 12px; }
+.adminConnection { display: inline-block; flex-shrink: 0; color: #405223; background: #dfe5c5; border-radius: 7px; padding: 6px 10px; font-size: .72rem; font-weight: 700; }
+.adminConnection.isOffline { color: #842b15; background: #ebc7b0; }
+.adminAlarmControls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 10px 0 16px; }
+.adminAlarmControls label { display: grid; grid-template-columns: auto 120px 40px; align-items: center; gap: 10px; margin-left: auto; }
+.adminPage .adminAlarmControls input[type=range] { padding: 0; min-height: 32px; accent-color: #823e1b; background: transparent; }
+.adminAlarmIncoming { padding: 14px; margin: 14px 0; background: #f8e5bc; border: 1px solid #c3914e; border-radius: 9px; overflow-wrap: anywhere; }
+.adminAlarmIncoming > div { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+.adminPage .adminAlarmIncoming button:last-child { color: #fff0cf; background: #7c3216; border-color: #7c3216; }
+.adminAlarmWarning { padding: 12px; background: #f0cdb7; color: #7c2c18; border-radius: 8px; margin-bottom: 12px !important; font-size: .85rem; }
+.adminPage .adminAwakeChoice { flex-direction: row; align-items: center; font-size: .8rem; gap: 10px; margin: 12px 0; }
+.adminPage .adminAlarmHelp { font-size: .75rem; color: #795b40; margin: 0; }
+@media(max-width: 760px) {
+    .adminOrderAlarm { padding: 16px; }.adminAlarmHeading { flex-direction: column; gap: 0; }.adminConnection { margin-bottom: 10px; }
+    .adminAlarmControls > button { flex: 1; }.adminAlarmControls label { margin: 8px 0 0; width: 100%; grid-template-columns: auto minmax(70px,1fr) 40px; }
+    .adminAlarmIncoming > div { flex-direction: column; }.adminAlarmControls { margin-bottom: 10px; }
 }
-
-.adminSidebar {
-    background: #1a1a1a;
-    color: #f5c542;
-    padding: 24px;
+.adminOrderingControl { display: flex; justify-content: space-between; align-items: center; gap: 22px; background: #e1e4c3; border: 1px solid #a6af7a; border-radius: 12px; padding: 18px 20px; margin-bottom: 28px; }
+.adminOrderingControl.isPaused { background: #eed4b5; border-color: #c29562; }.adminOrderingControl strong { font-size: 1rem; }.adminOrderingControl p { font-size: .8rem; margin: 5px 0 0; }.adminOrderingControl [role=alert] { color: #832e18; }
+.adminOrderingActions { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }.adminPage .adminOrderingActions button { font-size: .8rem; }.adminPage .adminOrderingActions button:last-child { background: transparent; border-color: #b8a77b; }
+@media(max-width: 760px) {.adminOrderingControl { flex-direction: column; align-items: stretch; padding: 16px; gap: 14px; }.adminOrderingActions { flex-direction: row; flex-wrap: wrap; }.adminOrderingActions button { flex: 1; }}
+.modal-content.adminDialog { background-color: #f5ead2; color: #59230f; }
+.adminLoginPage { min-height: 100vh; display: grid; place-items: center; padding: 24px; }.adminLoginCard { width: min(100%, 410px); display: grid; gap: 18px; padding: 32px; background: var(--admin-card); border: 1px solid var(--admin-line); border-radius: 18px; }.adminLoginCard h1 { font-size: 1.75rem; }
+.adminRememberChoice { display: flex; align-items: flex-start; gap: 10px; font-size: .9rem; cursor: pointer; }
+.adminRememberChoice input { width: 20px; height: 20px; min-height: 20px; accent-color: #823e1b; flex-shrink: 0; margin-top: 3px; }
+.adminRememberChoice small { display: block; color: #795b40; font-size: .77rem; margin-top: 5px; }
+.adminPage .adminLogoutError { color: #f4dfbd; font-size: .8rem; }
+.adminPage .adminSidebarActions button:last-child { font-size: .75rem; }
+@media (max-width: 1100px) { .adminPage { grid-template-columns: 190px minmax(0, 1fr); }.dashboardStatsGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }.adminOrderSummary { gap: 12px !important; }.adminMenuRow { grid-template-columns: 22px minmax(0, 1fr) 75px 110px 60px; gap: 10px; padding: 14px; } }
+@media (max-width: 760px) {
+    .adminPage { display: block; }.adminSidebar { padding: 16px; gap: 16px; }.adminBrand { padding: 0; }.adminBrand strong { font-size: 1rem; }.adminBrand > span { padding: 7px; }.adminSidebar nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }.adminSidebar nav a { padding: 12px 3px; text-align: center; font-size: .82rem; }.adminSidebarActions { flex-direction: row; justify-content: space-between; align-items: center; margin: 0; gap: 12px; }.adminSidebarActions a { font-size: .8rem; padding: 4px; }.adminPage .adminSidebarActions button { font-size: .8rem; min-height: 36px; padding: 6px 12px; }
+    .adminSidebarActions { flex-wrap: wrap; }.adminPage .adminSidebarActions button:last-child { flex-basis: 100%; }
+    .adminContent { padding: 24px 16px 40px; }.adminPageHeader { align-items: flex-start; flex-direction: column; gap: 8px; }.adminPageHeader > button { width: 100%; }.adminPageHeader p { font-size: .85rem; }.dashboardStatsGrid { gap: 10px; margin: 18px 0; }.dashboardCard { padding: 16px 12px; border-radius: 12px; }.dashboardCard h2 { font-size: .8rem; }.dashboardCard small { font-size: .7rem; }.dashboardCard > strong { font-size: 1.65rem; }.dashboardQuickActions { display: grid; gap: 8px; }.dashboardQuickActions a { font-size: .85rem; }.adminPanel { padding: 16px; }.adminSectionHeading { align-items: flex-start; }.adminSectionHeading h2 { max-width: 160px; }.adminSectionHeading a { font-size: .75rem; }.adminRecentOrder { flex-wrap: wrap; gap: 10px; }.adminRecentOrder > div { flex-basis: 55%; }.adminRecentOrder > strong { margin-left: auto; }.adminFilters { gap: 12px; }.adminFilters label { min-width: 130px; }.adminFilters > label:first-child { flex-basis: 100%; }.adminFilters > button { flex: 1; }.adminFilters > span { padding: 0; }
+    .adminPage .adminOrderSummary { grid-template-columns: minmax(0, 1fr) auto; padding: 16px; }.adminOrderSummary > div:nth-child(2) { grid-column: 1; grid-row: 2; }.adminOrderSummary > .statusBadge { grid-column: 2; grid-row: 1; }.adminOrderSummary > div:last-child { grid-column: 2; grid-row: 2; max-width: 120px; }.adminOrderSummary strong { font-size: .85rem; }.adminOrderSummary small { font-size: .72rem; }.adminOrderDetails { padding: 16px; }.adminOrderContact { grid-template-columns: 1fr; gap: 10px; }.adminOrderContact label small { max-width: none; }.adminOrderItems li { grid-template-columns: 25px minmax(0, 1fr) auto; gap: 8px; font-size: .85rem; }.adminOrderTotal { font-size: .85rem; }.adminEmailRow { flex-wrap: wrap; }.adminMailPanel summary { font-size: .9rem; }.adminNotice button { margin: 8px 8px 0 0; }
+    .adminBulkPanel summary span { display: block; margin: 5px 0 0; }.adminSelection { align-items: flex-start; }.adminSelection > span { max-width: 110px; text-align: right; }.adminMenuRow { grid-template-columns: 22px minmax(0, 1fr) auto; gap: 10px; padding: 16px 12px; }.adminMenuIdentity { grid-column: 2; }.adminMenuPrice { grid-column: 3; font-size: .9rem; }.adminMenuRow .adminAvailability { grid-column: 2; justify-self: start; width: 130px; }.adminMenuRow > button:last-child { grid-column: 3; width: 65px; }.adminMenuIdentity strong { font-size: .9rem; }.adminEditFields { grid-template-columns: 1fr; }.adminEditFields label { grid-column: 1 !important; }.adminPricePreview { flex-direction: column; gap: 6px; }.adminDialog .modal-footer button { flex: 1; }
 }
-
-.adminSidebar h2 {
-    margin-bottom: 28px;
-}
-
-.adminSidebar nav {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.adminSidebar a {
-    color: #f8d7a4 !important;
-    text-decoration: none;
-    padding: 12px 14px;
-    border-radius: 10px;
-}
-
-.adminSidebar a.active,
-.adminSidebar a:hover {
-    background: linear-gradient(to right, #d4a437, #f0c96a);
-    color: #1a0f05 !important;
-}
-
-.adminContent {
-    padding: 32px;
-}
-
-
-
-/*Admin Orders*/
-
-
-.adminPageHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-}
-
-.adminPageHeader button {
-    padding: 10px 16px;
-    border-radius: 10px;
-    border: none;
-    background: linear-gradient(to right, #d4a437, #f0c96a);
-    font-weight: 700;
-}
-
-.adminTableCard {
-    background: #fff7e8;
-    border: 1px solid rgba(102, 26, 6, 0.2);
-    border-radius: 16px;
-    overflow: hidden;
-}
-
-.adminTable {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.adminTable th,
-.adminTable td {
-    padding: 14px 16px;
-    text-align: left;
-    border-bottom: 1px solid rgba(102, 26, 6, 0.12);
-}
-
-.adminTable th {
-    background: #f4d88f;
-    color: #661a06;
-}
-
-.statusBadge {
-    background: #d4a437;
-    color: #1a0f05;
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-size: 0.85rem;
-    font-weight: 700;
-}
-
-.adminOrderRow {
-    cursor: pointer;
-}
-
-.adminOrderRow:hover {
-    background: rgba(212, 164, 55, 0.15);
-}
-
-.orderDetailsBox {
-    background: #fffaf0;
-    padding: 18px;
-    border-radius: 12px;
-    border: 1px solid rgba(102, 26, 6, 0.18);
-}
-
-.orderDetailsBox h3 {
-    margin-bottom: 12px;
-    color: #661a06;
-}
-
-.orderItemsList {
-    margin-top: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.orderDetailItem {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid rgba(102, 26, 6, 0.12);
-    padding-bottom: 8px;
-}
-
-.selectedRow {
-    background: rgba(212, 164, 55, 0.18);
-}
-
-
-
-
-/*Admin Menu*/
-
-.bulkEditBar {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    margin-bottom: 18px;
-}
-
-
-.adminMenuFilters {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 18px;
-}
-
-.adminMenuFilters input,
-.adminMenuFilters select {
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid rgba(102, 26, 6, 0.25);
-}
-
-.adminMenuFilters input {
-    flex: 1;
-}
-
-.adminMenuFilters button {
-    padding: 10px 14px;
-    border-radius: 10px;
-    border: none;
-    background: #661a06;
-    color: #f8d7a4;
-}
-
-.adminTable {
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
-}
-
-.adminTable th,
-.adminTable td {
-    /*overflow: hidden;*/
-    /*text-overflow: ellipsis;*/
-    white-space: nowrap;
-}
-
-.colCheck {
-    width: 44px;
-}
-
-.colNumber {
-    width: 70px;
-}
-
-.colName {
-    width: 28%;
-}
-
-.colSize {
-    width: 90px;
-}
-
-.colCategory {
-    width: 160px;
-}
-
-.colPrice,
-.colNewPrice {
-    width: 110px;
-}
-
-.colSpicy {
-    width: 80px;
-}
-
-.colActions {
-    width: 140px;
-}
-
-.colActions,
-.colActions * {
-    overflow: visible !important;
-    text-overflow: unset !important;
-}
-
-.adminModalOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 3000;
-}
-
-.adminModal {
-    width: min(520px, 92vw);
-    background: #fff7e8;
-    border: 2px solid #d4a437;
-    border-radius: 18px;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.adminModal input {
-    padding: 11px 12px;
-    border-radius: 10px;
-    border: 1px solid rgba(102, 26, 6, 0.25);
-}
-
-.adminModalActions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 10px;
-}
-
-.editButton {
-    border: none;
-    background: #661a06;
-    color: #f8d7a4;
-    padding: 8px 14px;
-    border-radius: 10px;
-    font-weight: 600;
-}
-
-
-
-
-/*Admin Dashboard*/
-.dashboardStatsGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 18px;
-    margin-bottom: 28px;
-}
-
-.dashboardCard {
-    background: #fff7e8;
-    border: 1px solid rgba(102, 26, 6, 0.15);
-    border-radius: 18px;
-    padding: 24px;
-}
-
-.dashboardCard h3 {
-    color: #661a06;
-    margin-bottom: 10px;
-    font-size: 1rem;
-}
-
-.dashboardCard p {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #1a0f05;
-}
-
-.dashboardQuickActions {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-}
-
-.dashboardQuickActions button {
-    border: none;
-    padding: 14px 18px;
-    border-radius: 12px;
-    background: linear-gradient(to right, #d4a437, #f0c96a);
-    color: #1a0f05;
-    font-weight: 700;
-}
-
-
-/*Admin Analytics*/
-
-.analyticsPlaceholder {
-    height: 280px;
-    border: 2px dashed rgba(102, 26, 6, 0.25);
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #661a06;
-    font-weight: 700;
-}
-
-.analyticsTable {
-    margin-top: 28px;
-    padding: 20px;
-}
-
-.analyticsTable h2 {
-    color: #661a06;
-    margin-bottom: 16px;
-}
-
-.analyticsFilters {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-    margin-bottom: 28px;
-    flex-wrap: wrap;
-}
-
-.analyticsFilters input {
-    padding: 10px 14px;
-    border-radius: 10px;
-    border: 1px solid rgba(102, 26, 6, 0.2);
-}
-
-.analyticsFilters button {
-    border: none;
-    padding: 10px 18px;
-    border-radius: 10px;
-    background: #d4a437;
-    font-weight: 700;
-}
-
-
-.dashboardChartCard {
-    background: #fff7e8;
-    border: 1px solid rgba(102, 26, 6, 0.15);
-    border-radius: 18px;
-    padding: 24px;
-    margin-top: 28px;
-}
-
-.dashboardChartCard h2 {
-    color: #661a06;
-    margin-bottom: 18px;
-}
-

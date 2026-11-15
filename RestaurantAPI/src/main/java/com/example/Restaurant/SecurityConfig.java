@@ -35,7 +35,8 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain apiSecurity(HttpSecurity http, UserDetailsService users,
-                                   BCryptPasswordEncoder encoder, CustomerTokens tokens) throws Exception {
+                                   BCryptPasswordEncoder encoder, CustomerTokens tokens,
+                                   com.example.Restaurant.Service.AdminDeviceSessions adminDevices) throws Exception {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(users);
         provider.setPasswordEncoder(encoder);
@@ -59,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/menu/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/menu/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/store/ordering").permitAll()
                         .requestMatchers("/health", "/error", "/carts/generate", "/users/validate", "/users/add").permitAll()
                         .requestMatchers(HttpMethod.GET, "/menu/**").permitAll()
                         .requestMatchers("/users/getUser/**", "/users/contact", "/users/me", "/orders/placeOrder", "/orders/getOrder/**", "/orders/submissions/**", "/carts/**")
@@ -73,6 +75,13 @@ public class SecurityConfig {
                 String method = request.getMethod();
                 String token = request.getHeader("X-Customer-Token");
                 var context = org.springframework.security.core.context.SecurityContextHolder.getContext();
+                String deviceToken = request.getHeader("X-Admin-Token");
+                if (context.getAuthentication() == null && deviceToken != null) {
+                    String admin = adminDevices.verify(deviceToken);
+                    if (admin != null) context.setAuthentication(
+                            org.springframework.security.authentication.UsernamePasswordAuthenticationToken.authenticated(admin, null,
+                                    java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_ADMIN"))));
+                }
                 if (context.getAuthentication() == null && token != null) {
                     String owner = tokens.verify(token);
                     if (owner != null) context.setAuthentication(

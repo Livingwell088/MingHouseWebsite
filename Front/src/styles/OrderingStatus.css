@@ -1,0 +1,4 @@
+.orderingNotice { background: #ead2a0; border: 1px solid #be9455; border-radius: 12px; color: #661a06; padding: 18px 20px; margin: 18px auto; max-width: 1400px; font: 15px/1.5 system-ui, sans-serif; text-align: left; }
+.orderingNotice p { margin: 6px 0 12px; }.orderingNotice > div { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.orderingNotice a { color: #661a06 !important; font-weight: 700; }.orderingNotice button { background: #ddbb70; color: #661a06; border: 1px solid #ad813c; border-radius: 7px; padding: 9px 14px; min-height: 44px; font: inherit; cursor: pointer; }
+@media(max-width: 760px) {.orderingNotice { margin: 12px; padding: 16px; font-size: 14px; }}

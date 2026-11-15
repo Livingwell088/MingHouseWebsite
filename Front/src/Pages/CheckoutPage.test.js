@@ -6,6 +6,7 @@ jest.mock('../api', () => ({
   cartAPI: { get: jest.fn() }, menuAPI: { getByNumber: jest.fn() },
   userAPI: { getUser: jest.fn(), updateContact: jest.fn() },
   orderAPI: { create: jest.fn(), submission: jest.fn() },
+  storeAPI: { ordering: jest.fn() },
   priceAPI: { price: value => Number(value).toFixed(2) }
 }));
 jest.mock('../components/CheckoutLeft', () => props => <input aria-label="Phone" name="phoneNumber" onChange={props.handleChangeFields} />);
@@ -20,6 +21,7 @@ beforeEach(() => {
   API.cartAPI.get.mockResolvedValue({data:[line]}); API.menuAPI.getByNumber.mockResolvedValue({data:[]});
   API.userAPI.getUser.mockResolvedValue({data:{firstName:'Test',lastName:'Customer',email:'test@example.com'}});
   API.orderAPI.create.mockResolvedValue({data:saved}); API.userAPI.updateContact.mockResolvedValue({});
+  API.storeAPI.ordering.mockResolvedValue({data:{enabled:true}});
 });
 async function show() {
   render(<MemoryRouter><CheckoutPage /></MemoryRouter>);
@@ -45,4 +47,29 @@ test('a lost response checks the saved submission before allowing another order'
   await waitFor(() => expect(check).not.toBeDisabled()); fireEvent.click(check);
   expect(await screen.findByText('Saved order receipt')).toBeInTheDocument();
   expect(API.orderAPI.create).toHaveBeenCalledTimes(1);
+});
+test('paused ordering disables new submissions and keeps the cart visible', async () => {
+  API.storeAPI.ordering.mockResolvedValue({data:{enabled:false}}); await show();
+  expect(await screen.findByText(/Online ordering is temporarily paused/)).toBeInTheDocument();
+  expect(screen.getByRole('button',{name:'Place Order'})).toBeDisabled();
+  expect(screen.getByText(/1x Egg Roll/)).toBeInTheDocument(); expect(API.orderAPI.create).not.toHaveBeenCalled();
+});
+test('a pause after the checkout loaded is handled without leaving a pending submission', async () => {
+  API.orderAPI.create.mockRejectedValue({response:{status:409,data:{code:'ORDERING_PAUSED',message:'Online ordering is temporarily paused.'}}});
+  await show(); fireEvent.click(screen.getByRole('button',{name:'Place Order'}));
+  await screen.findByRole('alert');
+  expect(screen.getByRole('button',{name:'Place Order'})).toBeDisabled();
+  expect(sessionStorage.getItem('checkoutAttempt')).toBeNull();
+});
+test('saved-order recovery still works while online ordering is paused', async () => {
+  sessionStorage.setItem('checkoutAttempt',JSON.stringify({key:'existing-key'}));
+  API.storeAPI.ordering.mockResolvedValue({data:{enabled:false}}); API.orderAPI.submission.mockResolvedValue({data:saved});
+  render(<MemoryRouter><CheckoutPage /></MemoryRouter>);
+  expect(await screen.findByText('Saved order receipt')).toBeInTheDocument(); expect(API.orderAPI.create).not.toHaveBeenCalled();
+});
+test('unavailable ordering status fails closed and can be retried', async () => {
+  API.storeAPI.ordering.mockRejectedValueOnce(new Error('offline')).mockResolvedValue({data:{enabled:true}}); await show();
+  expect(screen.getByRole('button',{name:'Place Order'})).toBeDisabled();
+  fireEvent.click(await screen.findByRole('button',{name:'Check again'}));
+  await waitFor(()=>expect(screen.getByRole('button',{name:'Place Order'})).not.toBeDisabled());
 });

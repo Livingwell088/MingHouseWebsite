@@ -19,8 +19,15 @@ with the `RESTAURANT_ORDERS_EMAIL` environment variable (Spring property
 Deploy both the frontend and backend for the complete change. No real emails
 are sent by `OrderNotificationServiceTest`; its mail service is mocked.
 
-Email failures are logged; they do not cancel a saved order, and there is no
-automatic retry. Staff should keep the restaurant inbox monitored. To distinguish
-orders, create a mail filter for subjects starting with `NEW PICKUP ORDER` or
-`NEW DELIVERY ORDER` and enable notifications on the counter device. Notification
-sounds are configured in the mail app/device, not by the website.
+Saved orders queue restaurant and customer messages in the durable email outbox.
+The background worker retries delivery failures; staff can inspect delivery status
+and retry a message in admin. Email failure does not cancel a saved order.
+
+The admin website also provides an independent repeating order bell. Staff must
+enable sound on their receiving device and keep the admin page open and awake.
+See `../Front/ADMIN-ORDER-ALERTS.md` for setup and browser limitations.
+
+Before deploying the pending admin release, apply migrations
+`003_admin_remembered_devices.sql` and `004_online_ordering_switch.sql` to a
+backed-up database. These add remembered-device sessions and the persistent
+online-ordering switch without altering existing orders or menu prices.

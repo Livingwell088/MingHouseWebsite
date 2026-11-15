@@ -8,10 +8,13 @@ import "../styles/Checkout.css"
 import ErrorAlert from "../components/ErrorAlert";
 import ConfirmationModal from "../components/ConfirmationModal";
 import LoginModal from "../components/LoginModal";
+import useOrderingStatus from '../Services/useOrderingStatus';
+import OrderingNotice from '../components/OrderingNotice';
 
 
 
 const CheckoutPage = (props) => {
+    const ordering = useOrderingStatus();
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -151,6 +154,7 @@ const CheckoutPage = (props) => {
         event.preventDefault();
         if (submitting.current) return;
         if (pending) { await checkSubmission(); return; }
+        if (!ordering.enabled) {setErrorContent(ordering.message); setShowError(true); return;}
         const form = event.currentTarget;
 
         if (
@@ -209,7 +213,8 @@ const CheckoutPage = (props) => {
                 if (error.response && error.response.status >= 400 && error.response.status < 500) {
                     sessionStorage.removeItem('checkoutAttempt'); setPending(false);
                     setErrorContent(error.response.data?.message || 'Please review your contact details and cart, then try again.');
-                    if (error.response.status === 409) await testing();
+                    if (error.response.data?.code === 'ORDERING_PAUSED') ordering.markPaused();
+                    else if (error.response.status === 409) await testing();
                 } else {
                     setErrorContent('The connection was interrupted. Check your submission before placing another order, or call (508) 756-6888.');
                 }
@@ -228,6 +233,7 @@ const CheckoutPage = (props) => {
 
 
     return <div className={"App teko"}>
+        <OrderingNotice status={ordering}/>
 
         <main className="checkout-page">
             <CheckoutLeft
@@ -301,7 +307,7 @@ const CheckoutPage = (props) => {
                     {showError && (
                         <div role="alert">{errorContent}</div>
                     )}
-                    <button className="placeOrderBtn" disabled={placing || showPopup} onClick={makeOrder}>{placing ? 'Placing order…' : pending ? 'Check order submission' : 'Place Order'}</button>
+                    <button className="placeOrderBtn" disabled={placing || showPopup || (!pending && !ordering.enabled)} onClick={makeOrder}>{placing ? 'Placing order…' : pending ? 'Check order submission' : 'Place Order'}</button>
                 </div>
             </aside>
         </main>

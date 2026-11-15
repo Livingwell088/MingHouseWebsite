@@ -14,8 +14,11 @@ import Typography from "@mui/material/Typography";
 import '../styles/fonts.css';
 import API from "../api";
 import axios from "axios";
+import useOrderingStatus from '../Services/useOrderingStatus';
+import OrderingNotice from '../components/OrderingNotice';
 
 const MenuPage = (props) => {
+    const ordering = useOrderingStatus();
 
     const [menu, setMenu] = useState([]);
     // const [categories, setCategories] = useState([]);
@@ -89,6 +92,7 @@ const MenuPage = (props) => {
 
             <CssBaseline />
             <div className="App teko menu-page">
+                <OrderingNotice status={ordering}/>
 
 
 

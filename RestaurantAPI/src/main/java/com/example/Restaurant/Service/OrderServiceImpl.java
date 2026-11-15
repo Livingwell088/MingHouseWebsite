@@ -21,6 +21,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired private OrderNotificationService notifications;
     @Autowired private Ownership ownership;
     @Autowired private MenuPricing pricing;
+    @Autowired private StoreOrderingService ordering;
     private ResponseStatusException bad(String message) { return new ResponseStatusException(HttpStatus.BAD_REQUEST, message); }
     public String scopedKey(String key) {
         try { return ownership.current() + ":" + UUID.fromString(key); }
@@ -37,6 +38,7 @@ public class OrderServiceImpl implements OrderService {
         Cart cart = cartRepository.findLockedById(owner).orElseThrow(() -> bad("Cart not found"));
         Optional<Orders> prior = orderRepository.findByRequestKey(key);
         if (prior.isPresent()) return prior.get();
+        ordering.requireEnabled();
         List<CartItem> items = cartItemRepository.findAllByCartId(owner);
         if (items.isEmpty() || items.size() > 100) throw bad("Your cart must contain 1 to 100 items");
         if (input.getItems() == null || input.getItems().size() != items.size()) throw stale();

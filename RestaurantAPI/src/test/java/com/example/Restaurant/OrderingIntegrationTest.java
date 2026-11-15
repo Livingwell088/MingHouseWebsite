@@ -29,8 +29,11 @@ class OrderingIntegrationTest {
  @Autowired UserRepository userRepository; @Autowired MailDelivery delivery; @Autowired CustomerTokens tokens;
  @MockBean EmailService email;
  @SpyBean OrderNotificationService notifications;
+ @Autowired StoreOrderingService ordering;
+ @Autowired StoreOrderingSettingsRepository orderingSettings;
  String owner; Menu dish;
  @BeforeEach void setup() {
+  ordering.update(true);
   owner=carts.generateCart(); authenticate(owner);
   StoreUser c=new StoreUser(); c.setUsernameId(owner); c.setFirstName("Test"); c.setLastName("Customer"); c.setEmail("test@example.com"); users.updateContact(c);
   dish=new Menu(); dish.setId(UUID.randomUUID().toString()); dish.setName("Egg Roll"); dish.setNumber("1"); dish.setPrice("4.25"); dish.setAvailable(true); menu.saveAndFlush(dish); reset(email);
@@ -43,6 +46,29 @@ class OrderingIntegrationTest {
   assertEquals(8.50,add(2).getOrderPrice()); Orders i=request(); long before=orderRepository.count(),mails=outbox.count(); Orders saved=orders.placeOrder(i);
   assertEquals(8.50,saved.getOrderPrice()); assertEquals(new BigDecimal("9.10"),saved.getTotal()); assertTrue(carts.getCartItems(owner).isEmpty());
   assertEquals(saved.getId(),orders.placeOrder(i).getId()); assertEquals(before+1,orderRepository.count()); assertEquals(mails+2,outbox.count()); verifyNoInteractions(email);
+ }
+ @Test void pausedOrderingPreservesCartAndSendsNoEmailsThenCanResume() {
+  add(1); Orders input=request(); long before=orderRepository.count(), mails=outbox.count();
+  ordering.update(false);
+  assertFalse(new StoreOrderingService(orderingSettings).status().enabled());
+  assertThrows(StoreOrderingService.OrderingPaused.class,()->orders.placeOrder(input));
+  input.setOrderType("Delivery"); input.setAddress("123 Preview Street");
+  assertThrows(StoreOrderingService.OrderingPaused.class,()->orders.placeOrder(input));
+  assertEquals(before,orderRepository.count()); assertEquals(mails,outbox.count()); assertEquals(1,carts.getCartItems(owner).size()); verifyNoInteractions(email);
+  ordering.update(true); Orders saved=orders.placeOrder(input); assertNotNull(saved.getId());
+  ordering.update(false); assertEquals(saved.getId(),orders.placeOrder(input).getId());
+ }
+ @Test void pausedOrderHttpResponseIsActionableAndMenuStaysPublic() throws Exception {
+  add(1); Orders input=request(); String token=tokens.issue(owner); ordering.update(false); SecurityContextHolder.clearContext();
+  mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/orders/placeOrder").header("X-Customer-Token",token)
+    .contentType("application/json").content(json.writeValueAsBytes(input)))
+    .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isConflict())
+    .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.code").value("ORDERING_PAUSED"));
+  mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/store/ordering"))
+    .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isOk())
+    .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.enabled").value(false));
+  mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/menu/getMenu"))
+    .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isOk());
  }
  @Test void ownership() {
   CartItem line=add(1); String victim=owner; authenticate("someone-else");

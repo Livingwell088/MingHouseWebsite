@@ -23,7 +23,7 @@ test('admin login waits for server approval before navigating', async () => {
     fireEvent.change(screen.getByLabelText('Admin password'), {target: {value: 'test-password'}});
     fireEvent.click(screen.getByRole('button', {name: 'Login'}));
     expect(await screen.findByText('Protected dashboard')).toBeInTheDocument();
-    expect(API.adminAPI.login).toHaveBeenCalledWith('admin', 'test-password');
+    expect(API.adminAPI.login).toHaveBeenCalledWith('admin', 'test-password', false);
     expect(sessionStorage.getItem('adminLoggedIn')).toBeNull();
 });
 
@@ -33,6 +33,15 @@ test('rejected admin credentials remain on the login screen', async () => {
     fireEvent.change(screen.getByLabelText('Admin password'), {target: {value: 'wrong-password'}});
     fireEvent.click(screen.getByRole('button', {name: 'Login'}));
     expect(await screen.findByRole('alert')).toHaveTextContent('Incorrect username or password.');
+});
+test('remembering a device is an explicit login choice', async () => {
+    API.adminAPI.login.mockResolvedValue({data: {authenticated: true}});
+    render(<MemoryRouter><AdminLogin /></MemoryRouter>);
+    fireEvent.change(screen.getByLabelText('Admin password'), {target: {value: 'test-password'}});
+    const remember = screen.getByRole('checkbox', {name: /Remember this device/});
+    expect(remember).not.toBeChecked();
+    fireEvent.click(remember); fireEvent.click(screen.getByRole('button', {name: 'Login'}));
+    await waitFor(() => expect(API.adminAPI.login).toHaveBeenCalledWith('admin', 'test-password', true));
 });
 
 test('a forged browser flag cannot open a protected route', async () => {

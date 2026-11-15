@@ -24,6 +24,11 @@ import java.util.Map;
 })
 
 public class OrderController {
+    @ExceptionHandler(com.example.Restaurant.Service.StoreOrderingService.OrderingPaused.class)
+    public org.springframework.http.ResponseEntity<Map<String, String>> orderingPaused() {
+        return org.springframework.http.ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                "code", "ORDERING_PAUSED", "message", com.example.Restaurant.Service.StoreOrderingService.PAUSED_MESSAGE));
+    }
 
     @Autowired
     private OrderService orderService;

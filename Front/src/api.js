@@ -1,12 +1,14 @@
 import axios from "axios";
+import {rememberedAdminToken, rememberAdminToken, forgetAdminToken} from './Services/AdminDeviceStorage';
 
 let apiToken = null;
 let apiTokenFetchTime = new Date();
-// Admin credentials live only in memory and are cleared on logout/reload.
+// Password credentials live only in memory. Remembered devices use a revocable token.
 let adminAuthorization = null;
 
 export function clearAdminCredentials() {
     adminAuthorization = null;
+    forgetAdminToken();
 }
 
 export function clearCustomerSession() {
@@ -28,7 +30,7 @@ export function ensureCustomerSession() {
     return sessionPending;
 }
 
-function Api() {
+function Api(adminRequest = false) {
     const axiosConfig = {
         headers: {
             Accept: "application/json",
@@ -38,12 +40,18 @@ function Api() {
     };
     const local = ['localhost','127.0.0.1'].includes(window.location.hostname);
     axiosConfig.baseURL = process.env.REACT_APP_API_URL || (local ? 'http://localhost:8080' : 'https://minghousewebsite-backend.onrender.com');
-    if (adminAuthorization) {
+    if (adminRequest && adminAuthorization) {
         axiosConfig.headers.Authorization = adminAuthorization;
         axiosConfig.headers["X-Admin-Request"] = "true";
+    } else if (adminRequest) {
+        const deviceToken = rememberedAdminToken();
+        if (deviceToken) {
+            axiosConfig.headers['X-Admin-Token'] = deviceToken;
+            axiosConfig.headers['X-Admin-Request'] = 'true';
+        }
     }
     const token = sessionStorage.getItem('customerToken');
-    if (token) axiosConfig.headers['X-Customer-Token'] = token;
+    if (token && !adminRequest) axiosConfig.headers['X-Customer-Token'] = token;
     // axiosConfig.baseURL = "http://localhost:8080";
     // http://localhost:8080
 
@@ -51,6 +59,12 @@ function Api() {
     client.interceptors.response.use(response => {
         if (response.headers['x-customer-token']) sessionStorage.setItem('customerToken', response.headers['x-customer-token']);
         return response;
+    }, error => {
+        if (error.response?.status === 401 && (axiosConfig.headers.Authorization || axiosConfig.headers['X-Admin-Token'])) {
+            clearAdminCredentials();
+            window.dispatchEvent(new Event('admin-session-ended'));
+        }
+        return Promise.reject(error);
     });
     return client;
 }
@@ -218,21 +232,46 @@ const months = ["January", "February", "March", "April", "May", "June", "July", 
 
 
 const API = {
+    storeAPI: {
+        ordering: () => Api().get('/store/ordering'),
+    },
     adminAPI: {
-        login: async (username, password) => {
+        ordering: () => Api(true).get('/admin/ordering'),
+        setOrdering: enabled => Api(true).put('/admin/ordering', {enabled}),
+        login: async (username, password, remember = false) => {
             const bytes = new TextEncoder().encode(`${username}:${password}`);
             adminAuthorization = `Basic ${btoa(String.fromCharCode(...bytes))}`;
             try {
-                return await Api().get('/admin/session');
+                const session = await Api(true).get('/admin/session');
+                if (remember) {
+                    const {data} = await Api(true).post('/admin/devices');
+                    try {rememberAdminToken(data.token);}
+                    catch (storageError) {
+                        // Do not leave a valid server token behind if the browser cannot save it.
+                        await Api(true).post('/admin/devices/logout', null, {headers: {'X-Admin-Token': data.token}});
+                        throw new Error('This browser cannot remember devices. Uncheck Remember this device and try again.');
+                    }
+                    adminAuthorization = null;
+                } else forgetAdminToken();
+                return session;
             } catch (error) {
                 clearAdminCredentials();
                 throw error;
             }
         },
-        notifications: () => Api().get('/admin/notifications'),
-        retryNotification: id => Api().post('/admin/notifications/' + id + '/retry'),
-        session: () => Api().get('/admin/session'),
-        logout: clearAdminCredentials,
+        notifications: () => Api(true).get('/admin/notifications'),
+        retryNotification: id => Api(true).post('/admin/notifications/' + id + '/retry'),
+        session: () => Api(true).get('/admin/session'),
+        logout: async () => {
+            try {if (rememberedAdminToken()) await Api(true).post('/admin/devices/logout');}
+            catch (error) {if (error.response?.status !== 401) throw error;}
+            finally {clearAdminCredentials();}
+        },
+        revokeDevices: async () => {
+            await Api(true).post('/admin/devices/revoke-all');
+            clearAdminCredentials();
+            window.dispatchEvent(new Event('admin-session-ended'));
+        },
     },
     priceAPI: {
         price: (price) => {
@@ -262,7 +301,7 @@ const API = {
         },
         edit: async (menuItem) => {
 
-            return await Api().put("/menu/edit", menuItem, {
+            return await Api(true).put("/menu/edit", menuItem, {
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json",
@@ -423,7 +462,7 @@ const API = {
 
         },
         get: async () => {
-            const result = await (Api().get("/orders/getAllOrders"))
+            const result = await (Api(true).get("/orders/getAllOrders"))
             // console.log(result.data)
 
             return result //.data
@@ -435,7 +474,7 @@ const API = {
             return result //.data
         },
         updateStatus: async (id, status) => {
-            return await Api().put(`/orders/${id}/status`, {
+            return await Api(true).put(`/orders/${id}/status`, {
                 status: status
             });
         }
@@ -465,7 +504,7 @@ const API = {
 
         get: async() => {
 
-            const result = await (Api().get("/users/getAllUsers"))
+            const result = await (Api(true).get("/users/getAllUsers"))
             // console.log(result.data)
 
             return result //.data

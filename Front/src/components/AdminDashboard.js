@@ -1,113 +1,21 @@
-import "../styles/Admin.css";
-import API from "../api";
-import React, {useEffect, useState} from "react";
-import {orderDateKey, restaurantDateKey} from '../orderDates';
-
+import {Link} from 'react-router-dom';
+import useAdminOrders from '../Services/useAdminOrders';
+import {activeOrder, customerName, money, orderTotal, salesSummary} from '../Services/AdminPresentation';
+import {restaurantDateKey} from '../orderDates';
 export default function AdminDashboard() {
-
-
-    const [orders, setOrders] = useState([]);
-    const [revenue, setRevenue] = useState(0);
-    const [activeOrder, setActiveOrder] = useState(0);
-    const [error, setError] = useState('');
-
-
-
-    const loadOrders = async () => {
-
-        try {
-            const res = await API.orderAPI.get();
-
-            const latestOrders = [...res.data].sort((a, b) => {
-                const dateA = new Date(`${a.datePlaced} ${a.timePlaced}`);
-                const dateB = new Date(`${b.datePlaced} ${b.timePlaced}`);
-                return dateB - dateA;
-            }).filter((item) => {
-                // console.log(item.datePlaced);
-                return orderDateKey(item.datePlaced) === restaurantDateKey();
-            });
-
-            let currentRevenue = 0;
-            let currentActiveOrder = 0;
-
-
-            latestOrders.map((item) => {
-                currentRevenue += item.orderPrice;
-
-                if ((item.orderStatus !== "Completed" ) && (item.orderStatus !== "Cancelled")) {
-                    currentActiveOrder += 1;
-                }
-            })
-
-
-
-
-            setOrders(latestOrders);
-            setRevenue(currentRevenue);
-            setActiveOrder(currentActiveOrder);
-            setError('');
-        } catch (error) {
-            setError('Unable to refresh orders. Please try again.');
-        }
-    }
-
-
-    useEffect(() => {
-        loadOrders();
-        const timer = setInterval(loadOrders, 30000);
-        return () => clearInterval(timer);
-    }, []);
-
-
-    return (
-        <div>
-
-            <div className="adminPageHeader">
-                <h1>Dashboard</h1>
-            </div>
-
-            <h4>{restaurantDateKey()}</h4>
-            <button onClick={loadOrders}>Refresh dashboard</button>
-            <p>Refreshes every 30 seconds. Dates use restaurant time.</p>
-            {error && <p role="alert">{error}</p>}
-
-            <div className="dashboardStatsGrid">
-
-                <div className="dashboardCard">
-                    <h3>Today's Orders</h3>
-                    <p>{orders.length}</p>
-                </div>
-
-                <div className="dashboardCard">
-                    <h3>Revenue</h3>
-                    <p>${API.priceAPI.price(revenue)}</p>
-                </div>
-
-                <div className="dashboardCard">
-                    <h3>Active Orders</h3>
-                    <p>{activeOrder}</p>
-                </div>
-
-                <div className="dashboardCard">
-                    <h3>Avg Order</h3>
-                    ${
-                    API.priceAPI.price(
-                        orders.length > 0 ? revenue / orders.length : 0
-                    )
-                }
-                </div>
-
-            </div>
-
-            <div className="dashboardQuickActions">
-
-                <button>Orders</button>
-                <button>Menu</button>
-                <button>Analytics</button>
-                <button>Store Settings</button>
-
-            </div>
-
-        </div>
-    );
+    const {orders, notifications, error, mailError, loading, updated, refresh} = useAdminOrders();
+    const summary = salesSummary(orders), outstanding = orders.filter(activeOrder);
+    const mailIssues = notifications.filter(n => ['Failed', 'Retrying'].includes(n.status));
+    return <div>
+        <div className="adminPageHeader"><div><p className="adminEyebrow">{restaurantDateKey()} · Restaurant time</p><h1>Today at Ming House</h1><p>Your orders and menu, in one place.</p></div><button onClick={refresh} disabled={loading}>Refresh dashboard</button></div>
+        {error && <p className="adminNotice error" role="alert">{error}</p>}{mailError && <p className="adminNotice" role="status">{mailError}</p>}
+        <p className="adminSync" role="status">{loading ? 'Loading dashboard…' : `Last updated ${updated?.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}) || '—'} · Refreshes every 5 seconds while open`}</p>
+        <div className="dashboardStatsGrid">{[['Orders today', summary.count, 'Includes cancelled orders'], ['Sales today', money(summary.revenue), 'Before tax · Excludes cancelled'], ['Active orders', summary.active, 'Across all dates'], ['Average order', money(summary.average), 'Before tax · Excludes cancelled']].map(([label, value, detail]) => <div className="dashboardCard" key={label}><h2>{label}</h2><strong>{loading ? '—' : value}</strong><small>{detail}</small></div>)}</div>
+        <div className="dashboardQuickActions"><Link to="/admin/orders">Manage orders →</Link><Link to="/admin/menu">Update prices & availability →</Link><Link to="/admin/analytics">View sales reports →</Link></div>
+        {mailIssues.length > 0 && <div className="adminNotice" role="status">{mailIssues.length} email{mailIssues.length !== 1 ? 's need' : ' needs'} attention. <Link to="/admin/orders">Review delivery status</Link></div>}
+        <section className="adminPanel"><div className="adminSectionHeading"><h2>Orders to work on</h2><Link to="/admin/orders">See all orders →</Link></div>
+            {!loading && !outstanding.length && <div className="adminEmpty"><strong>You’re all caught up</strong><p>New orders will appear here automatically.</p></div>}
+            {outstanding.slice(0, 6).map(o => <Link className="adminRecentOrder" key={o.id} to={`/admin/orders?order=${encodeURIComponent(o.id)}`}><div><strong>{o.orderName}</strong><small>{customerName(o)} · {o.orderType} · {o.orderTime || 'ASAP'}</small></div><span className={`statusBadge status${o.orderStatus}`}>{o.orderStatus || 'New'}</span><strong>{money(orderTotal(o))}</strong></Link>)}
+        </section>
+    </div>;
 }
