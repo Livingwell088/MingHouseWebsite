@@ -5,14 +5,17 @@ import '../styles/menuPopup.css';
 import '../styles/fonts.css';
 import API from '../api';
 import {useMenuPhoto} from '../Services/MenuPhotos';
-import {sortMenuOptions, includedWith, lunchInstructions, splitLunchInstructions} from '../Services/MenuPresentation';
+import {popupMenuOptions, includedWith, lunchInstructions, splitLunchInstructions} from '../Services/MenuPresentation';
 import {cannedSodas} from '../Services/DrinkCatalog';
+import {lunchClosed, lunchMessage, useRestaurantTime} from '../Services/OrderPolicy';
 import {comboCategories, comboSubstitutions, splitComboInstructions, comboInstructions} from '../Services/ComboSubstitutions';
 
 export default function MenuPopup(props) {
-    const options = sortMenuOptions(props.item || []);
+    const options = popupMenuOptions(props.item || []);
     const first = options[0];
     const isLunch = first?.category === 'Lunch Special';
+    const restaurantTime = useRestaurantTime();
+    const lunchUnavailable = isLunch && lunchClosed(restaurantTime);
     const isCombo = comboCategories.includes(first?.category);
     const {photo, onPhotoError} = useMenuPhoto(first?.number);
     const [sizeChosen, setSizeChosen] = useState('');
@@ -26,7 +29,7 @@ export default function MenuPopup(props) {
     const [error, setError] = useState('');
     useEffect(() => {
         if (!props.show) return;
-        const initial = props.do === 'Edit' ? props.cartItem?.item : sortMenuOptions(props.item || [])[0];
+        const initial = props.do === 'Edit' ? props.cartItem?.item : popupMenuOptions(props.item || [])[0];
         const saved = props.do === 'Edit' ? props.cartItem?.specialInstruction || '' : '';
         const combo = splitComboInstructions(saved);
         const lunch = splitLunchInstructions(isCombo ? combo.notes : saved);
@@ -44,6 +47,7 @@ export default function MenuPopup(props) {
     const total = Math.round((Number(selected?.price || 0) + surcharge) * count * 100) / 100;
     const save = async () => {
         if (selected?.draft) return;
+        if (isLunch && lunchClosed() && count > 0) {setError(lunchMessage); return;}
         if (isLunch && side === 'Can of soda' && !cannedSodas.includes(soda)) {
             setError('Please choose your canned soda.');
             return;
@@ -113,6 +117,8 @@ export default function MenuPopup(props) {
                     </Form.Group>}
                     {selected?.draft && <p>This drink is currently unavailable for online ordering.</p>}
                     <Form.Control as="textarea" rows={3} className="specialText" aria-label="Special instructions" placeholder="Special Instructions" value={instructions} onChange={e => setInstructions(e.target.value)} />
+                    {isLunch && <p className="popupDesc">Lunch specials are available before 4:00 PM Eastern.</p>}
+                    {lunchUnavailable && <p role="status">{lunchMessage}</p>}
                     {error && <p role="alert">{error}</p>}
                 </div>
             </div>
@@ -125,7 +131,7 @@ export default function MenuPopup(props) {
             </div>
             <div className="popupActions">
                 <Button className="mingButtonOutline" variant="secondary" onClick={props.onClose} disabled={saving}>Cancel</Button>
-                <Button className="mingButton" onClick={save} disabled={saving || selected?.draft}>{selected?.draft ? 'Currently unavailable' : saving ? 'Saving…' : `${props.do === 'Edit' ? 'Update' : 'Add'} $${API.priceAPI.price(total)}`}</Button>
+                <Button className="mingButton" onClick={save} disabled={saving || selected?.draft || (lunchUnavailable && count > 0)}>{selected?.draft ? 'Currently unavailable' : saving ? 'Saving…' : `${props.do === 'Edit' ? 'Update' : 'Add'} $${API.priceAPI.price(total)}`}</Button>
             </div>
         </Modal.Footer>
     </Modal>;

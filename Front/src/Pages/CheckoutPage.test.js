@@ -73,3 +73,9 @@ test('unavailable ordering status fails closed and can be retried', async () => 
   fireEvent.click(await screen.findByRole('button',{name:'Check again'}));
   await waitFor(()=>expect(screen.getByRole('button',{name:'Place Order'})).not.toBeDisabled());
 });
+test('delivery below $15 is blocked before contact or order requests', async () => {
+  sessionStorage.setItem('orderType','Delivery'); await show();
+  expect(screen.getByRole('button',{name:'Place Order'})).toBeDisabled();
+  expect(screen.getByRole('status')).toHaveTextContent('Delivery requires a $15.00 item subtotal');
+  expect(API.orderAPI.create).not.toHaveBeenCalled(); expect(API.userAPI.updateContact).not.toHaveBeenCalled();
+});

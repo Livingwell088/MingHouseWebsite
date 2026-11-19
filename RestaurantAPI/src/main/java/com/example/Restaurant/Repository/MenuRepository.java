@@ -12,6 +12,8 @@ import java.util.List;
 //@Repository
 public interface MenuRepository extends JpaRepository<Menu, String> {
 
-    @Query("SELECT m FROM Menu m WHERE m.number = :menuNumber")
+    List<Menu> findAllByArchivedFalse();
+
+    @Query("SELECT m FROM Menu m WHERE m.number = :menuNumber AND m.archived = false")
     List<Menu> findAllMenuByNumber(@Param("menuNumber") String menuNumber);
 }

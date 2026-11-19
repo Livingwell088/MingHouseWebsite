@@ -6,6 +6,16 @@ export function sortMenuOptions(items) {
     const rank = item => /\b(sm|small|pt|pint)\b/i.test(item.size || '') ? 0 : /\b(lg|large|qt|quart)\b/i.test(item.size || '') ? 2 : 1;
     return [...items].sort((a, b) => rank(a) - rank(b) || String(a.size || '').localeCompare(String(b.size || ''), undefined, {numeric: true}));
 }
+export function popupMenuOptions(items) {
+    const unique = new Map();
+    for (const item of items) {
+        if (item.archived) continue;
+        const key = JSON.stringify([item.category, item.number, item.name, item.size].map(value => String(value || '').trim().toLowerCase()));
+        const prior = unique.get(key);
+        if (!prior || (prior.available === false && item.available !== false)) unique.set(key, item);
+    }
+    return sortMenuOptions([...unique.values()]);
+}
 export function includedWith(item) {
     if (item?.description) return item.description;
     const sides = {

@@ -22,6 +22,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired private Ownership ownership;
     @Autowired private MenuPricing pricing;
     @Autowired private StoreOrderingService ordering;
+    @Autowired private OrderPolicy policy;
     private ResponseStatusException bad(String message) { return new ResponseStatusException(HttpStatus.BAD_REQUEST, message); }
     public String scopedKey(String key) {
         try { return ownership.current() + ":" + UUID.fromString(key); }
@@ -42,10 +43,13 @@ public class OrderServiceImpl implements OrderService {
         List<CartItem> items = cartItemRepository.findAllByCartId(owner);
         if (items.isEmpty() || items.size() > 100) throw bad("Your cart must contain 1 to 100 items");
         if (input.getItems() == null || input.getItems().size() != items.size()) throw stale();
+        ZonedDateTime now = policy.now();
         BigDecimal subtotal = BigDecimal.ZERO;
         for (CartItem item : items) {
             CartItem submitted = input.getItems().stream().filter(i -> Objects.equals(i.getId(), item.getId())).findFirst().orElseThrow(this::stale);
-            BigDecimal amount = pricing.line(pricing.menu(item.getItem().getId()), item.getQuantity(), item.getSpecialInstruction());
+            Menu currentMenu = pricing.menu(item.getItem().getId());
+            policy.requireLunchAvailable(currentMenu, input.getOrderTime(), now);
+            BigDecimal amount = pricing.line(currentMenu, item.getQuantity(), item.getSpecialInstruction());
             if (submitted.getQuantity() != item.getQuantity() || !Double.isFinite(submitted.getOrderPrice())
                     || amount.compareTo(BigDecimal.valueOf(submitted.getOrderPrice())) != 0) throw stale();
             item.setOrderPrice(amount.doubleValue());
@@ -59,12 +63,12 @@ public class OrderServiceImpl implements OrderService {
         if (input.getPhoneNumber() == null || !input.getPhoneNumber().matches("[0-9+() .-]{7,30}")) throw bad("Valid phone number required");
         if (input.getOrderTime() == null || !input.getOrderTime().matches("(?i)(ASAP|[0-9]{1,2}:[0-9]{2} [AP]M)")) throw bad("Choose a requested time");
         if ("Delivery".equals(input.getOrderType()) && (input.getAddress() == null || input.getAddress().isBlank())) throw bad("Delivery address required");
+        policy.requireDeliveryMinimum(input.getOrderType(), subtotal);
         Orders order = new Orders();
         order.setRequestKey(key); order.setUser(user); order.setItems(new ArrayList<>(items));
         order.setOrderType(input.getOrderType()); order.setPhoneNumber(input.getPhoneNumber());
         order.setAddress(limited(input.getAddress(), 500)); order.setSpecialInstructions(limited(input.getSpecialInstructions(), 2000));
         order.setOrderTime(input.getOrderTime()); order.setOrderStatus("New");
-        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("America/New_York"));
         order.setDatePlaced(now.toLocalDate().toString()); order.setTimePlaced(now.toLocalTime().withNano(0).toString());
         order.setOrderName(now.toLocalDate() + "-" + UUID.randomUUID().toString().substring(0,8));
         order.setOrderPrice(subtotal.doubleValue());

@@ -31,3 +31,10 @@ Before deploying the pending admin release, apply migrations
 `003_admin_remembered_devices.sql` and `004_online_ordering_switch.sql` to a
 backed-up database. These add remembered-device sessions and the persistent
 online-ordering switch without altering existing orders or menu prices.
+
+Before deploying the lunch duplicate cleanup, apply
+`005_archive_duplicate_lunch_options.sql` to a backed-up database. It adds an
+archive flag and hides inactive lunch duplicates only when exactly one matching
+available option exists at the same price. Archived rows remain in the database
+for historical order references. The public and admin menu APIs omit archived
+rows; distinct protein choices and ordinary unavailable items remain visible.

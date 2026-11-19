@@ -23,7 +23,7 @@ public class MenuServiceImpl implements MenuService{
 
     @Override
     public List<Menu> getAllMenu() {
-        return menuRepository.findAll();
+        return menuRepository.findAllByArchivedFalse();
     }
 
     public void deleteMenu() {
@@ -42,6 +42,8 @@ public class MenuServiceImpl implements MenuService{
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Menu item not found with id: " + updatedItem.getId()
                 ));
+        if (currentItem.isArchived()) throw new org.springframework.web.server.ResponseStatusException(
+                org.springframework.http.HttpStatus.BAD_REQUEST, "This duplicate menu entry has been archived. Refresh the menu and edit the current option.");
 
         currentItem.setNumber(updatedItem.getNumber());
         currentItem.setName(updatedItem.getName());

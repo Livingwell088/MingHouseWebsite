@@ -15,6 +15,11 @@ public class Menu {
     private String number, name, size, category, price, spicy;
 
     private Boolean available = true;
+    @jakarta.persistence.Column(nullable = false)
+    private boolean archived = false;
+
+    public boolean isArchived() { return archived; }
+    public void setArchived(boolean archived) { this.archived = archived; }
 
     public Menu() {
     }

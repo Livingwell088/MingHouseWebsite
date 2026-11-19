@@ -10,6 +10,7 @@ import ConfirmationModal from "../components/ConfirmationModal";
 import LoginModal from "../components/LoginModal";
 import useOrderingStatus from '../Services/useOrderingStatus';
 import OrderingNotice from '../components/OrderingNotice';
+import {checkoutPolicy, useRestaurantTime} from '../Services/OrderPolicy';
 
 
 
@@ -26,6 +27,8 @@ const CheckoutPage = (props) => {
     const [subtotal, setSubtotal] = useState(0)
     const [orderTime, setOrderTime] = useState(window.sessionStorage.getItem('orderTime'));
     const [cart, setCart] = useState([])
+    const restaurantTime = useRestaurantTime();
+    const policyMessage = checkoutPolicy(cart, subtotal, orderType, orderTime, restaurantTime);
 
     // console.log(cart)
 
@@ -155,6 +158,8 @@ const CheckoutPage = (props) => {
         if (submitting.current) return;
         if (pending) { await checkSubmission(); return; }
         if (!ordering.enabled) {setErrorContent(ordering.message); setShowError(true); return;}
+        const currentPolicy = checkoutPolicy(cart, subtotal, orderType, orderTime);
+        if (currentPolicy) {setErrorContent(currentPolicy); setShowError(true); return;}
         const form = event.currentTarget;
 
         if (
@@ -301,13 +306,15 @@ const CheckoutPage = (props) => {
                         </div>
                         </div>
 
+                    <p className="checkoutPaymentNote">Delivery minimum: $15.00 before tax and delivery fees. Lunch specials are available before 4:00 PM Eastern.</p>
+                    {policyMessage && <p role="status">{policyMessage}</p>}
                     <p className="checkoutPaymentNote">
                         Paying by card? Please call the restaurant at <a href="tel:15087566888">(508) 756-6888</a> after placing your order to arrange payment.
                     </p>
                     {showError && (
                         <div role="alert">{errorContent}</div>
                     )}
-                    <button className="placeOrderBtn" disabled={placing || showPopup || (!pending && !ordering.enabled)} onClick={makeOrder}>{placing ? 'Placing order…' : pending ? 'Check order submission' : 'Place Order'}</button>
+                    <button className="placeOrderBtn" disabled={placing || showPopup || (!pending && (!ordering.enabled || !!policyMessage))} onClick={makeOrder}>{placing ? 'Placing order…' : pending ? 'Check order submission' : 'Place Order'}</button>
                 </div>
             </aside>
         </main>

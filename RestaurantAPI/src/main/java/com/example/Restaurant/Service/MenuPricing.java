@@ -17,7 +17,7 @@ public class MenuPricing {
     public Menu menu(String id) {
         if (id == null) throw bad("Menu item required");
         Menu item = menus.findById(id).orElseThrow(() -> bad("Menu item unavailable"));
-        if (Boolean.FALSE.equals(item.getAvailable())) throw bad("Menu item unavailable");
+        if (item.isArchived() || Boolean.FALSE.equals(item.getAvailable())) throw bad("Menu item unavailable");
         return item;
     }
     public BigDecimal unit(Menu menu) {

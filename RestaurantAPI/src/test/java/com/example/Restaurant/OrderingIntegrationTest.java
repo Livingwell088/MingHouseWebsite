@@ -31,8 +31,12 @@ class OrderingIntegrationTest {
  @SpyBean OrderNotificationService notifications;
  @Autowired StoreOrderingService ordering;
  @Autowired StoreOrderingSettingsRepository orderingSettings;
+ @SpyBean OrderPolicy policy;
+ @Autowired MenuService menuService;
+ @Autowired javax.sql.DataSource testDataSource;
  String owner; Menu dish;
  @BeforeEach void setup() {
+  doReturn(java.time.ZonedDateTime.parse("2026-11-19T15:00:00-05:00[America/New_York]")).when(policy).now();
   ordering.update(true);
   owner=carts.generateCart(); authenticate(owner);
   StoreUser c=new StoreUser(); c.setUsernameId(owner); c.setFirstName("Test"); c.setLastName("Customer"); c.setEmail("test@example.com"); users.updateContact(c);
@@ -55,7 +59,7 @@ class OrderingIntegrationTest {
   input.setOrderType("Delivery"); input.setAddress("123 Preview Street");
   assertThrows(StoreOrderingService.OrderingPaused.class,()->orders.placeOrder(input));
   assertEquals(before,orderRepository.count()); assertEquals(mails,outbox.count()); assertEquals(1,carts.getCartItems(owner).size()); verifyNoInteractions(email);
-  ordering.update(true); Orders saved=orders.placeOrder(input); assertNotNull(saved.getId());
+  ordering.update(true); input.setOrderType("Pickup"); Orders saved=orders.placeOrder(input); assertNotNull(saved.getId());
   ordering.update(false); assertEquals(saved.getId(),orders.placeOrder(input).getId());
  }
  @Test void pausedOrderHttpResponseIsActionableAndMenuStaysPublic() throws Exception {
@@ -144,5 +148,50 @@ class OrderingIntegrationTest {
   assertEquals(new BigDecimal("0.98"),saved.getTax()); assertEquals(new BigDecimal("14.98"),saved.getTotal());
   assertEquals(note,saved.getItems().get(0).getSpecialInstruction());
   assertTrue(outbox.findAll().stream().filter(m->m.orderId.equals(saved.getId())).allMatch(m->m.body.contains("Beef Lo Mein") && m.body.contains("Sprite")));
+ }
+ @Test void deliveryMinimumUsesServerSubtotalAndKeepsRejectedCartAndOutboxIntact() {
+  dish.setPrice("14.99"); menu.saveAndFlush(dish); add(1);
+  Orders input=request(); input.setOrderType("Delivery"); input.setAddress("123 Test Street"); input.setOrderPrice(100);
+  long before=orderRepository.count(), mails=outbox.count();
+  assertTrue(assertThrows(ResponseStatusException.class,()->orders.placeOrder(input)).getReason().contains("$15.00"));
+  assertEquals(before,orderRepository.count()); assertEquals(mails,outbox.count()); assertEquals(1,carts.getCartItems(owner).size());
+  dish.setPrice("15.00"); menu.saveAndFlush(dish); input.setItems(carts.getCartItems(owner));
+  assertEquals(15.0,orders.placeOrder(input).getOrderPrice());
+ }
+ @Test void lunchInExistingCartCannotBeOrderedAtCutoffEvenWithEarlierRequestedTime() {
+  dish.setCategory("Lunch Special"); menu.saveAndFlush(dish); add(1); Orders input=request(); input.setOrderTime("3:30 PM");
+  doReturn(java.time.ZonedDateTime.parse("2026-11-19T16:00:00-05:00[America/New_York]")).when(policy).now();
+  long before=orderRepository.count(), mails=outbox.count();
+  assertTrue(assertThrows(ResponseStatusException.class,()->orders.placeOrder(input)).getReason().contains("4:00 PM"));
+  assertEquals(before,orderRepository.count()); assertEquals(mails,outbox.count()); assertEquals(1,carts.getCartItems(owner).size());
+ }
+ @Test void lunchRequestedAtCutoffIsRejectedButEarlierOrderAndRetryAreAllowed() {
+  dish.setCategory("Lunch Special"); menu.saveAndFlush(dish); add(1); Orders input=request(); input.setOrderTime("4:00 PM");
+  assertThrows(ResponseStatusException.class,()->orders.placeOrder(input));
+  input.setOrderTime("3:59 PM"); Orders saved=orders.placeOrder(input);
+  doReturn(java.time.ZonedDateTime.parse("2026-11-19T17:00:00-05:00[America/New_York]")).when(policy).now();
+  assertEquals(saved.getId(),orders.placeOrder(input).getId());
+ }
+ @Test void duplicateLunchMigrationKeepsHistoryAndDistinctProteinOptions() throws Exception {
+  dish.setNumber("L-test-"+UUID.randomUUID()); dish.setCategory("Lunch Special"); dish.setSize("(Chicken)"); menu.saveAndFlush(dish);
+  add(1); Orders saved=orders.placeOrder(request());
+  dish.setAvailable(false); menu.saveAndFlush(dish);
+  Menu canonical=new Menu(UUID.randomUUID().toString(),dish.getNumber(),dish.getName(),"(Chicken)","Lunch Special",dish.getPrice(),dish.getSpicy(),true);
+  Menu beef=new Menu(UUID.randomUUID().toString(),dish.getNumber(),dish.getName(),"(Beef)","Lunch Special",dish.getPrice(),dish.getSpicy(),false);
+  menu.saveAndFlush(canonical); menu.saveAndFlush(beef);
+  for (int run=0;run<2;run++) {
+   try (var connection=testDataSource.getConnection()) {
+    org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(connection,
+      new org.springframework.core.io.FileSystemResource("migrations/005_archive_duplicate_lunch_options.sql"));
+   }
+  }
+  assertTrue(menu.findById(dish.getId()).orElseThrow().isArchived());
+  assertFalse(menu.findById(beef.getId()).orElseThrow().isArchived());
+  assertTrue(menuService.getAllMenu().stream().noneMatch(item->item.getId().equals(dish.getId())));
+  assertEquals(2,menuService.findAllMenuByNumber(dish.getNumber()).stream().filter(item->item.getName().equals(dish.getName())).count());
+  assertEquals(dish.getId(),orders.getOrdersByUser(owner).stream().filter(order->order.getId().equals(saved.getId())).findFirst().orElseThrow().getItems().get(0).getItem().getId());
+  assertThrows(ResponseStatusException.class,()->menuService.updateMenuItem(dish));
+  CartItem oldSelection=new CartItem(); oldSelection.setCartId(owner); oldSelection.setItem(dish); oldSelection.setQuantity(1);
+  assertThrows(ResponseStatusException.class,()->carts.addItemToCart(oldSelection));
  }
 }
